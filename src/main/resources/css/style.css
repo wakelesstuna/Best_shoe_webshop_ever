@@ -1,0 +1,24 @@
+.back_ground{
+    -fx-background-color: #B0B9C8;
+    color: white;
+
+    min-height: 100px;
+}
+.nav-bar{
+    -fx-background-color: linear-gradient(to left top, #B37E39, #E7B13A);
+    -fx-font-family: "Poppins", sans-serif;
+    min-height: 100px;
+}
+.nav-bar-links{
+    -fx-text-fill: #353535;
+    -fx-font-size: 20px;
+}
+.main-shoe-img{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+.main-title{
+    -fx-font-size: 30px;
+    -fx-text-fill: #353535;
+}
+
+
