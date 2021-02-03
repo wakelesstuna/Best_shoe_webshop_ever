@@ -2,6 +2,8 @@ package shoeWebshop.controllers;
 
 public class OrderController {
 
+    //---- Nav Links ----\\
+
     public void changeToHomeView(){
         ChangeView.changeScenes(ChangeView.homeView());
     }

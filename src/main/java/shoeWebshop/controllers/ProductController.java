@@ -2,6 +2,9 @@ package shoeWebshop.controllers;
 
 public class ProductController {
 
+
+    //---- Nav Links ----\\
+
     public void changeToHomeView(){
         ChangeView.changeScenes(ChangeView.homeView());
     }

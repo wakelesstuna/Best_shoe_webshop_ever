@@ -152,11 +152,11 @@
       </VBox>
       <HBox layoutX="723.0" layoutY="285.0" prefHeight="39.0" prefWidth="208.0" spacing="10.0">
          <children>
-            <RadioButton mnemonicParsing="false" text="1" />
-            <RadioButton mnemonicParsing="false" text="2" />
-            <RadioButton mnemonicParsing="false" text="3" />
-            <RadioButton mnemonicParsing="false" text="4" />
-            <RadioButton mnemonicParsing="false" text="5" />
+            <RadioButton fx:id="reviewOne" mnemonicParsing="false" text="1" />
+            <RadioButton fx:id="reviewTwo" mnemonicParsing="false" text="2" />
+            <RadioButton fx:id="reviewThree" mnemonicParsing="false" text="3" />
+            <RadioButton fx:id="reviewFour" mnemonicParsing="false" text="4" />
+            <RadioButton fx:id="reviewFive" mnemonicParsing="false" text="5" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

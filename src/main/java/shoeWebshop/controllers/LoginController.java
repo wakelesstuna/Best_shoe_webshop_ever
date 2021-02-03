@@ -2,6 +2,8 @@ package shoeWebshop.controllers;
 
 public class LoginController {
 
+    //---- Nav Links ----\\
+
     public void changeToHomeView(){
         ChangeView.changeScenes(ChangeView.homeView());
     }
@@ -10,9 +12,7 @@ public class LoginController {
         ChangeView.changeScenes(ChangeView.productView());
     }
 
-    public void changeToReviewView() {
-        ChangeView.changeScenes(ChangeView.reviewView());
-    }
+    public void changeToReviewView() { ChangeView.changeScenes(ChangeView.reviewView()); }
 
     public void changeToOrderView(){
         ChangeView.changeScenes(ChangeView.orderView());
