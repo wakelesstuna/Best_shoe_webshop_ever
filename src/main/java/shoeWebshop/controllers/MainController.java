@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
-public class mainController {
+public class MainController {
 
     @FXML
     private Label navHome;
@@ -21,8 +21,8 @@ public class mainController {
     @FXML
     private Label navLogin;
 
-    private void navLogin(MouseEvent actionEvent){
-
+    public void changeToLoginView(){
+        ChangeView.changeScenes(ChangeView.loginView());
     }
 
 

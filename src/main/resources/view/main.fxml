@@ -9,11 +9,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="back_ground" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shoeWebshop.controllers.mainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="back_ground" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shoeWebshop.controllers.MainController">
    <children>
       <Pane prefHeight="100.0" prefWidth="1200.0" styleClass="nav-bar">
          <children>
-            <HBox alignment="CENTER_RIGHT" layoutX="465.0" prefHeight="100.0" prefWidth="735.0" spacing="60.0" styleClass="nav-bar-links">
+            <HBox alignment="CENTER_RIGHT" layoutX="465.0" prefHeight="100.0" prefWidth="735.0" spacing="40.0" styleClass="nav-bar-links">
                <children>
                   <Label fx:id="navHome" styleClass="nav-bar-links" text="Home">
                      <cursor>
@@ -35,7 +35,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
-                  <Label fx:id="navLogin" styleClass="nav-bar-links" text="Login">
+                  <Label fx:id="navLogin" onMouseClicked="#changeToLoginView" styleClass="nav-bar-links" text="Login">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
@@ -43,6 +43,14 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/iconmonstr-log-out-1-32.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="60.0" top="10.0" />
