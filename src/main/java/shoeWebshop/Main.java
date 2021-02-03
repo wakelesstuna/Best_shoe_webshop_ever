@@ -1,5 +1,6 @@
 package shoeWebshop;
 
+import javafx.scene.image.Image;
 import shoeWebshop.controllers.*;
 
 import javafx.application.Application;
@@ -18,6 +19,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("view/main.fxml")));
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
+        primaryStage.getIcons().add(new Image("img/iconmonstr-shop-4-96.png"));
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(e -> {

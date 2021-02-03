@@ -32,6 +32,40 @@ public class ChangeView {
         return scene;
     }
 
+    public static Scene productView() {
+        Scene scene = null;
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(ChangeView.class.getClassLoader().getResource("view/product.fxml")));
+            scene = new Scene(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return scene;
+    }
+
+    public static Scene reviewView() {
+        Scene scene = null;
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(ChangeView.class.getClassLoader().getResource("view/review.fxml")));
+            scene = new Scene(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return scene;
+    }
+
+    public static Scene orderView() {
+        Scene scene = null;
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(ChangeView.class.getClassLoader().getResource("view/order.fxml")));
+            scene = new Scene(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return scene;
+    }
+
+
     public static Scene loginView() {
         Scene scene = null;
         try {

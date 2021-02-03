@@ -20,17 +20,17 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
-                  <Label fx:id="navProduct" styleClass="nav-bar-links" text="Product">
+                  <Label fx:id="navProduct" onMouseClicked="#changeToProductView" styleClass="nav-bar-links" text="Product">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
-                  <Label fx:id="navReview" styleClass="nav-bar-links" text="Review">
+                  <Label fx:id="navReview" onMouseClicked="#changeToReviewView" styleClass="nav-bar-links" text="Review">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
-                  <Label fx:id="navOrders" styleClass="nav-bar-links" text="Orders">
+                  <Label fx:id="navOrders" onMouseClicked="#changeToOrderView" styleClass="nav-bar-links" text="Orders">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
@@ -69,7 +69,7 @@
             <Image url="@../img/main_shoe.jpg" />
          </image>
       </ImageView>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="414.0" layoutY="131.0" prefHeight="45.0" prefWidth="372.0" styleClass="main-title" text="Best Shoe Shop Ever" textAlignment="CENTER" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="317.0" layoutY="136.0" prefHeight="45.0" prefWidth="566.0" styleClass="main-title" text="Welcome to the Best Shoe Shop Ever" textAlignment="CENTER" />
       <HBox layoutX="1023.0" layoutY="740.0" prefHeight="45.0" prefWidth="134.0">
          <children>
             <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
