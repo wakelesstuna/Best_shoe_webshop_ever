@@ -5,22 +5,22 @@ public class OrderController {
     //---- Nav Links ----\\
 
     public void changeToHomeView(){
-        ChangeView.changeScenes(ChangeView.homeView());
+        FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 
     public void changeToProductView(){
-        ChangeView.changeScenes(ChangeView.productView());
+        FxmlUtils.changeScenes(FxmlUtils.productView());
     }
 
     public void changeToReviewView() {
-        ChangeView.changeScenes(ChangeView.reviewView());
+        FxmlUtils.changeScenes(FxmlUtils.reviewView());
     }
 
     public void changeToOrderView(){
-        ChangeView.changeScenes(ChangeView.orderView());
+        FxmlUtils.changeScenes(FxmlUtils.orderView());
     }
 
     public void changeToLoginView(){
-        ChangeView.changeScenes(ChangeView.loginView());
+        FxmlUtils.changeScenes(FxmlUtils.loginView());
     }
 }

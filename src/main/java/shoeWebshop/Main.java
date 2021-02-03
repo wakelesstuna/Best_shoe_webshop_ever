@@ -27,7 +27,7 @@ public class Main extends Application {
             System.exit(0);
         });
 
-        ChangeView.setCurrentStage(primaryStage);
+        FxmlUtils.setCurrentStage(primaryStage);
     }
 
     public static void main(String[] args) {
