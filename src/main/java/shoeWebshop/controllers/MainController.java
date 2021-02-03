@@ -21,6 +21,10 @@ public class MainController {
     @FXML
     private Label navLogin;
 
+    public void changeToHomeView(){
+        ChangeView.changeScenes(ChangeView.homeView());
+    }
+
     public void changeToLoginView(){
         ChangeView.changeScenes(ChangeView.loginView());
     }

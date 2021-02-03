@@ -15,7 +15,7 @@
          <children>
             <HBox alignment="CENTER_RIGHT" layoutX="465.0" prefHeight="100.0" prefWidth="735.0" spacing="40.0" styleClass="nav-bar-links">
                <children>
-                  <Label fx:id="navHome" styleClass="nav-bar-links" text="Home">
+                  <Label fx:id="navHome" onMouseClicked="#changeToHomeView" styleClass="nav-bar-links" text="Home">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

@@ -21,15 +21,26 @@ public class ChangeView {
             currentStage.show();
     }
 
-    public static Scene loginView() {
-        Scene loginScene = null;
+    public static Scene homeView() {
+        Scene scene = null;
         try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(ChangeView.class.getClassLoader().getResource("view/login.fxml")));
-            loginScene = new Scene(root);
+            Parent root = FXMLLoader.load(Objects.requireNonNull(ChangeView.class.getClassLoader().getResource("view/main.fxml")));
+            scene = new Scene(root);
         }catch (IOException e){
             e.printStackTrace();
         }
-        return loginScene;
+        return scene;
+    }
+
+    public static Scene loginView() {
+        Scene scene = null;
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(ChangeView.class.getClassLoader().getResource("view/login.fxml")));
+            scene = new Scene(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return scene;
     }
 
 }
