@@ -5,5 +5,5 @@ public class ProductRate {
     Product productId;
     Customer customerId;
     Rate rateId;
-    String Review;
+    String review;
 }
