@@ -49,7 +49,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#loggOut" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../img/iconmonstr-log-out-1-32.png" />
                             </image>
@@ -70,7 +70,7 @@
                 </ImageView>
             </children>
         </Pane>
-        <Label contentDisplay="CENTER" layoutX="134.0" layoutY="190.0" prefHeight="45.0" prefWidth="187.0" styleClass="main-title" text="Your orders" textAlignment="CENTER" />
+        <Label fx:id="ordersText" contentDisplay="CENTER" layoutX="134.0" layoutY="190.0" prefHeight="45.0" prefWidth="632.0" styleClass="main-title" text="Your orders" textAlignment="CENTER" />
         <HBox layoutX="1023.0" layoutY="740.0" prefHeight="45.0" prefWidth="134.0">
             <children>
                 <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
@@ -105,7 +105,7 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </HBox>
-      <TableView layoutX="134.0" layoutY="252.0" prefHeight="260.0" prefWidth="365.0">
+      <TableView fx:id="orderTable" layoutX="134.0" layoutY="252.0" prefHeight="260.0" prefWidth="365.0">
         <columns>
           <TableColumn prefWidth="75.0" text="Order ID" />
           <TableColumn prefWidth="75.0" text="Date" />
@@ -113,13 +113,13 @@
             <TableColumn prefWidth="139.0" text="Number of products" />
         </columns>
       </TableView>
-      <Button layoutX="377.0" layoutY="548.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="122.0" text="Show order">
+      <Button fx:id="showOrderButton" layoutX="377.0" layoutY="548.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="122.0" text="Show order">
          <styleClass>
             <String fx:value="login-button" />
             <String fx:value="login-text" />
          </styleClass>
       </Button>
-      <TableView layoutX="600.0" layoutY="252.0" prefHeight="260.0" prefWidth="423.0">
+      <TableView fx:id="selectedOrderTable" layoutX="600.0" layoutY="252.0" prefHeight="260.0" prefWidth="423.0">
         <columns>
           <TableColumn prefWidth="121.0" text="Model" />
           <TableColumn prefWidth="87.0" text="Brand" />
@@ -128,13 +128,13 @@
             <TableColumn prefWidth="82.0" text="Price" />
         </columns>
       </TableView>
-      <VBox layoutX="600.0" layoutY="161.0" prefHeight="91.0" prefWidth="320.0">
+      <VBox fx:id="selectOrderText" layoutX="600.0" layoutY="161.0" prefHeight="91.0" prefWidth="320.0">
          <children>
             <Label contentDisplay="CENTER" prefHeight="40.0" prefWidth="320.0" styleClass="order-text" text="Your selected order" textAlignment="CENTER" />
             <HBox prefHeight="46.0" prefWidth="320.0">
                <children>
                   <Label contentDisplay="CENTER" prefHeight="45.0" prefWidth="211.0" styleClass="order-text" text="Number of products" textAlignment="CENTER" />
-                  <Label contentDisplay="CENTER" prefHeight="45.0" prefWidth="187.0" styleClass="order-text" text="null" textAlignment="CENTER" />
+                  <Label contentDisplay="CENTER" prefHeight="45.0" prefWidth="187.0" styleClass="order-text" textAlignment="CENTER" />
                </children>
             </HBox>
          </children>
@@ -142,7 +142,7 @@
             <Insets top="10.0" />
          </padding>
       </VBox>
-      <HBox layoutX="749.0" layoutY="544.0" prefHeight="48.0" prefWidth="274.0">
+      <HBox fx:id="totalPrice" layoutX="749.0" layoutY="544.0" prefHeight="48.0" prefWidth="274.0">
          <children>
             <Label styleClass="login-text" text="Total price">
                <HBox.margin>
@@ -156,5 +156,6 @@
             </TextField>
          </children>
       </HBox>
+      <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
     </children>
 </AnchorPane>

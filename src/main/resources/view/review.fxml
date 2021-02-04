@@ -9,13 +9,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="back_ground" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shoeWebshop.controllers.ReviewController">
     <children>
@@ -51,7 +49,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#loggOut" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../img/iconmonstr-log-out-1-32.png" />
                             </image>
@@ -117,40 +115,8 @@
          </columns>
       </TableView>
       <Label layoutX="94.0" layoutY="182.0" styleClass="leave-review-text" text="Choose a model to look at reviews or leave a review " />
-      <TextArea layoutX="723.0" layoutY="344.0" prefHeight="239.0" prefWidth="372.0" styleClass="box-shadow-light" />
-      <VBox layoutX="723.0" layoutY="179.0" prefHeight="106.0" prefWidth="321.0">
-         <children>
-            <HBox prefHeight="45.0" prefWidth="200.0">
-               <children>
-                  <Label prefWidth="70.0" styleClass="order-text" text="Name">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </Label>
-                  <TextField prefHeight="25.0" prefWidth="195.0">
-                     <HBox.margin>
-                        <Insets bottom="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </TextField>
-               </children>
-            </HBox>
-            <HBox prefHeight="40.0" prefWidth="242.0">
-               <children>
-                  <Label prefHeight="27.0" prefWidth="70.0" styleClass="order-text" text="Email">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </Label>
-                  <TextField prefHeight="25.0" prefWidth="195.0">
-                     <HBox.margin>
-                        <Insets bottom="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </TextField>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <HBox layoutX="723.0" layoutY="285.0" prefHeight="39.0" prefWidth="208.0" spacing="10.0">
+      <TextArea fx:id="reviewText" layoutX="723.0" layoutY="344.0" prefHeight="239.0" prefWidth="372.0" styleClass="box-shadow-light" />
+      <HBox fx:id="radioButtonBox" layoutX="723.0" layoutY="285.0" prefHeight="39.0" prefWidth="208.0" spacing="10.0">
          <children>
             <RadioButton fx:id="reviewOne" mnemonicParsing="false" text="1" />
             <RadioButton fx:id="reviewTwo" mnemonicParsing="false" text="2" />
@@ -162,7 +128,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <Button layoutX="909.0" layoutY="606.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="Leave review">
+      <Button fx:id="leaveReviewButton" layoutX="909.0" layoutY="606.0" mnemonicParsing="false" onAction="#leaveReview" prefHeight="39.0" prefWidth="170.0" text="Leave review">
          <styleClass>
             <String fx:value="login-text" />
             <String fx:value="login-button" />
@@ -171,7 +137,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </Button>
-      <Button layoutX="417.0" layoutY="606.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="170.0" text="Look at reviews">
+      <Button fx:id="showReviewButton" layoutX="417.0" layoutY="606.0" mnemonicParsing="false" onAction="#showReview" prefHeight="39.0" prefWidth="170.0" text="Look at reviews">
          <styleClass>
             <String fx:value="login-text" />
             <String fx:value="login-button" />
@@ -180,5 +146,7 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </Button>
+      <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
+      <Label fx:id="leaveReviewText" layoutX="723.0" layoutY="217.0" prefHeight="69.0" prefWidth="355.0" styleClass="leave-review-text" text="You need to be logged in to leave a review" wrapText="true" />
     </children>
 </AnchorPane>

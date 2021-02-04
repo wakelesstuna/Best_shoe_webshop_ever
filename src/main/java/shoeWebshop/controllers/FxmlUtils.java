@@ -11,11 +11,14 @@ import java.util.Objects;
 
 public class FxmlUtils {
 
+    public static boolean isLoggedIn = false;
+    public static String howIsLoggedIn = "";
     private static Stage currentStage;
 
-    public static void showMessage(String message, String title, Alert.AlertType alertType){
+    public static void showMessage(String title, String header, String message, Alert.AlertType alertType){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
+        alert.setHeaderText(header);
         alert.setContentText(message);
         alert.showAndWait();
     }

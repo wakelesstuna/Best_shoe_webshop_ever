@@ -46,7 +46,7 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#loggOut" pickOnBounds="true" preserveRatio="true">
                             <image>
                                 <Image url="@../img/iconmonstr-log-out-1-32.png" />
                             </image>
@@ -111,14 +111,16 @@
             <TableColumn prefWidth="78.0" text="Stock" />
         </columns>
       </TableView>
-      <TableView layoutX="651.0" layoutY="282.0" prefHeight="272.0" prefWidth="471.0">
+      <TableView fx:id="cartTable" layoutX="651.0" layoutY="282.0" prefHeight="272.0" prefWidth="471.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Model" />
-          <TableColumn prefWidth="75.0" text="Price" />
-            <TableColumn prefWidth="75.0" text="Antal" />
+          <TableColumn prefWidth="119.0" text="Model" />
+            <TableColumn prefWidth="113.0" text="Brand" />
+          <TableColumn prefWidth="82.0" text="Price" />
+            <TableColumn prefWidth="77.0" text="Size" />
+            <TableColumn prefWidth="79.0" text="Antal" />
         </columns>
       </TableView>
-      <HBox layoutX="838.0" layoutY="577.0" prefHeight="48.0" prefWidth="284.0" spacing="10.0">
+      <HBox fx:id="totalPrice" layoutX="838.0" layoutY="577.0" prefHeight="48.0" prefWidth="284.0" spacing="10.0">
          <children>
             <Label prefHeight="30.0" prefWidth="104.0" styleClass="nav-bar-links" text="Total price:" />
             <TextField editable="false" prefHeight="30.0" prefWidth="149.0" />
@@ -129,7 +131,7 @@
       </HBox>
       <HBox layoutX="523.0" layoutY="576.0" prefHeight="50.0" prefWidth="104.0">
          <children>
-            <ImageView fx:id="addToCart" fitHeight="150.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView id="addToCart" fx:id="addToCart" fitHeight="150.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/iconmonstr-plus-5-32.png" />
                </image>
@@ -148,7 +150,7 @@
          </children>
       </HBox>
       <Label layoutX="316.0" layoutY="188.0" styleClass="main-title" text="Products" />
-      <HBox layoutX="835.0" layoutY="187.0" prefHeight="48.0" prefWidth="104.0" spacing="10.0">
+      <HBox fx:id="cartBox" layoutX="835.0" layoutY="187.0" prefHeight="48.0" prefWidth="104.0" spacing="10.0">
          <children>
             <Label styleClass="main-title" text="Cart" />
             <ImageView fitHeight="150.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
@@ -161,5 +163,6 @@
             </ImageView>
          </children>
       </HBox>
+      <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
     </children>
 </AnchorPane>

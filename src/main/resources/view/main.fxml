@@ -43,7 +43,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
-                  <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#loggOut" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/iconmonstr-log-out-1-32.png" />
                      </image>
@@ -104,5 +104,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </HBox>
+      <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
    </children>
 </AnchorPane>

@@ -2,7 +2,6 @@
     -fx-background-color: #B0B9C8;
     color: white;
 
-    min-height: 100px;
 }
 .nav-bar{
     -fx-background-color: linear-gradient(to left top, #B37E39, #E7B13A);
@@ -51,5 +50,6 @@
 .box-shadow-light{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 3, 0, 0, 0);
 }
+
 
 
