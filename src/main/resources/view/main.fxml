@@ -57,10 +57,13 @@
                </padding>
             </HBox>
             <Label layoutX="135.0" layoutY="28.0" prefHeight="45.0" prefWidth="299.0" styleClass="main-title" text="Best Shoe Shop Ever" />
-            <ImageView fitHeight="69.0" fitWidth="69.0" layoutX="41.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="69.0" fitWidth="69.0" layoutX="41.0" layoutY="16.0" onMouseClicked="#changeToHomeView" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/iconmonstr-shop-4-96.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </Pane>
