@@ -2,10 +2,12 @@ package shoeWebshop.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +32,9 @@ public class ProductController implements Initializable {
     @FXML
     private HBox cartBox;
 
+    @FXML
+    private Button sendOrder;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -40,6 +45,7 @@ public class ProductController implements Initializable {
             cartTable.setDisable(false);
             totalPrice.setDisable(false);
             cartBox.setDisable(false);
+            sendOrder.setDisable(false);
         }else{
             loggedIn.setText("Logged in: not logged in");
             addToCart.setDisable(true);
@@ -47,9 +53,15 @@ public class ProductController implements Initializable {
             cartTable.setDisable(true);
             totalPrice.setDisable(true);
             cartBox.setDisable(true);
+            sendOrder.setDisable(true);
         }
 
         // TODO: 2021-02-03 fill the table with all shoes in the database
+    }
+
+    public void sendOrder(){
+        SendEmail email = new SendEmail("nackademinJava20A@gmail.com", "Shoe Order", null);
+        System.out.println("sending");
     }
 
     //---- Nav Links ----\\

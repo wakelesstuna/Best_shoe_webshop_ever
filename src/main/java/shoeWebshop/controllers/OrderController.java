@@ -14,8 +14,6 @@ import java.util.ResourceBundle;
 
 public class OrderController implements Initializable {
 
-
-
     @FXML
     private Label loggedIn;
 
@@ -36,8 +34,6 @@ public class OrderController implements Initializable {
 
     @FXML
     private HBox totalPrice;
-
-    SendEmail email;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,11 +58,6 @@ public class OrderController implements Initializable {
             selectedOrderTable.setDisable(true);
             totalPrice.setDisable(true);
         }
-    }
-
-    public void sendOrder(){
-        email = new SendEmail("nackademinJava20A@gmail.com","Shoe Order", "Thank you for ordering from Best Shoe Shop Ever!");
-        System.out.println("sending");
     }
 
     //---- Nav Links ----\\
