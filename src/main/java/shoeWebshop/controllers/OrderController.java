@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -36,6 +37,8 @@ public class OrderController implements Initializable {
     @FXML
     private HBox totalPrice;
 
+    SendEmail email;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (FxmlUtils.isLoggedIn){
@@ -48,6 +51,7 @@ public class OrderController implements Initializable {
             totalPrice.setDisable(false);
 
             // TODO: 2021-02-03 as database for the loggedin customers orders and fill the table
+            // TODO: 2021-02-04 lägg till status på ordrar så att slutförda ordrar kan ses men inte ändras
 
         }else{
             loggedIn.setText("Logged in: not logged in");
@@ -58,6 +62,11 @@ public class OrderController implements Initializable {
             selectedOrderTable.setDisable(true);
             totalPrice.setDisable(true);
         }
+    }
+
+    public void sendOrder(){
+        email = new SendEmail("nackademinJava20A@gmail.com","Shoe Order", "Thank you for ordering from Best Shoe Shop Ever!");
+        System.out.println("sending");
     }
 
     //---- Nav Links ----\\

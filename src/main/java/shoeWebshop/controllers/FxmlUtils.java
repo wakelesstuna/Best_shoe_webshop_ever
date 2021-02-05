@@ -88,4 +88,14 @@ public class FxmlUtils {
         return scene;
     }
 
+    public static Scene createUserView() {
+        Scene scene = null;
+        try {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/createUser.fxml")));
+            scene = new Scene(root);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return scene;
+    }
 }

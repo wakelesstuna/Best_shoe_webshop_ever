@@ -132,7 +132,7 @@
                               <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
                            </VBox.margin>
                         </PasswordField>
-                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#authorizeLogin" text="Login ">
+                        <Button fx:id="loginButton" mnemonicParsing="false" onAction="#authorizeLogin" prefHeight="37.0" prefWidth="190.0" text="Login ">
                            <VBox.margin>
                               <Insets top="10.0" />
                            </VBox.margin>
@@ -142,6 +142,18 @@
                            <styleClass>
                               <String fx:value="login-button" />
                               <String fx:value="login-text" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="createUser" mnemonicParsing="false" onAction="#changeToCreateUserView" prefWidth="190.0" text="Create user">
+                           <VBox.margin>
+                              <Insets top="30.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets bottom="5.0" left="45.0" right="45.0" top="5.0" />
+                           </padding>
+                           <styleClass>
+                              <String fx:value="login-text" />
+                              <String fx:value="login-button" />
                            </styleClass>
                         </Button>
                      </children>

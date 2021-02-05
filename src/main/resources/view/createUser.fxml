@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="back_ground" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shoeWebshop.controllers.CreateUserContoller">
+    <children>
+        <Pane prefHeight="100.0" prefWidth="1200.0" styleClass="nav-bar">
+            <children>
+                <HBox alignment="CENTER_RIGHT" layoutX="465.0" prefHeight="100.0" prefWidth="735.0" spacing="40.0" styleClass="nav-bar-links">
+                    <children>
+                        <Label fx:id="navHome" onMouseClicked="#changeToHomeView" styleClass="nav-bar-links" text="Home">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <Label fx:id="navProduct" onMouseClicked="#changeToProductView" styleClass="nav-bar-links" text="Product">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <Label fx:id="navReview" onMouseClicked="#changeToReviewView" styleClass="nav-bar-links" text="Review">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <Label fx:id="navOrders" onMouseClicked="#changeToOrderView" styleClass="nav-bar-links" text="Orders">
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <Label fx:id="navLogin" onMouseClicked="#changeToLoginView" styleClass="nav-bar-links" text="Login">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#loggOut" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/iconmonstr-log-out-1-32.png" />
+                            </image>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </ImageView>
+                    </children>
+                    <padding>
+                        <Insets bottom="10.0" left="10.0" right="60.0" top="10.0" />
+                    </padding>
+                </HBox>
+                <Label layoutX="135.0" layoutY="28.0" prefHeight="45.0" prefWidth="299.0" styleClass="main-title" text="Best Shoe Shop Ever" />
+                <ImageView fitHeight="69.0" fitWidth="69.0" layoutX="41.0" layoutY="16.0" onMouseClicked="#changeToHomeView" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../img/iconmonstr-shop-4-96.png" />
+                    </image>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </ImageView>
+            </children>
+        </Pane>
+        <HBox layoutX="1023.0" layoutY="740.0" prefHeight="45.0" prefWidth="134.0">
+            <children>
+                <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../img/iconmonstr-facebook-3-32.png" />
+                    </image>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                </ImageView>
+                <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../img/iconmonstr-instagram-11-32.png" />
+                    </image>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                </ImageView>
+                <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../img/iconmonstr-twitter-1-32.png" />
+                    </image>
+                    <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                    </HBox.margin>
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </ImageView>
+            </children>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </HBox>
+        <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
+      <Pane layoutX="129.0" layoutY="138.0" prefHeight="585.0" prefWidth="495.0" styleClass="create-user">
+         <children>
+            <VBox layoutY="-1.0" prefHeight="585.0" prefWidth="495.0">
+               <children>
+                  <Pane prefHeight="200.0" prefWidth="200.0" styleClass="crate-user-title">
+                     <children>
+                        <Label layoutX="173.0" layoutY="28.0" styleClass="main-title" text="Create user" />
+                     </children>
+                  </Pane>
+                  <HBox prefHeight="427.0" prefWidth="495.0">
+                     <children>
+                        <VBox alignment="TOP_RIGHT" prefHeight="585.0" prefWidth="324.0">
+                           <children>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="First name:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Last name:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Social security number:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Phone number">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Address:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Zip code:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="City:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Password:">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="585.0" prefWidth="377.0">
+                           <children>
+                              <TextField fx:id="firstName" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="lastName" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="socialSecurityNumber" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="phoneNumber" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="Address" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="zipCode" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="city" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                              <TextField fx:id="password" prefHeight="27.0" prefWidth="254.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Pane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="121.0" layoutY="20.0" mnemonicParsing="false" onAction="#createUser" prefHeight="49.0" prefWidth="254.0" styleClass="login-button" text="Create">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </Pane>
+               </children>
+            </VBox>
+         </children>
+      </Pane>
+      <ImageView fitHeight="558.0" fitWidth="463.0" layoutX="676.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true" styleClass="box-shadow-light">
+         <image>
+            <Image url="@../img/create-user-shoe.png" />
+         </image>
+      </ImageView>
+    </children>
+</AnchorPane>
