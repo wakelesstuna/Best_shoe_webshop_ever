@@ -1,18 +1,41 @@
 package shoeWebshop.model.Utils;
 
-public enum Credentials {
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Properties;
 
-    SENDER_EMAIL("nackademinJava20A@gmail.com"),
-    SENDER_PASSWORD("YS8]a8u>Hc|ZC3kNo");
+public class Credentials {
 
-    private final String s;
+    private static String username;
+    private static String password;
 
-    Credentials(String s) {
-        this.s = s;
+    public Credentials(){
+        Properties login = new Properties();
+        try (FileReader in = new FileReader("src/main/java/shoeWebshop/user.properties")){
+            login.load(in);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        username = login.getProperty("username");
+        password = login.getProperty("password");
     }
 
-    @Override
-    public String toString() {
-        return s;
+    public enum USER {
+        SENDER_EMAIL(username),
+        SENDER_PASSWORD(password);
+
+        private final String s;
+
+        USER(String s) {
+            this.s = s;
+        }
+
+        @Override
+        public String toString() {
+            return s;
+        }
     }
 }
+
+
+

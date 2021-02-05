@@ -19,7 +19,7 @@ public class SendEmail {
 
         Session session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(Credentials.SENDER_EMAIL.toString(), Credentials.SENDER_PASSWORD.toString());
+                return new PasswordAuthentication(Credentials.USER.SENDER_EMAIL.toString(), Credentials.USER.SENDER_PASSWORD.toString());
 
             }
         });
@@ -27,7 +27,7 @@ public class SendEmail {
 
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(Credentials.SENDER_EMAIL.toString()));
+            message.setFrom(new InternetAddress(Credentials.USER.SENDER_EMAIL.toString()));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(emailAddressToSendTo));
             message.setSubject(subjectLine);
             message.setText(emailMessage);

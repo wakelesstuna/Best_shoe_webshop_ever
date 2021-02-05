@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import shoeWebshop.model.Utils.Credentials;
 
 import java.util.Objects;
 
@@ -26,7 +27,7 @@ public class Main extends Application {
             Platform.exit();
             System.exit(0);
         });
-
+        Credentials c = new Credentials();
         FxmlUtils.setCurrentStage(primaryStage);
     }
 
