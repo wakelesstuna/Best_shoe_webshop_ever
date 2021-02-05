@@ -81,6 +81,12 @@ public class LoginController implements Initializable {
         FxmlUtils.changeScenes(FxmlUtils.loginView());
     }
 
+    public void changeToCreateUserView(){
+        FxmlUtils.changeScenes(FxmlUtils.createUserView());
+    }
+
+
+
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         FxmlUtils.howIsLoggedIn = "not logged in";

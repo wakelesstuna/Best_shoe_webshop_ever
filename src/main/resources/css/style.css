@@ -50,6 +50,17 @@
 .box-shadow-light{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 3, 0, 0, 0);
 }
-
-
+.create-user{
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 3, 0, 0, 0);
+}
+.crate-user-title{
+    -fx-background-color: linear-gradient(to left top, #d99743, #E7B13A);
+    -fx-font-family: "Poppins", sans-serif;
+    -fx-border-radius: 10;
+}
+.create-user-text{
+    -fx-font-size: 18px;
+    -fx-text-fill: #353535;
+}
 

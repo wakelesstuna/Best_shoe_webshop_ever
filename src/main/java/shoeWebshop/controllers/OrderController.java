@@ -48,6 +48,7 @@ public class OrderController implements Initializable {
             totalPrice.setDisable(false);
 
             // TODO: 2021-02-03 as database for the loggedin customers orders and fill the table
+            // TODO: 2021-02-04 lägg till status på ordrar så att slutförda ordrar kan ses men inte ändras
 
         }else{
             loggedIn.setText("Logged in: not logged in");
