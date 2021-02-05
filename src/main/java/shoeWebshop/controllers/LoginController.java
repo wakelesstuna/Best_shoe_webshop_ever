@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,6 +40,7 @@ public class LoginController implements Initializable {
         }
     }
 
+
     public void authorizeLogin(){
         // TODO: 2021-02-03 check with database if email and password is right
 
@@ -53,7 +55,6 @@ public class LoginController implements Initializable {
             loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
             loginEmail.setText("");
             loginPassword.setText("");
-
         }else {
             FxmlUtils.showMessage("Warning",
                     "Couldn't find any user","Wrong email or password, try again",
