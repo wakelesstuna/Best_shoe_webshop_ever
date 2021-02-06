@@ -106,29 +106,29 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </HBox>
-      <TableView layoutX="121.0" layoutY="280.0" prefHeight="272.0" prefWidth="506.0">
+      <TableView fx:id="productTable" layoutX="121.0" layoutY="280.0" prefHeight="272.0" prefWidth="506.0">
         <columns>
-          <TableColumn prefWidth="116.0" text="Model" />
-          <TableColumn prefWidth="94.0" text="Brand" />
-            <TableColumn prefWidth="78.0" text="Price" />
-            <TableColumn prefWidth="65.0" text="Size" />
-            <TableColumn prefWidth="74.0" text="Color" />
-            <TableColumn prefWidth="78.0" text="Stock" />
+          <TableColumn fx:id="modelCol" prefWidth="116.0" text="Model" />
+          <TableColumn fx:id="brandCol" prefWidth="94.0" text="Brand" />
+            <TableColumn fx:id="priceCol" prefWidth="78.0" text="Price" />
+            <TableColumn fx:id="sizeCol" prefWidth="65.0" text="Size" />
+            <TableColumn fx:id="colorCol" prefWidth="74.0" text="Color" />
+            <TableColumn fx:id="stockCol" prefWidth="78.0" text="Stock" />
         </columns>
       </TableView>
       <TableView fx:id="cartTable" layoutX="651.0" layoutY="282.0" prefHeight="272.0" prefWidth="471.0">
         <columns>
-          <TableColumn prefWidth="119.0" text="Model" />
-            <TableColumn prefWidth="113.0" text="Brand" />
-          <TableColumn prefWidth="82.0" text="Price" />
-            <TableColumn prefWidth="77.0" text="Size" />
-            <TableColumn prefWidth="79.0" text="Antal" />
+          <TableColumn fx:id="cartModelCul" prefWidth="119.0" text="Model" />
+            <TableColumn fx:id="cartBrandCol" prefWidth="113.0" text="Brand" />
+          <TableColumn fx:id="cartPriceCol" prefWidth="82.0" text="Price" />
+            <TableColumn fx:id="cartSizeCol" prefWidth="77.0" text="Size" />
+            <TableColumn fx:id="cartQuantityCol" prefWidth="79.0" text="Antal" />
         </columns>
       </TableView>
       <HBox fx:id="totalPrice" layoutX="838.0" layoutY="577.0" prefHeight="48.0" prefWidth="284.0" spacing="10.0">
          <children>
             <Label prefHeight="30.0" prefWidth="104.0" styleClass="nav-bar-links" text="Total price:" />
-            <TextField editable="false" prefHeight="30.0" prefWidth="149.0" />
+            <TextField fx:id="showTotalPrice" alignment="CENTER_RIGHT" editable="false" prefHeight="30.0" prefWidth="149.0" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -136,7 +136,7 @@
       </HBox>
       <HBox layoutX="523.0" layoutY="576.0" prefHeight="50.0" prefWidth="104.0">
          <children>
-            <ImageView id="addToCart" fx:id="addToCart" fitHeight="150.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView id="addToCart" fx:id="addToCart" fitHeight="150.0" fitWidth="32.0" onMouseClicked="#addToCart" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/iconmonstr-plus-5-32.png" />
                </image>
@@ -144,7 +144,7 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </ImageView>
-            <ImageView fx:id="removeFromCart" fitHeight="150.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="removeFromCart" fitHeight="150.0" fitWidth="32.0" onMouseClicked="#removeFromCart" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../img/iconmonstr-minus-5-32.png" />
                </image>

@@ -1,15 +1,25 @@
 package shoeWebshop.controllers;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.util.Callback;
+import shoeWebshop.Main;
+import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ProductController implements Initializable {
@@ -24,9 +34,6 @@ public class ProductController implements Initializable {
     private ImageView removeFromCart;
 
     @FXML
-    private TableView<?> cartTable;
-
-    @FXML
     private HBox totalPrice;
 
     @FXML
@@ -35,9 +42,60 @@ public class ProductController implements Initializable {
     @FXML
     private Button sendOrder;
 
+    @FXML
+    private TextField showTotalPrice;
+
+    //----- product table ------\\
+
+    @FXML
+    private TableView<Product> productTable;
+
+    @FXML
+    private TableColumn<Product, String> modelCol;
+
+    @FXML
+    private TableColumn<Product, String> brandCol;
+
+    @FXML
+    private TableColumn<Product, Double> priceCol;
+
+    @FXML
+    private TableColumn<Product, Integer> sizeCol;
+
+    @FXML
+    private TableColumn<Product, String> colorCol;
+
+    @FXML
+    private TableColumn<Product, Integer> stockCol;
+
+    //---- Cart Table ---- \\
+
+    @FXML
+    private TableView<Product> cartTable;
+
+    @FXML
+    private TableColumn<Product, String> cartModelCul;
+
+    @FXML
+    private TableColumn<Product, String> cartBrandCol;
+
+    @FXML
+    private TableColumn<Product, Double> cartPriceCol;
+
+    @FXML
+    private TableColumn<Product, Integer> cartSizeCol;
+
+    @FXML
+    private TableColumn<Product, Integer> cartQuantityCol;
+
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        showTotalPrice.setText("0");
+        showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
             addToCart.setDisable(false);
@@ -55,6 +113,7 @@ public class ProductController implements Initializable {
             cartBox.setDisable(true);
             sendOrder.setDisable(true);
         }
+        fillProductTabel(Main.list);
 
         // TODO: 2021-02-03 fill the table with all shoes in the database
     }
@@ -62,6 +121,46 @@ public class ProductController implements Initializable {
     public void sendOrder(){
         SendEmail email = new SendEmail("nackademinJava20A@gmail.com", "Shoe Order", null);
         System.out.println("sending");
+    }
+
+    public void fillProductTabel(List<Product> list){
+
+            modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
+            brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
+            priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
+            sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
+            colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
+            stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
+            productTable.getItems().setAll(list);
+    }
+
+    public void addToCart(){
+        System.out.println("+");
+
+        Product selectedItem = productTable.getSelectionModel().getSelectedItem();
+
+        cartModelCul.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        cartBrandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        cartPriceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
+        cartSizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
+        cartQuantityCol.setCellValueFactory(e -> new SimpleIntegerProperty(1).asObject());
+
+        cartTable.getItems().add(selectedItem);
+
+        // add to price
+        double price = Double.parseDouble(showTotalPrice.getText());
+        showTotalPrice.setText(price + selectedItem.getPriceSek() + "");
+    }
+
+    public void removeFromCart(){
+        System.out.println("-");
+        Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
+        cartTable.getItems().remove(selectedItem);
+
+        // remove from price
+        double price = Double.parseDouble(showTotalPrice.getText());
+        showTotalPrice.setText(price - selectedItem.getPriceSek() + "");
     }
 
     //---- Nav Links ----\\
