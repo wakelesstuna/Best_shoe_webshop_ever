@@ -1,6 +1,4 @@
 package shoeWebshop.model;
-
-
 import shoeWebshop.model.Utils.Database;
 
 public class Brand {
@@ -11,8 +9,8 @@ public class Brand {
 
     }
     
-    public Brand getBrand(int id, String c){
-        return Database.brands.stream().filter(b -> b.equals(c)).map(b -> new Brand(id, c)).findFirst().orElse(null);
+    public static Brand getBrand(String c){
+        return Database.brands.stream().filter(b -> b.equals(c)).map(b -> new Brand(b.id, c)).findFirst().orElse(null);
 
     }
 }

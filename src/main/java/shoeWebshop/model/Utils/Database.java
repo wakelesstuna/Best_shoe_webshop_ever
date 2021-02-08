@@ -3,6 +3,7 @@ package shoeWebshop.model.Utils;
 import shoeWebshop.model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.sql.*;
 
@@ -16,11 +17,11 @@ public class Database extends Credentials {
 
     private static Connection connection;
 
-    private static List<Customer> customers = new ArrayList<>();
-    private static List<Product> products = new ArrayList<>();
-    private static List<Brand> brands = new ArrayList<>();
-    private static List<Category> category = new ArrayList<>();
-    private static List<Color> color = new ArrayList<>();
+    public static List<Customer> customers = new ArrayList<>();
+    public static List<Product> products = new ArrayList<>();
+    public static List<Brand> brands = new ArrayList<>();
+    public static List<Category> category = new ArrayList<>();
+    public static List<Color> color = new ArrayList<>();
 
     public static void main(String[] args) {
         Database pro = new Database();
@@ -80,7 +81,7 @@ public class Database extends Credentials {
                 Size size = getSize(tempSize);
 
                 String tempBrand = rs.getString("brand_name");
-                Brand brand = getBrand(tempBrand);
+                Brand brand = Brand.getBrand(tempBrand);
 
                 int stock = Integer.parseInt( rs.getString("stock"));
 
