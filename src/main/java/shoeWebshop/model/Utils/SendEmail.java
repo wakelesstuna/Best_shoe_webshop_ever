@@ -64,7 +64,7 @@ public class SendEmail {
         }
     }
 
-    private static String buildCreateCustomerMail(String customerName, String customerEmail, String customerPassword){
+    public static String buildCreateCustomerMail(String customerName, String customerEmail, String customerPassword){
         StringBuilder sb = new StringBuilder();
 
         return sb.append("Welcome to the Best Shoe Shop Ever!\n")

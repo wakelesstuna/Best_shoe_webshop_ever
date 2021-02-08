@@ -37,7 +37,7 @@ public class Database extends Credentials {
         }
     }
 
-    public static boolean isAuthorizeLogin(String userName, String password){
+    public static boolean isAuthorizeLogin(String userName, String password) {
         createConnection();
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.password = ?");
@@ -45,8 +45,8 @@ public class Database extends Credentials {
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
-            if(rs.next()){
-                FxmlUtils.showMessage("Logged in", "Logged in","Logged in sucsses", Alert.AlertType.INFORMATION);
+            if (rs.next()) {
+                FxmlUtils.showMessage("Logged in", "Logged in", "Logged in sucsses", Alert.AlertType.INFORMATION);
                 FxmlUtils.isLoggedIn = true;
                 createLoggedInCustomer(rs);
                 return true;
@@ -60,21 +60,48 @@ public class Database extends Credentials {
 
     private static void createLoggedInCustomer(ResultSet rs) throws SQLException {
         FxmlUtils.whoIsLoggedIn = new Customer(rs.getString("first_name"),
-        rs.getString("last_name"),
-        rs.getInt("phone_number"),
-        rs.getString("email"),
-        rs.getString("password"),
-        rs.getString("social_security_number"),
-        rs.getString("address"),
+                rs.getString("last_name"),
+                rs.getInt("phone_number"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("social_security_number"),
+                rs.getString("address"),
                 new City());
     }
 
-    public void getAllCustomers(){
+    public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address) {
+        createConnection();
+        getAllCustomers();
+        try {
+            if (customers.stream().anyMatch(e -> e.getEmail().equals(email))) {
+                FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
+            } else {
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address) VALUES (?,?,?,?,?,?,?)");
+                stmt.setString(1, firstName);
+                stmt.setString(2, lastName);
+                stmt.setString(3, phoneNumber);
+                stmt.setString(4, email);
+                stmt.setString(5, password);
+                stmt.setString(6, ssn);
+                stmt.setString(7, address);
+
+                stmt.execute();
+
+                SendEmail.sendCreateUserMail(email, "New Customer", firstName + " " + lastName, password);
+                FxmlUtils.showMessage("New customer", "Welcome!", "We are so glad that you have join us Mr/Mrs " + firstName, Alert.AlertType.INFORMATION);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void getAllCustomers() {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
-            while (rs.next()){
+            while (rs.next()) {
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 int phoneNumber = rs.getInt("phone_number");
@@ -85,7 +112,7 @@ public class Database extends Credentials {
                 //City city = rs.getString("city_name");
                 int zipCode = rs.getInt("zip_code");
 
-                customers.add(new Customer(firstName,lastName,phoneNumber,email,password,socialSecurityNumber,address,new City()));
+                customers.add(new Customer(firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, new City()));
             }
 
         } catch (SQLException throwables) {
@@ -93,7 +120,7 @@ public class Database extends Credentials {
         }
     }
 
-    public void getAllProducts(){
+    public void getAllProducts() {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
@@ -102,7 +129,7 @@ public class Database extends Credentials {
                     "JOIN size ON product.fk_size_id = size.id " +
                     "JOIN brand ON product.fk_brand_id = brand.id");
 
-            while (rs.next()){
+            while (rs.next()) {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String color = rs.getString("color");
@@ -120,9 +147,9 @@ public class Database extends Credentials {
         }
     }
 
-    public void writeAllInfo(List<?> list){
+    public void writeAllInfo(List<?> list) {
         int count = 1;
-        for (Object e:list) {
+        for (Object e : list) {
             System.out.println(count + ": " + e);
             count++;
         }

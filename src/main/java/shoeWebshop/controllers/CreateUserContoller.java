@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.Customer;
+import shoeWebshop.model.Utils.Database;
 import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
@@ -45,6 +46,9 @@ public class CreateUserContoller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setMaxTextFieldCount(socialSecurityNumber,10);
+        setMaxTextFieldCount(phoneNumber,10);
+        setMaxTextFieldCount(zipCode,5);
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
@@ -64,12 +68,13 @@ public class CreateUserContoller implements Initializable {
         int customerZipCode = Integer.parseInt(zipCode.getText());
         String customerCity = city.getText();
         String customerPassword = password.getText();
-        SendEmail.sendCreateUserMail(customerEmail, "New Customer", customerFirstName + " " + customerLastName, customerPassword);
+
+        Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress);
 
         eraseAllTextFields();
-        FxmlUtils.showMessage(null,null,"user created!", Alert.AlertType.INFORMATION);
 
-
+        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.showMessage("Logg in", "Please logg in to \nstart shopping", null, Alert.AlertType.INFORMATION);
     }
 
     public void eraseAllTextFields(){
@@ -94,9 +99,18 @@ public class CreateUserContoller implements Initializable {
         password.setPromptText("password");
     }
 
-    private void buildCreateUserMessage(){
-
+    public void setMaxTextFieldCount(TextField textField, int maxLength){
+        textField.setOnKeyTyped(t -> {
+            if (textField.getText().length() > maxLength) {
+                int pos = textField.getCaretPosition();
+                textField.setText(textField.getText(0, maxLength));
+                textField.positionCaret(pos);
+            }
+        });
     }
+
+
+    //---- Nav Links ----\\
 
     public void changeToHomeView(){
         FxmlUtils.changeScenes(FxmlUtils.homeView());

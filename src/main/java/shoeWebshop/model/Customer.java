@@ -21,6 +21,8 @@ public class Customer {
         this.city = city;
     }
 
+    public String getEmail() {return email;}
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

@@ -26,9 +26,6 @@ public class LoginController implements Initializable {
     private Label loginText;
 
 
-    String emailCheck = "oscar";
-    String passwordCheck = "1234";
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginEmail.setPromptText("Email");
@@ -50,7 +47,7 @@ public class LoginController implements Initializable {
 
             FxmlUtils.isLoggedIn = true;
 
-            loginText.setText("Welcome " + emailCheck);
+            loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             loginEmail.setText("");
             loginPassword.setText("");
