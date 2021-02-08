@@ -9,11 +9,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.Credentials;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Main extends Application {
+
+    public static List<Product> list = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -29,6 +34,10 @@ public class Main extends Application {
         });
         Credentials c = new Credentials();
         FxmlUtils.setCurrentStage(primaryStage);
+
+
+        list.add(new Product("runner",399, 3, "blue", 36, "Nike"));
+        list.add(new Product("not runner",499, 5, "red", 37, "Nike"));
     }
 
     public static void main(String[] args) {

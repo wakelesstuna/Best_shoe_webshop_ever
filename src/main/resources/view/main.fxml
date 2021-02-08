@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -15,10 +16,14 @@
          <children>
             <HBox alignment="CENTER_RIGHT" layoutX="465.0" prefHeight="100.0" prefWidth="735.0" spacing="40.0" styleClass="nav-bar-links">
                <children>
-                  <Label fx:id="navHome" onMouseClicked="#changeToHomeView" styleClass="nav-bar-links" text="Home">
+                  <Label fx:id="navHome" onMouseClicked="#changeToHomeView" text="Home">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <styleClass>
+                        <String fx:value="nav-bar-links" />
+                        <String fx:value="active-page" />
+                     </styleClass>
                   </Label>
                   <Label fx:id="navProduct" onMouseClicked="#changeToProductView" styleClass="nav-bar-links" text="Product">
                      <cursor>

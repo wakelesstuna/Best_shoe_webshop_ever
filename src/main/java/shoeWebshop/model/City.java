@@ -1,6 +1,6 @@
 package shoeWebshop.model;
 
-public class County {
+public class City {
     int id;
     String countyName;
 }

@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,7 +33,7 @@ public class LoginController implements Initializable {
         loginEmail.setPromptText("Email");
         loginPassword.setPromptText("Password");
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
@@ -51,8 +50,8 @@ public class LoginController implements Initializable {
         } else if(loginEmail.getText().equals(emailCheck) && loginPassword.getText().equals(passwordCheck)){
             loginText.setText("Welcome " + emailCheck);
             FxmlUtils.isLoggedIn = true;
-            FxmlUtils.howIsLoggedIn = emailCheck;
-            loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
+            FxmlUtils.whoIsLoggedIn = emailCheck;
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
             loginEmail.setText("");
             loginPassword.setText("");
         }else {
@@ -90,7 +89,7 @@ public class LoginController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.howIsLoggedIn = "not logged in";
+        FxmlUtils.whoIsLoggedIn = "not logged in";
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 
