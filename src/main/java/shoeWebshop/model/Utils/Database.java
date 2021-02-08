@@ -112,7 +112,7 @@ public class Database extends Credentials {
                 Size size = getSize(tempSize);
 
                 String tempBrand = rs.getString("brand_name");
-                Brand brand = getBrand(tempBrand);
+                Brand brand = Brand.getBrand(tempBrand);
 
                 int stock = Integer.parseInt( rs.getString("stock"));
 
