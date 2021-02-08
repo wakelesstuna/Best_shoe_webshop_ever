@@ -21,7 +21,7 @@ public class Database extends Credentials {
     public static List<Product> products = new ArrayList<>();
     public static List<Brand> brands = new ArrayList<>();
     public static List<Category> category = new ArrayList<>();
-    public static List<Color> color = new ArrayList<>();
+    public static List<Color> colors = new ArrayList<>();
     public static List<Size> sizes = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -55,8 +55,8 @@ public class Database extends Credentials {
                 String password = rs.getString("password");
                 String socialSecurityNumber = rs.getString("social_security_number");
                 String address = rs.getString("address");
-                String city = rs.getString("city_name");
-                int zipCode = rs.getInt("zip_code");
+                String tempCity = rs.getString("city_name");
+                City city = City.getCity(tempCity);
 
                 customers.add(new Customer(firstName,lastName,phoneNumber,email,password,socialSecurityNumber,address,city));
             }
@@ -94,6 +94,24 @@ public class Database extends Credentials {
             String brand = (rs.getString("brand_name"));
 
             brands.add(new Brand(id,brand));
+        }
+
+
+    } catch (SQLException throwable) {
+        throwable.printStackTrace();
+    }
+}
+
+    public void getColors(){
+    try {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM color ");
+
+        while (rs.next()){
+            int id = Integer.parseInt(rs.getString("id"));
+            String color = (rs.getString("color"));
+
+            colors.add(new Color(id,color));
         }
 
 
