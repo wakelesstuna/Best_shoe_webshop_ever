@@ -75,7 +75,7 @@ public class Database extends Credentials {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
-                Color color = getColor(tempColor);
+                Color color = Color.getColor(tempColor);
 
                 String tempSize = rs.getInt("eu");
                 Size size = getSize(tempSize);
@@ -106,7 +106,7 @@ public class Database extends Credentials {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
-                Color color = getColor(tempColor);
+                Color color = Color.getColor(tempColor);
 
                 String tempSize = rs.getInt("eu");
                 Size size = getSize(tempSize);
