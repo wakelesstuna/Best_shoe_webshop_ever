@@ -23,6 +23,7 @@ public class Database extends Credentials {
     public static List<Category> category = new ArrayList<>();
     public static List<Color> colors = new ArrayList<>();
     public static List<Size> sizes = new ArrayList<>();
+    public static List<Size> citys = new ArrayList<>();
 
     public static void main(String[] args) {
         Database pro = new Database();
