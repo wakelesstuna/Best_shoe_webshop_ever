@@ -36,10 +36,14 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <Label fx:id="navOrders" onMouseClicked="#changeToOrderView" styleClass="nav-bar-links" text="Orders">
+                        <Label fx:id="navOrders" onMouseClicked="#changeToOrderView" text="Orders">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                            <styleClass>
+                                <String fx:value="nav-bar-links" />
+                                <String fx:value="active-page" />
+                            </styleClass>
                         </Label>
                         <Label fx:id="navLogin" onMouseClicked="#changeToLoginView" styleClass="nav-bar-links" text="Login">
                             <opaqueInsets>

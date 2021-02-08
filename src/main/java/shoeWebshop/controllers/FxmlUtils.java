@@ -12,7 +12,7 @@ import java.util.Objects;
 public class FxmlUtils {
 
     public static boolean isLoggedIn = false;
-    public static String howIsLoggedIn = "";
+    public static String whoIsLoggedIn = "";
     private static Stage currentStage;
 
     public static void showMessage(String title, String header, String message, Alert.AlertType alertType){

@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,7 +37,7 @@ public class OrderController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
             ordersText.setText("Your orders");
             selectOrderText.setVisible(true);
             orderTable.setDisable(false);
@@ -84,7 +83,7 @@ public class OrderController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.howIsLoggedIn = "not logged in";
+        FxmlUtils.whoIsLoggedIn = "not logged in";
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 

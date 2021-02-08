@@ -11,6 +11,13 @@
     -fx-text-fill: #353535;
     -fx-font-size: 20px;
 }
+.active-page{
+    -fx-background-color: #353535;
+    -fx-background-radius: 50px;
+    -fx-text-fill: white;
+    -fx-padding: 4px 8px;
+    -fx-border-radius: 50px;
+}
 .main-shoe-img{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
 }

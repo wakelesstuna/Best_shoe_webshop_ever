@@ -1,10 +1,6 @@
 package shoeWebshop.controllers;
 
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -12,8 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.util.Callback;
 import shoeWebshop.Main;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.SendEmail;
@@ -89,15 +83,12 @@ public class ProductController implements Initializable {
     private TableColumn<Product, Integer> cartQuantityCol;
 
 
-
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTotalPrice.setText("0");
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
             addToCart.setDisable(false);
             removeFromCart.setDisable(false);
             cartTable.setDisable(false);
@@ -113,18 +104,22 @@ public class ProductController implements Initializable {
             cartBox.setDisable(true);
             sendOrder.setDisable(true);
         }
-        fillProductTabel(Main.list);
+        fillProductTable(Main.list);
 
         // TODO: 2021-02-03 fill the table with all shoes in the database
     }
 
     public void sendOrder(){
-        SendEmail email = new SendEmail("nackademinJava20A@gmail.com", "Shoe Order", null);
+        List<Product> products = cartTable.getItems();
+        SendEmail.sendOrderConfirmMail("nackademinJava20A@gmail.com", "Shoe Order", products, FxmlUtils.whoIsLoggedIn);
+        FxmlUtils.showMessage("Order", "Order Sent!", "Thank you for ordering from\nBest Shoe Shop Ever!", Alert.AlertType.INFORMATION);
+        cartTable.getItems().clear();
+        showTotalPrice.setText("0");
+
         System.out.println("sending");
     }
 
-    public void fillProductTabel(List<Product> list){
-
+    public void fillProductTable(List<Product> list){
             modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
             brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
             priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
@@ -155,6 +150,7 @@ public class ProductController implements Initializable {
 
     public void removeFromCart(){
         System.out.println("-");
+
         Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
         cartTable.getItems().remove(selectedItem);
 
@@ -187,7 +183,7 @@ public class ProductController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.howIsLoggedIn = "not logged in";
+        FxmlUtils.whoIsLoggedIn = "not logged in";
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 }

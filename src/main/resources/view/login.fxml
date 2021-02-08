@@ -40,13 +40,17 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <Label fx:id="navLogin" onMouseClicked="#changeToLoginView" styleClass="nav-bar-links" text="Login">
+                        <Label fx:id="navLogin" onMouseClicked="#changeToLoginView" text="Login">
                             <opaqueInsets>
                                 <Insets />
                             </opaqueInsets>
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                            <styleClass>
+                                <String fx:value="nav-bar-links" />
+                                <String fx:value="active-page" />
+                            </styleClass>
                         </Label>
                   <ImageView fitHeight="32.0" fitWidth="32.0" onMouseClicked="#loggOut" pickOnBounds="true" preserveRatio="true">
                      <image>
