@@ -11,10 +11,10 @@ public class Brand {
 
     }
     
-    public Brand getBrand(int id, String b){
+    public Brand getBrand(int id, String c){
         for (brandName b : Database.brands) {
-            if (brandName.equals(b)
-                Brand brand = new Brand(id, b);
+            if (b.equals(c))
+                Brand brand = new Brand(id, c);
         }
         
         return brand;
