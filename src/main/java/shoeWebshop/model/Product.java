@@ -42,4 +42,5 @@ public class Product {
     public String getBrand() {
         return brand;
     }
+
 }
