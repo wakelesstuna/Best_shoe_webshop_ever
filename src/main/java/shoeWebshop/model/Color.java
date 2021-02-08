@@ -12,6 +12,6 @@ public class Color {
     }
 
     public static Color getColor(String c){
-        return Database.color.stream().filter(b -> b.equals(c)).map(b -> new Color(b.id, c)).findFirst().orElse(null);
+        return Database.colors.stream().filter(b -> b.equals(c)).map(b -> new Color(b.id, c)).findFirst().orElse(null);
     }
 }

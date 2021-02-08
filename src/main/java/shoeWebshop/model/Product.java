@@ -3,7 +3,7 @@ package shoeWebshop.model;
 public class Product {
     String productName;
     double priceSek;
-    String color;
+    Color color;
     Size size;
     Brand brand;
     int stock;
