@@ -46,7 +46,7 @@ public class CreateUserContoller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
@@ -118,7 +118,8 @@ public class CreateUserContoller implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        FxmlUtils.whoIsLoggedIn = null;
+        loggedIn.setText("");
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 }

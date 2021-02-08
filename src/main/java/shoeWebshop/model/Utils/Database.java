@@ -10,13 +10,7 @@ import java.sql.*;
 
 import static shoeWebshop.model.Utils.Credentials.USER.*;
 
-
 public class Database extends Credentials {
-
-    /*static final String DB_NAME = "sql_shoe_webshop";
-    static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/";
-    static final String USER_NAME = "root";
-    static final String PASSWORD = "Jedi";*/
 
     private static Connection connection;
 
@@ -43,7 +37,7 @@ public class Database extends Credentials {
         }
     }
 
-    public static boolean authorizeLogin(String userName, String password){
+    public static boolean isAuthorizeLogin(String userName, String password){
         createConnection();
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.password = ?");
@@ -53,6 +47,8 @@ public class Database extends Credentials {
 
             if(rs.next()){
                 FxmlUtils.showMessage("Logged in", "Logged in","Logged in sucsses", Alert.AlertType.INFORMATION);
+                FxmlUtils.isLoggedIn = true;
+                createLoggedInCustomer(rs);
                 return true;
             }
         } catch (SQLException e) {
@@ -60,6 +56,17 @@ public class Database extends Credentials {
         }
         FxmlUtils.showMessage("Warning", "Not logged in", "Wrong username or password", Alert.AlertType.ERROR);
         return false;
+    }
+
+    private static void createLoggedInCustomer(ResultSet rs) throws SQLException {
+        FxmlUtils.whoIsLoggedIn = new Customer(rs.getString("first_name"),
+        rs.getString("last_name"),
+        rs.getInt("phone_number"),
+        rs.getString("email"),
+        rs.getString("password"),
+        rs.getString("social_security_number"),
+        rs.getString("address"),
+                new City());
     }
 
     public void getAllCustomers(){

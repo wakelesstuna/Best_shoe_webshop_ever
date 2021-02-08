@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import shoeWebshop.model.Customer;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
 public class FxmlUtils {
 
     public static boolean isLoggedIn = false;
-    public static String whoIsLoggedIn = "";
+    public static Customer whoIsLoggedIn;
     private static Stage currentStage;
 
     public static void showMessage(String title, String header, String message, Alert.AlertType alertType){

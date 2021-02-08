@@ -46,17 +46,12 @@ public class LoginController implements Initializable {
 
             FxmlUtils.showMessage("Input", "Input","You need to enter a email\nand a password", Alert.AlertType.ERROR);
 
-        } else if(Database.authorizeLogin(loginEmail.getText(),loginPassword.getText())){
-
-            // TODO: 2021-02-08 måste skapa och spara den inloggade kunden i frontend nånstans
+        } else if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
             FxmlUtils.isLoggedIn = true;
-            FxmlUtils.whoIsLoggedIn = emailCheck;
-            System.out.println("Logged in " + true);
-
 
             loginText.setText("Welcome " + emailCheck);
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             loginEmail.setText("");
             loginPassword.setText("");
 
@@ -93,7 +88,8 @@ public class LoginController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        loggedIn.setText("");
+        FxmlUtils.whoIsLoggedIn = null;
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 

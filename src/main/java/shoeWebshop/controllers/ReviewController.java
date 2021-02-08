@@ -53,7 +53,7 @@ public class ReviewController implements Initializable {
         reviewFive.setToggleGroup(reviewGroup);
 
         if (FxmlUtils.isLoggedIn) {
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             leaveReviewText.setText("Fill in the form to leave a review");
             radioButtonBox.setDisable(false);
             reviewText.setDisable(false);
@@ -109,7 +109,8 @@ public class ReviewController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        loggedIn.setText("");
+        FxmlUtils.whoIsLoggedIn = null;
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 

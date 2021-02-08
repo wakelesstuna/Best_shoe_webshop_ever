@@ -88,7 +88,7 @@ public class ProductController implements Initializable {
         showTotalPrice.setText("0");
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             addToCart.setDisable(false);
             removeFromCart.setDisable(false);
             cartTable.setDisable(false);
@@ -111,7 +111,7 @@ public class ProductController implements Initializable {
 
     public void sendOrder(){
         List<Product> products = cartTable.getItems();
-        SendEmail.sendOrderConfirmMail("nackademinJava20A@gmail.com", "Shoe Order", products, FxmlUtils.whoIsLoggedIn);
+        SendEmail.sendOrderConfirmMail("nackademinJava20A@gmail.com", "Shoe Order", products, FxmlUtils.whoIsLoggedIn.getFullName());
         FxmlUtils.showMessage("Order", "Order Sent!", "Thank you for ordering from\nBest Shoe Shop Ever!", Alert.AlertType.INFORMATION);
         cartTable.getItems().clear();
         showTotalPrice.setText("0");
@@ -183,7 +183,8 @@ public class ProductController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        loggedIn.setText("");
+        FxmlUtils.whoIsLoggedIn = null;
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 }
