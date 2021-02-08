@@ -12,11 +12,7 @@ public class Brand {
     }
     
     public Brand getBrand(int id, String c){
-        for (brandName b : Database.brands) {
-            if (b.equals(c))
-                Brand brand = new Brand(id, c);
-        }
-        
-        return brand;
+        return Database.brands.stream().filter(b -> b.equals(c)).map(b -> new Brand(id, c)).findFirst().orElse(null);
+
     }
 }
