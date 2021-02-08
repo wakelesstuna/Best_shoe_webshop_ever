@@ -45,7 +45,7 @@ public class Product {
     }
 
     public String getColor() {
-        return color;
+        return color.color;
     }
 
     public double getSize() {

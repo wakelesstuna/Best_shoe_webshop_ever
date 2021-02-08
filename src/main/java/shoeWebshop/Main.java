@@ -36,8 +36,8 @@ public class Main extends Application {
         FxmlUtils.setCurrentStage(primaryStage);
 
 
-        list.add(new Product("runner",399, 3, "blue", 36, "Nike"));
-        list.add(new Product("not runner",499, 5, "red", 37, "Nike"));
+        //list.add(new Product("runner",399, 3, "blue", 36, "Nike"));
+        //list.add(new Product("not runner",499, 5, "red", 37, "Nike"));
     }
 
     public static void main(String[] args) {
