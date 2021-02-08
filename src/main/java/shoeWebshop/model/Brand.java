@@ -6,7 +6,8 @@ public class Brand {
     String brandName;
 
     public Brand (int id, String brandName){
-
+        this.id = id;
+        this.brandName = brandName;
     }
     
     public static Brand getBrand(String c){

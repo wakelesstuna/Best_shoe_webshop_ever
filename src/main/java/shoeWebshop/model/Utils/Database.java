@@ -64,6 +64,7 @@ public class Database extends Credentials {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
     }    public void getAllSizes(){
         try {
             Statement stmt = connection.createStatement();
@@ -83,7 +84,23 @@ public class Database extends Credentials {
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
+    }   public void getBrands(){
+        try {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM brand ");
+
+        while (rs.next()){
+            int id = Integer.parseInt(rs.getString("id"));
+            String brand = (rs.getString("brand_name"));
+
+            brands.add(new Brand(id,brand));
+        }
+
+
+    } catch (SQLException throwable) {
+        throwable.printStackTrace();
     }
+}
 
     public void getAllProducts(){
         try {
