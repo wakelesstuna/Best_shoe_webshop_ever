@@ -23,7 +23,7 @@ public class Database extends Credentials {
     public static List<Category> category = new ArrayList<>();
     public static List<Color> colors = new ArrayList<>();
     public static List<Size> sizes = new ArrayList<>();
-    public static List<Size> citys = new ArrayList<>();
+    public static List<City> citys = new ArrayList<>();
 
     public static void main(String[] args) {
         Database pro = new Database();
@@ -95,6 +95,23 @@ public class Database extends Credentials {
             String brand = (rs.getString("brand_name"));
 
             brands.add(new Brand(id,brand));
+        }
+
+
+    } catch (SQLException throwable) {
+        throwable.printStackTrace();
+    }
+}
+    public void getCitys(){
+    try {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM city ");
+
+        while (rs.next()){
+            int id = Integer.parseInt(rs.getString("id"));
+            String tempCity = (rs.getString("city_name"));
+
+            citys.add(new City(id, tempCity));
         }
 
 
