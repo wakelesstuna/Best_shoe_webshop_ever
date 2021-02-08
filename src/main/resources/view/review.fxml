@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" styleClass="back_ground" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="shoeWebshop.controllers.ReviewController">
     <children>
@@ -115,14 +116,16 @@
          <columns>
             <TableColumn prefWidth="116.0" text="Model" />
             <TableColumn prefWidth="94.0" text="Brand" />
-            <TableColumn prefWidth="78.0" text="Price" />
-            <TableColumn prefWidth="65.0" text="Size" />
-            <TableColumn prefWidth="74.0" text="Color" />
-            <TableColumn prefWidth="78.0" text="Stock" />
+            <TableColumn prefWidth="99.0" text="Price" />
+            <TableColumn prefWidth="76.0" text="Size" />
+            <TableColumn prefWidth="120.0" text="Color" />
          </columns>
       </TableView>
       <Label layoutX="94.0" layoutY="182.0" styleClass="leave-review-text" text="Choose a model to look at reviews or leave a review " />
-      <TextArea fx:id="reviewText" layoutX="723.0" layoutY="344.0" prefHeight="239.0" prefWidth="372.0" styleClass="box-shadow-light" />
+      <TextArea fx:id="reviewText" layoutX="723.0" layoutY="344.0" prefHeight="239.0" prefWidth="372.0" styleClass="box-shadow-light" wrapText="true">
+         <font>
+            <Font size="14.0" />
+         </font></TextArea>
       <HBox fx:id="radioButtonBox" layoutX="723.0" layoutY="285.0" prefHeight="39.0" prefWidth="208.0" spacing="10.0">
          <children>
             <RadioButton fx:id="reviewOne" mnemonicParsing="false" text="1" />

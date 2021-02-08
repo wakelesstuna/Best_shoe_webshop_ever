@@ -3,18 +3,17 @@ CREATE DATABASE sql_shoe_webshop;
 USE sql_shoe_webshop;
 SET sql_safe_updates = 0;
 SET GLOBAL log_bin_trust_function_creators = 1;
-
 -- DONE!
 
 CREATE TABLE customer (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    phone_number INT,
-    email VARCHAR(50),
-    password VARCHAR(50),
-    social_security_number VARCHAR(10),
-    address VARCHAR(50),
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    phone_number INT NOT NULL,
+    email VARCHAR(50) UNIQUE NULL,
+    password VARCHAR(50) NOT NULL,
+    social_security_number VARCHAR(10) NOT NULL,
+    address VARCHAR(50) NOT NULL,
     fk_city_id INT,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -23,13 +22,10 @@ CREATE INDEX IX_customer_Last_name ON customer (last_name);
 -- CREATE INDEX IX_customer_full_name ON customer (first_name ,last_name);
 -- Man vill kunna söker ofta på förnamn och efternamn tillsammans
 
-
-
 CREATE TABLE city (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    city_name VARCHAR(30),
+    city_name VARCHAR(30) UNIQUE NOT NULL,
     zip_code INT,
-    UNIQUE (city_name),
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -49,8 +45,7 @@ CREATE TABLE product (
 
 CREATE TABLE color (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    color VARCHAR(30),
-    UNIQUE(color),
+    color VARCHAR(30) UNIQUE NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -58,8 +53,7 @@ CREATE TABLE color (
 
 CREATE TABLE category (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(50),
-    UNIQUE(category_name),
+    category_name VARCHAR(50) UNIQUE NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -76,14 +70,13 @@ CREATE TABLE size (
 
 CREATE TABLE brand (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    brand_name VARCHAR(50),
-    UNIQUE (brand_name),
+    brand_name VARCHAR(50) UNIQUE NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE product_category (
-    id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY ,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fk_product_id INT,
     fk_category_id INT,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -91,16 +84,16 @@ CREATE TABLE product_category (
 );
 
 CREATE TABLE orders (
-    id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY ,
-    date DATE,
-    time TIME,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
     fk_customer_id INT,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE orders_product (
-    id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY ,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     fk_orders_id INT,
     fk_product_id INT,
     product_price DOUBLE,
@@ -121,8 +114,8 @@ CREATE TABLE product_review (
 
 CREATE TABLE rating (
     id INT NOT NULL AUTO_INCREMENT  PRIMARY KEY ,
-    rating_text varchar(15),
-	rating_number int,
+    rating_text varchar(20) UNIQUE NOT NULL,
+	rating_number int UNIQUE NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     lastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -137,7 +130,7 @@ ADD FOREIGN KEY(fk_size_id) REFERENCES size(id),
 ADD FOREIGN KEY(fk_brand_id) REFERENCES brand(id) ON DELETE CASCADE,
 ADD FOREIGN KEY(fk_color_id) REFERENCES color(id);
 
--- nr vi tar bort ett brand så tar vi bort alla producter som ingår i de märket också
+-- när vi tar bort ett brand så tar vi bort alla producter som ingår i de märket också
 -- för vi vill inte ha några brandfria skor i våran shop
 
 ALTER TABLE product_category
@@ -155,3 +148,5 @@ ALTER TABLE product_review
 ADD FOREIGN KEY (fk_product_id) REFERENCES product(id) ON DELETE CASCADE,
 ADD FOREIGN KEY (fk_customer_id) REFERENCES customer(id) ON DELETE SET NULL,
 ADD FOREIGN KEY (fk_rating_id) REFERENCES rating(id);
+
+

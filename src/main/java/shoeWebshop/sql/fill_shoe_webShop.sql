@@ -2,19 +2,19 @@ USE sql_shoe_webshop;
 
 INSERT INTO city (city_name) VALUES
 ('stockholm'),
-('jämtland'),
-('norrbotten'),
-('gävleborgs'),
+('funäsdalen'),
+('luleå'),
+('gävle'),
 ('uppsala'),
-('dalarnas');
+('rättvik');
 
 INSERT INTO customer (first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES
 ('oscar','forss', '0703455445', 'oscar@email.com','1234', '9014321234', 'sliepnervägen', (SELECT id FROM city WHERE city_name = 'stockholm')),
 ('patrik','melander', '0703236545', 'patrik@email.com','1234', '8709421234', 'bromma', (SELECT id FROM city WHERE city_name = 'stockholm')),
-('cribb','grännby', '0703876513', 'cribb@email.com','1234', '8509221234', 'blackeberg', (SELECT id FROM city WHERE city_name = 'jämtland')),
-('stefan','henning', '0703233314', 'stefan@email.com','1234', '8210221234', 'vikingavägen', (SELECT id FROM city WHERE city_name = 'gävleborgs')),
+('cribb','grännby', '0703876513', 'cribb@email.com','1234', '8509221234', 'blackeberg', (SELECT id FROM city WHERE city_name = 'funäsdalen')),
+('stefan','henning', '0703233314', 'stefan@email.com','1234', '8210221234', 'vikingavägen', (SELECT id FROM city WHERE city_name = 'gävle')),
 ('julia','wingsteadts', '0732344549', 'julia@email.com','1234', '9603321234', 'huddingevägen', (SELECT id FROM city WHERE city_name = 'stockholm')),
-('sigrun','dottir', '0703231945', 'sigrun@email.com','1234', '8106201234', 'älvsjövägen', (SELECT id FROM city WHERE city_name = 'dalarnas'));
+('sigrun','dottir', '0703231945', 'sigrun@email.com','1234', '8106201234', 'älvsjövägen', (SELECT id FROM city WHERE city_name = 'rättvik'));
 
 INSERT INTO color (color) VALUES
 ('svart'),
@@ -235,7 +235,7 @@ INSERT INTO orders_product (fk_orders_id, fk_product_id, product_price, quantity
 
 INSERT INTO rating (rating_text, rating_number) VALUES
 ('missnöjd',1),
-('nöjd',2),
+('ganska nöjd',2),
 ('nöjd',3),
 ('mycket nöjd',4);
 

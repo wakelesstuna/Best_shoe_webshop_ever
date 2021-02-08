@@ -67,7 +67,7 @@ GROUP BY customer.last_name;
 -- Skriv ut en lista på det totala beställningsvärdet per ort där beställningsvärdet är större än
 -- 1000 kr. Ortnamn och värde ska visas. (det måste finnas orter i databasen där det har
 -- handlats för mindre än 1000 kr för att visa att frågan är korrekt formulerad)
--- Sigrun enda som bor i dalarn och handlat för 750 kr
+-- Sigrun enda som bor i rättvik och handlat för 750 kr
 -- DONE INGA BUGGAR
 SELECT
     city.city_name Ortnamn,
@@ -79,8 +79,10 @@ FROM city
               ON customer.id = orders.fk_customer_id
          JOIN orders_product
               ON orders.id = orders_product.fk_orders_id
-GROUP BY city_name;
--- HAVING totala_beställningsvärdet > 1000;
+GROUP BY city_name
+-- HAVING totala_beställningsvärdet > 1000
+ORDER BY totala_beställningsvärdet DESC;
+
 
 -- Skapa en topp-5 lista av de mest sålda produkterna
 -- DONE INGA BUGGAR
