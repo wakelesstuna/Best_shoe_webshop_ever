@@ -3,6 +3,7 @@ package shoeWebshop.model.Utils;
 import shoeWebshop.model.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.sql.*;
 
@@ -16,11 +17,13 @@ public class Database extends Credentials {
 
     private static Connection connection;
 
-    private static List<Customer> customers = new ArrayList<>();
-    private static List<Product> products = new ArrayList<>();
-    private static List<Brand> brands = new ArrayList<>();
-    private static List<Category> category = new ArrayList<>();
-    private static List<Color> color = new ArrayList<>();
+    public static List<Customer> customers = new ArrayList<>();
+    public static List<Product> products = new ArrayList<>();
+    public static List<Brand> brands = new ArrayList<>();
+    public static List<Category> category = new ArrayList<>();
+    public static List<Color> colors = new ArrayList<>();
+    public static List<Size> sizes = new ArrayList<>();
+    public static List<City> citys = new ArrayList<>();
 
     public static void main(String[] args) {
         Database pro = new Database();
@@ -53,8 +56,8 @@ public class Database extends Credentials {
                 String password = rs.getString("password");
                 String socialSecurityNumber = rs.getString("social_security_number");
                 String address = rs.getString("address");
-                String city = rs.getString("city_name");
-                int zipCode = rs.getInt("zip_code");
+                String tempCity = rs.getString("city_name");
+                City city = City.getCity(tempCity);
 
                 customers.add(new Customer(firstName,lastName,phoneNumber,email,password,socialSecurityNumber,address,city));
             }
@@ -62,36 +65,78 @@ public class Database extends Credentials {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+
     }    public void getAllSizes(){
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product " +
-                    "JOIN color ON product.fk_color_id = color.id " +
-                    "JOIN size ON product.fk_size_id = size.id " +
-                    "JOIN brand ON product.fk_brand_id = brand.id");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM size ");
 
             while (rs.next()){
-                String productName = rs.getString("product_name");
-                double priceSek = rs.getDouble("price_sek");
-                String tempColor = rs.getString("color");
-                Color color = getColor(tempColor);
+                int id = Integer.parseInt(rs.getString("id"));
+                double eu = Double.parseDouble(rs.getString("eu"));
+                double us = Double.parseDouble(rs.getString("us"));
+                double uk = Double.parseDouble(rs.getString("uk"));
+                double cm = Double.parseDouble(rs.getString("cm"));
 
-                String tempSize = rs.getInt("eu");
-                Size size = getSize(tempSize);
-
-                String tempBrand = rs.getString("brand_name");
-                Brand brand = getBrand(tempBrand);
-
-                int stock = Integer.parseInt( rs.getString("stock"));
-
-                products.add(new Product(productName,priceSek,color,size,brand, stock));
+                sizes.add(new Size(id,eu, us,uk,cm));
             }
 
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
+    }   public void getBrands(){
+        try {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM brand ");
+
+        while (rs.next()){
+            int id = Integer.parseInt(rs.getString("id"));
+            String brand = (rs.getString("brand_name"));
+
+            brands.add(new Brand(id,brand));
+        }
+
+
+    } catch (SQLException throwable) {
+        throwable.printStackTrace();
     }
+}
+    public void getCitys(){
+    try {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM city ");
+
+        while (rs.next()){
+            int id = Integer.parseInt(rs.getString("id"));
+            String tempCity = (rs.getString("city_name"));
+
+            citys.add(new City(id, tempCity));
+        }
+
+
+    } catch (SQLException throwable) {
+        throwable.printStackTrace();
+    }
+}
+
+    public void getColors(){
+    try {
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM color ");
+
+        while (rs.next()){
+            int id = Integer.parseInt(rs.getString("id"));
+            String color = (rs.getString("color"));
+
+            colors.add(new Color(id,color));
+        }
+
+
+    } catch (SQLException throwable) {
+        throwable.printStackTrace();
+    }
+}
 
     public void getAllProducts(){
         try {
@@ -105,13 +150,13 @@ public class Database extends Credentials {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
-                Color color = getColor(tempColor);
+                Color color = Color.getColor(tempColor);
 
-                String tempSize = rs.getInt("eu");
-                Size size = getSize(tempSize);
+                double tempSize = rs.getInt("eu");
+                Size size = Size.getSize(tempSize);
 
                 String tempBrand = rs.getString("brand_name");
-                Brand brand = getBrand(tempBrand);
+                Brand brand = Brand.getBrand(tempBrand);
 
                 int stock = Integer.parseInt( rs.getString("stock"));
 
