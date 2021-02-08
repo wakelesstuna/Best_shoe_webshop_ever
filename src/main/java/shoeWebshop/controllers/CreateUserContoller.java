@@ -5,6 +5,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import shoeWebshop.model.Customer;
+import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,6 +26,9 @@ public class CreateUserContoller implements Initializable {
     private TextField socialSecurityNumber;
 
     @FXML
+    private TextField email;
+
+    @FXML
     private TextField phoneNumber;
 
     @FXML
@@ -41,7 +46,7 @@ public class CreateUserContoller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.howIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
@@ -49,6 +54,18 @@ public class CreateUserContoller implements Initializable {
     }
 
     public void createUser(){
+
+        String customerFirstName = firstName.getText();
+        String customerLastName = lastName.getText();
+        String customerSocialSecurityNumber = socialSecurityNumber.getText();
+        String customerEmail = email.getText();
+        String customerPhoneNumber = phoneNumber.getText();
+        String customerAddress = Address.getText();
+        int customerZipCode = Integer.parseInt(zipCode.getText());
+        String customerCity = city.getText();
+        String customerPassword = password.getText();
+        SendEmail.sendCreateUserMail(customerEmail, "New Customer", customerFirstName + " " + customerLastName, customerPassword);
+
         eraseAllTextFields();
         FxmlUtils.showMessage(null,null,"user created!", Alert.AlertType.INFORMATION);
 
@@ -59,6 +76,7 @@ public class CreateUserContoller implements Initializable {
         firstName.setText("");
         lastName.setText("");
         socialSecurityNumber.setText("");
+        email.setText("");
         phoneNumber.setText("");
         Address.setText("");
         zipCode.setText("");
@@ -68,11 +86,16 @@ public class CreateUserContoller implements Initializable {
         firstName.setPromptText("first name");
         lastName.setPromptText("last name");
         socialSecurityNumber.setPromptText("social security number");
+        email.setPromptText("email");
         phoneNumber.setPromptText("phone number");
         Address.setPromptText("address");
         zipCode.setPromptText("zip code");
         city.setPromptText("city");
         password.setPromptText("password");
+    }
+
+    private void buildCreateUserMessage(){
+
     }
 
     public void changeToHomeView(){
@@ -95,7 +118,7 @@ public class CreateUserContoller implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.howIsLoggedIn = "not logged in";
+        FxmlUtils.whoIsLoggedIn = "not logged in";
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 }

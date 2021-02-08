@@ -31,10 +31,14 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </Label>
-                        <Label fx:id="navReview" onMouseClicked="#changeToReviewView" styleClass="nav-bar-links" text="Review">
+                        <Label fx:id="navReview" onMouseClicked="#changeToReviewView" text="Review">
                             <cursor>
                                 <Cursor fx:constant="HAND" />
                             </cursor>
+                            <styleClass>
+                                <String fx:value="nav-bar-links" />
+                                <String fx:value="active-page" />
+                            </styleClass>
                         </Label>
                         <Label fx:id="navOrders" onMouseClicked="#changeToOrderView" styleClass="nav-bar-links" text="Orders">
                             <cursor>
