@@ -10,6 +10,7 @@ public class Customer {
     String ssn;
     String Address;
     City city;
+
     public Customer(String firstName, String lastName, int phoneNumber, String email, String password, String socialSecurityNumber, String address, City city) {
         this.firstName = firstName;
         this.lastName = lastName;

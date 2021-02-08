@@ -18,7 +18,7 @@ public class Database extends Credentials {
 
     private static List<Customer> customers = new ArrayList<>();
     private static List<Product> products = new ArrayList<>();
-    private static List<Brand> brand = new ArrayList<>();
+    private static List<Brand> brands = new ArrayList<>();
     private static List<Category> category = new ArrayList<>();
     private static List<Color> color = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class Database extends Credentials {
                 String password = rs.getString("password");
                 String socialSecurityNumber = rs.getString("social_security_number");
                 String address = rs.getString("address");
-                City city = rs.getString("city_name");
+                String city = rs.getString("city_name");
                 int zipCode = rs.getInt("zip_code");
 
                 customers.add(new Customer(firstName,lastName,phoneNumber,email,password,socialSecurityNumber,address,city));
@@ -61,6 +61,35 @@ public class Database extends Credentials {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }    public void getAllSizes(){
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM product " +
+                    "JOIN color ON product.fk_color_id = color.id " +
+                    "JOIN size ON product.fk_size_id = size.id " +
+                    "JOIN brand ON product.fk_brand_id = brand.id");
+
+            while (rs.next()){
+                String productName = rs.getString("product_name");
+                double priceSek = rs.getDouble("price_sek");
+                String tempColor = rs.getString("color");
+                Color color = getColor(tempColor);
+
+                String tempSize = rs.getInt("eu");
+                Size size = getSize(tempSize);
+
+                String tempBrand = rs.getString("brand_name");
+                Brand brand = getBrand(tempBrand);
+
+                int stock = Integer.parseInt( rs.getString("stock"));
+
+                products.add(new Product(productName,priceSek,color,size,brand, stock));
+            }
+
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
     }
 
@@ -75,18 +104,23 @@ public class Database extends Credentials {
             while (rs.next()){
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
-                String color = rs.getString("color");
-                int sizeEu = rs.getInt("eu");
-                int sizeUk = rs.getInt("uk");
-                int sizeUs = rs.getInt("us");
-                int sizeCm = rs.getInt("cm");
-                String brand = rs.getString("brand_name");
+                String tempColor = rs.getString("color");
+                Color color = getColor(tempColor);
 
-                products.add(new Product(productName,priceSek,color,sizeEu,sizeUk,sizeUs,sizeCm,brand));
+                String tempSize = rs.getInt("eu");
+                Size size = getSize(tempSize);
+
+                String tempBrand = rs.getString("brand_name");
+                Brand brand = getBrand(tempBrand);
+
+                int stock = Integer.parseInt( rs.getString("stock"));
+
+                products.add(new Product(productName,priceSek,color,size,brand, stock));
             }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
     }
 
