@@ -1,22 +1,35 @@
 package shoeWebshop.model;
 
 public class Product {
-
     String productName;
     double priceSek;
-    int stock;
     String color;
-    int size;
-    String brand;
+    Size size;
+    Brand brand;
+    int stock;
 
-    public Product(String productName, double priceSek, int stock, String color, int size, String brand) {
-
+    public Product(String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
         this.productName = productName;
         this.priceSek = priceSek;
-        this.stock = stock;
         this.color = color;
         this.size = size;
         this.brand = brand;
+        this.stock = stock;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productName='" + productName + '\'' +
+                ", priceSek=" + priceSek +
+                ", color='" + color + '\'' +
+                ", sizeEu=" + size.eu +
+                ", sizeUk=" + size.uk +
+                ", sizeUs=" + size.us +
+                ", sizeCm=" + size.cm +
+                ", brand='" + brand + '\'' +
+                '}';
     }
 
     public String getProductName() {
@@ -35,12 +48,13 @@ public class Product {
         return color;
     }
 
-    public int getSize() {
-        return size;
+    public double getSize() {
+
+        return size.eu;
     }
 
     public String getBrand() {
-        return brand;
+        return brand.brandName;
     }
 
 }
