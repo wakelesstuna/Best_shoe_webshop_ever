@@ -19,7 +19,7 @@ public class SendEmail {
         properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtp.auth", "true");
 
-        return Session.getInstance(properties, new Authenticator() {
+        return Session.getInstance(properties,new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(Credentials.USER.SENDER_EMAIL.toString(), Credentials.USER.SENDER_PASSWORD.toString());
             }
