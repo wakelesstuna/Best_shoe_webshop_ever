@@ -119,6 +119,23 @@ public class Database extends Credentials {
         throwable.printStackTrace();
     }
 }
+    public void getCategorys(){
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM category ");
+
+            while (rs.next()){
+                int id = Integer.parseInt(rs.getString("id"));
+                String categoryName = (rs.getString("category_name"));
+
+                category.add(new Category(id, categoryName));
+            }
+
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+    }
 
     public void getColors(){
     try {
