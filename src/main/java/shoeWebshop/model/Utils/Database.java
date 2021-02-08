@@ -22,6 +22,7 @@ public class Database extends Credentials {
     public static List<Brand> brands = new ArrayList<>();
     public static List<Category> category = new ArrayList<>();
     public static List<Color> color = new ArrayList<>();
+    public static List<Size> sizes = new ArrayList<>();
 
     public static void main(String[] args) {
         Database pro = new Database();
@@ -66,26 +67,16 @@ public class Database extends Credentials {
     }    public void getAllSizes(){
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product " +
-                    "JOIN color ON product.fk_color_id = color.id " +
-                    "JOIN size ON product.fk_size_id = size.id " +
-                    "JOIN brand ON product.fk_brand_id = brand.id");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM size ");
 
             while (rs.next()){
-                String productName = rs.getString("product_name");
-                double priceSek = rs.getDouble("price_sek");
-                String tempColor = rs.getString("color");
-                Color color = Color.getColor(tempColor);
+                int id = Integer.parseInt(rs.getString("id"));
+                double eu = Double.parseDouble(rs.getString("eu"));
+                double us = Double.parseDouble(rs.getString("us"));
+                double uk = Double.parseDouble(rs.getString("uk"));
+                double cm = Double.parseDouble(rs.getString("cm"));
 
-                String tempSize = rs.getInt("eu");
-                Size size = getSize(tempSize);
-
-                String tempBrand = rs.getString("brand_name");
-                Brand brand = Brand.getBrand(tempBrand);
-
-                int stock = Integer.parseInt( rs.getString("stock"));
-
-                products.add(new Product(productName,priceSek,color,size,brand, stock));
+                sizes.add(new Size(id,eu, us,uk,cm));
             }
 
 
@@ -108,8 +99,8 @@ public class Database extends Credentials {
                 String tempColor = rs.getString("color");
                 Color color = Color.getColor(tempColor);
 
-                String tempSize = rs.getInt("eu");
-                Size size = getSize(tempSize);
+                double tempSize = rs.getInt("eu");
+                Size size = Size.getSize(tempSize);
 
                 String tempBrand = rs.getString("brand_name");
                 Brand brand = Brand.getBrand(tempBrand);
