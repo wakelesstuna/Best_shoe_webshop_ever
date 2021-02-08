@@ -4,6 +4,7 @@ import shoeWebshop.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.*;
 
 
 public class Database extends Credentials {
