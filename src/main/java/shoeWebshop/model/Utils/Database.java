@@ -359,8 +359,6 @@ public class Database extends Credentials {
 
                 colors.add(new Color(id, color));
             }
-
-
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
@@ -407,7 +405,7 @@ public class Database extends Credentials {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
-                Color color = Color.getColor(tempColor);
+                Color color = Color.getColor(rs.getInt("fk_color_id"));
 
                 double tempSize = rs.getInt("eu");
                 Size size = Size.getSize(tempSize);
