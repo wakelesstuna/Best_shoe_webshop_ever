@@ -49,8 +49,8 @@ public class Customer {
 
 
     }
-    public static Customer getCustomer(int c){
-        return Database.getAllCustomers().stream().filter(b -> b.equals(c)).map(b -> new Customer(b.id, b.firstName, b.lastName, b.phoneNumber, b.email, b.password, b.ssn, b.Address, b.city)).findFirst().orElse(null);
+    public static Customer getCustomer(int id){
+        return Database.getAllCustomers().stream().filter(b -> b.id==id).map(b -> new Customer(b.id, b.firstName, b.lastName, b.phoneNumber, b.email, b.password, b.ssn, b.Address, b.city)).findFirst().orElse(null);
 
     }
 }

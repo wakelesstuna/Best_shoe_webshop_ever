@@ -35,8 +35,8 @@ public class City {
         this.cityName = cityName;
     }
 
-    public static City getCity(String c){
-        return Database.getCitys().stream().filter(b -> b.equals(c)).map(b -> new City(b.id, c)).findFirst().orElse(null);
+    public static City getCity(int id){
+        return Database.getCitys().stream().filter(b -> b.id==id).map(b -> new City(b.id, b.cityName)).findFirst().orElse(null);
 
     }
 }

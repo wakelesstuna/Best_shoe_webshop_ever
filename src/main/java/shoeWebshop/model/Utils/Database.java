@@ -105,14 +105,13 @@ public class Database extends Credentials {
                 String password = rs.getString("password");
                 String socialSecurityNumber = rs.getString("social_security_number");
                 String address = rs.getString("address");
-                String tempCity = rs.getString("city_name");
-                City city = City.getCity(tempCity);
+                City city = City.getCity(rs.getInt("fk_city_id"));
 
                 customers.add(new Customer(id, firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
             }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
         return customers;
     }
@@ -410,17 +409,11 @@ public class Database extends Credentials {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
-                String tempColor = rs.getString("color");
-                Color color = Color.getColor(tempColor);
 
-                double tempSize = rs.getInt("eu");
-                Size size = Size.getSize(tempSize);
-
-                String tempBrand = rs.getString("brand_name");
-                Brand brand = Brand.getBrand(tempBrand);
-
+                Color color = Color.getColor(rs.getInt("fk_color_id"));
+                Size size = Size.getSize(rs.getInt("fk_size_id"));
+                Brand brand = Brand.getBrand(rs.getInt("fk_brand_id"));
                 int stock = Integer.parseInt(rs.getString("stock"));
-
                 products.add(new Product(id, productName, priceSek, color, size, brand, stock));
             }
 
