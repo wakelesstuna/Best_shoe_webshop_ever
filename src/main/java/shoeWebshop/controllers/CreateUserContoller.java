@@ -1,15 +1,19 @@
 package shoeWebshop.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import shoeWebshop.model.Customer;
-import shoeWebshop.model.Utils.SendEmail;
+import shoeWebshop.model.City;
+import shoeWebshop.model.Utils.Database;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class CreateUserContoller implements Initializable {
 
@@ -41,12 +45,19 @@ public class CreateUserContoller implements Initializable {
     private TextField city;
 
     @FXML
+    private ComboBox cityBox;
+
+    @FXML
     private TextField password;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        setMaxTextFieldCount(socialSecurityNumber,10);
+        setMaxTextFieldCount(phoneNumber,10);
+        setMaxTextFieldCount(zipCode,5);
+        fillComboBox(cityBox);
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
@@ -62,14 +73,18 @@ public class CreateUserContoller implements Initializable {
         String customerPhoneNumber = phoneNumber.getText();
         String customerAddress = Address.getText();
         int customerZipCode = Integer.parseInt(zipCode.getText());
-        String customerCity = city.getText();
+
+        String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
-        SendEmail.sendCreateUserMail(customerEmail, "New Customer", customerFirstName + " " + customerLastName, customerPassword);
+
+        System.out.println("City: " + customerCity);
+
+        Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
 
         eraseAllTextFields();
-        FxmlUtils.showMessage(null,null,"user created!", Alert.AlertType.INFORMATION);
 
-
+        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.showMessage("Logg in", "Please logg in to \nstart shopping", null, Alert.AlertType.INFORMATION);
     }
 
     public void eraseAllTextFields(){
@@ -80,7 +95,7 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setText("");
         Address.setText("");
         zipCode.setText("");
-        city.setText("");
+        //city.setText("");
         password.setText("");
 
         firstName.setPromptText("first name");
@@ -90,13 +105,27 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setPromptText("phone number");
         Address.setPromptText("address");
         zipCode.setPromptText("zip code");
-        city.setPromptText("city");
+        //city.setPromptText("city");
         password.setPromptText("password");
     }
 
-    private void buildCreateUserMessage(){
-
+    public void setMaxTextFieldCount(TextField textField, int maxLength){
+        textField.setOnKeyTyped(t -> {
+            if (textField.getText().length() > maxLength) {
+                int pos = textField.getCaretPosition();
+                textField.setText(textField.getText(0, maxLength));
+                textField.positionCaret(pos);
+            }
+        });
     }
+
+    public void fillComboBox(ComboBox<String> comboBox){
+        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCountyName).collect(Collectors.toList()));
+        comboBox.setItems(list);
+    }
+
+
+    //---- Nav Links ----\\
 
     public void changeToHomeView(){
         FxmlUtils.changeScenes(FxmlUtils.homeView());
@@ -118,7 +147,8 @@ public class CreateUserContoller implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        FxmlUtils.whoIsLoggedIn = null;
+        loggedIn.setText("");
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 }

@@ -1,5 +1,7 @@
 package shoeWebshop.model.Utils;
 
+import javafx.scene.control.Alert;
+import shoeWebshop.controllers.FxmlUtils;
 import shoeWebshop.model.*;
 
 import java.util.ArrayList;
@@ -7,28 +9,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.sql.*;
 
+import static shoeWebshop.model.Utils.Credentials.USER.*;
 
 public class Database extends Credentials {
-
-    static final String DB_NAME = "sql_shoe_webshop";
-    static final String CONNECTION_STRING = "jdbc:mysql://localhost:3306/";
-    static final String USER_NAME = "root";
-    static final String PASSWORD = "Jedi";
 
     private static Connection connection;
 
     public static void main(String[] args) {
-        Database pro = new Database();
-        pro.createConnection();
-        pro.getAllCustomers();
-        pro.getAllProducts();
-        //pro.writeAllInfo(customers);
-        //pro.writeAllInfo(products);
+        Credentials c = new Credentials();
+        getAllCustomers().forEach(System.out::println);
     }
 
     public static void createConnection() {
         try {
-            connection = DriverManager.getConnection(CONNECTION_STRING + DB_NAME, USER_NAME, PASSWORD);
+            connection = DriverManager.getConnection(CONNECTION_STRING.toString() + DATABASE_NAME.toString(), DATABASE_USERNAME.toString(), DATABASE_PASSWORD.toString());
             System.out.println("DataBase connection Success");
 
         } catch (SQLException e) {
@@ -36,9 +30,69 @@ public class Database extends Credentials {
         }
     }
 
-    public static List<Customer> getAllCustomers() {
+    public static boolean isAuthorizeLogin(String userName, String password) {
         createConnection();
+        try {
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer JOIN city ON city.id = customer.fk_city_id WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?");
+            stmt.setString(1, userName);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                FxmlUtils.showMessage("Logged in", "Logged in", "Logged in sucsses", Alert.AlertType.INFORMATION);
+                FxmlUtils.isLoggedIn = true;
+                createLoggedInCustomer(rs);
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        FxmlUtils.showMessage("Warning", "Not logged in", "Wrong username or password", Alert.AlertType.ERROR);
+        return false;
+    }
+
+    private static void createLoggedInCustomer(ResultSet rs) throws SQLException {
+        FxmlUtils.whoIsLoggedIn = new Customer(rs.getInt(1),rs.getString("first_name"),
+                rs.getString("last_name"),
+                rs.getInt("phone_number"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("social_security_number"),
+                rs.getString("address"),
+                new City(rs.getInt(12), rs.getString(13), rs.getInt(14)));
+        // TODO: 2021-02-09 Lägg till så man får rätt city, hämta id, namn, och zip code
+        System.out.println(FxmlUtils.whoIsLoggedIn);
+    }
+
+    public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address, String city, int zipCode) {
+        createConnection();
+        try {
+            if (getAllCustomers().stream().anyMatch(e -> e.getEmail().equals(email))) {
+                FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
+            } else {
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?,(SELECT id FROM city WHERE city.city_name = '" + city + "'))");
+                stmt.setString(1, firstName);
+                stmt.setString(2, lastName);
+                stmt.setString(3, phoneNumber);
+                stmt.setString(4, email);
+                stmt.setString(5, password);
+                stmt.setString(6, ssn);
+                stmt.setString(7, address);
+
+                stmt.execute();
+
+                SendEmail.sendCreateUserMail(email, "New Customer", firstName + " " + lastName, password);
+                FxmlUtils.showMessage("New customer", "Welcome!", "We are so glad that you have join us Mr/Mrs " + firstName, Alert.AlertType.INFORMATION);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
+        createConnection();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
@@ -61,6 +115,43 @@ public class Database extends Credentials {
             throwables.printStackTrace();
         }
         return customers;
+        return customers;
+    }
+
+    public static void createNewReview(Product product, int rating, String review) {
+        createConnection();
+        try {
+            System.out.println(product.getId() + " " +  FxmlUtils.whoIsLoggedIn.getId() + " " + review);
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (?,?,1,?)");
+            // (SELECT id FROM rating WHERE rating.rating_number = " + rating + ")
+            stmt.setInt(1, product.getId());
+            stmt.setInt(2, FxmlUtils.whoIsLoggedIn.getId());
+            stmt.setString(3,review);
+            stmt.execute();
+
+            FxmlUtils.showMessage("Review", "Thank you for you're review", null, Alert.AlertType.INFORMATION);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static List<City> getAllCities() {
+        List<City> cities = new ArrayList<>();
+        createConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM city;");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String cityName = rs.getString("city_name");
+                int zipNumber = rs.getInt("zip_code");
+
+                cities.add(new City(id, cityName, zipNumber));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return cities;
     }
 
     public static List<Size> getSizes() {
@@ -316,7 +407,7 @@ public class Database extends Credentials {
                     "JOIN size ON product.fk_size_id = size.id " +
                     "JOIN brand ON product.fk_brand_id = brand.id");
 
-            while (rs.next()) {
+            while (rs.next()){
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
@@ -347,6 +438,4 @@ public class Database extends Credentials {
             count++;
         }
     }
-
-
 }

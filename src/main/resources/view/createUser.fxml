@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -153,12 +154,12 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Zip code:">
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="City:">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </VBox.margin>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="City:">
+                              <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" styleClass="create-user-text" text="Zip code:">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </VBox.margin>
@@ -202,12 +203,12 @@
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </VBox.margin>
                               </TextField>
-                              <TextField fx:id="zipCode" prefHeight="27.0" prefWidth="254.0">
+                              <ComboBox fx:id="cityBox" prefHeight="25.0" prefWidth="254.0" promptText="Select City">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </VBox.margin>
-                              </TextField>
-                              <TextField fx:id="city" prefHeight="27.0" prefWidth="254.0">
+                              </ComboBox>
+                              <TextField fx:id="zipCode" prefHeight="27.0" prefWidth="254.0">
                                  <VBox.margin>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </VBox.margin>

@@ -25,6 +25,15 @@ public class Customer {
         this.city = city;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getEmail() {return email;}
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
     @Override
     public String toString() {
