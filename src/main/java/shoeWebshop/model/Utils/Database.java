@@ -141,6 +141,7 @@ public class Database extends Credentials {
         }
         return productCategories;
     }
+
     public static List<Rate> getRates() {
         createConnection();
         List<Rate> ratings = new ArrayList<>();
@@ -162,6 +163,39 @@ public class Database extends Credentials {
         }
         return ratings;
     }
+
+    public static List<ProductRate> getProductRatings() {
+        createConnection();
+        List<ProductRate> productRatings = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM product_review");
+
+            while (rs.next()) {
+                int id = (rs.getInt("id"));
+
+                int product_id = (rs.getInt("fk_product_id"));
+                Product productId= Product.getProduct(product_id);
+
+                int cId = (rs.getInt("fk_customer_id"));
+                Customer customer = Customer.getCustomer(cId);
+
+                int rId = (rs.getInt("fk_rating_id"));
+                Rate rating = Rate.getRatings(rId);
+
+                String review = (rs.getString("review"));
+
+
+                productRatings.add(new ProductRate(id, productId, customer,rating, review  ));
+
+            }
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return productRatings;
+    }
+
 
     public static List<Brand> getBrands() {
         List<Brand> brands = new ArrayList<>();

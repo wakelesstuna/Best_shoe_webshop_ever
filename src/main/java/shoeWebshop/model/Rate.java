@@ -1,6 +1,8 @@
 package shoeWebshop.model;
 
 
+import shoeWebshop.model.Utils.Database;
+
 public class Rate {
     int id;
     String rateText;
@@ -10,5 +12,10 @@ public class Rate {
         this.id = id;
         this.rateText = ratingText;
         this.rateNumber = ratingNumber;
+    }
+
+    public static Rate getRatings(int c){
+        return Database.getRates().stream().filter(b -> b.equals(c)).map(b -> new Rate(b.id, b.rateText, b.rateNumber)).findFirst().orElse(null);
+
     }
 }
