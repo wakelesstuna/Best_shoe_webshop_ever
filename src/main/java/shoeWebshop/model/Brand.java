@@ -10,8 +10,8 @@ public class Brand {
         this.brandName = brandName;
     }
     
-    public static Brand getBrand(String c){
-        return Database.getBrands().stream().filter(b -> b.equals(c)).map(b -> new Brand(b.id, c)).findFirst().orElse(null);
+    public static Brand getBrand(int c){
+        return Database.getBrands().stream().filter(b -> b.id==c).map(b -> new Brand(b.id, b.brandName)).findFirst().orElse(null);
 
     }
 }

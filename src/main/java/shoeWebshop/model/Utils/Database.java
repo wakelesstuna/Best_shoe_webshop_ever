@@ -412,15 +412,10 @@ public class Database extends Credentials {
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
                 Color color = Color.getColor(tempColor);
-
                 double tempSize = rs.getInt("eu");
                 Size size = Size.getSize(tempSize);
-
-                String tempBrand = rs.getString("brand_name");
-                Brand brand = Brand.getBrand(tempBrand);
-
+                Brand brand = Brand.getBrand(rs.getInt("fk_brand_id"));
                 int stock = Integer.parseInt(rs.getString("stock"));
-
                 products.add(new Product(id, productName, priceSek, color, size, brand, stock));
             }
 
