@@ -74,8 +74,12 @@ public class CreateUserContoller implements Initializable {
         String customerAddress = Address.getText();
         int customerZipCode = Integer.parseInt(zipCode.getText());
         // String customerCity = city.getText();
-        String customerCity = cityBox.getSelectionModel().toString();
+
+        // TODO: 2021-02-09 get value from box!
+        String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
+
+        System.out.println("City: " + customerCity);
 
         Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
 
@@ -93,7 +97,7 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setText("");
         Address.setText("");
         zipCode.setText("");
-        city.setText("");
+        //city.setText("");
         password.setText("");
 
         firstName.setPromptText("first name");
@@ -103,7 +107,7 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setPromptText("phone number");
         Address.setPromptText("address");
         zipCode.setPromptText("zip code");
-        city.setPromptText("city");
+        //city.setPromptText("city");
         password.setPromptText("password");
     }
 

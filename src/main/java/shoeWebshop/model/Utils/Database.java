@@ -40,8 +40,8 @@ public class Database extends Credentials {
     public static boolean isAuthorizeLogin(String userName, String password) {
         createConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.password = ?");
-            //PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.aes_decrypt(password,UNHEX(SHA2(" + DECRYPT_KEY + "," + DECRYPT_VALUE + "))) = ?");
+            // PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.password = ?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?");
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
@@ -76,7 +76,7 @@ public class Database extends Credentials {
             if (getAllCustomers().stream().anyMatch(e -> e.getEmail().equals(email))) {
                 FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
             } else {
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,?,?,?,(SELECT id FROM city WHERE city_name = '"+ city +"'))");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY +"',"+ DECRYPT_VALUE +"))),?,?,(SELECT id FROM city WHERE city.city_name = '"+ city +"'))");
                 stmt.setString(1, firstName);
                 stmt.setString(2, lastName);
                 stmt.setString(3, phoneNumber);
@@ -103,6 +103,7 @@ public class Database extends Credentials {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
             while (rs.next()) {
+                // TODO: 2021-02-09 lägg till customers id
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 int phoneNumber = rs.getInt("phone_number");
@@ -136,7 +137,6 @@ public class Database extends Credentials {
 
                 cities.add(new City(id,cityName, zipNumber));
             }
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
