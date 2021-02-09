@@ -6,5 +6,10 @@ public class Orders {
     int id;
     LocalDate date;
     //tiden saknas här
-    Customer customerId;
+    Customer customer;
+
+    public Orders(int id, Customer customer) {
+        this.id = id;
+        this.customer = customer;
+    }
 }

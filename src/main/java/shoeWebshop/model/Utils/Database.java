@@ -36,13 +36,14 @@ public class Database extends Credentials {
         }
     }
 
-    public List<Customer> getAllCustomers() {
+    public static List<Customer> getAllCustomers() {
         createConnection();
         List<Customer> customers = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
             while (rs.next()) {
+                int id = Integer.parseInt(rs.getString("id"));
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 int phoneNumber = rs.getInt("phone_number");
@@ -53,7 +54,7 @@ public class Database extends Credentials {
                 String tempCity = rs.getString("city_name");
                 City city = City.getCity(tempCity);
 
-                customers.add(new Customer(firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
+                customers.add(new Customer(id, firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
             }
 
         } catch (SQLException throwables) {
@@ -167,6 +168,31 @@ public class Database extends Credentials {
             throwable.printStackTrace();
         }
         return colors;
+    }
+    public static List<Orders> getOrders() {
+        List<Orders> orders = new ArrayList<>();
+        createConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM orders JOIN customer ON orders.fk_customer_id = costumer.id");
+
+            while (rs.next()) {
+                int id = (rs.getInt("id"));
+                //String color = (rs.getString("date"));
+                // todo: lös hur man läser in datumet rätt
+
+                int cId = (rs.getInt("fk_customer_id"));
+                Customer customer = Customer.getCustomer(cId);
+
+
+                orders.add(new Orders(id, customer));
+            }
+
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return orders;
     }
 
     public  List<Product> getAllProducts() {

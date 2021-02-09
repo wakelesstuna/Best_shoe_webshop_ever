@@ -1,5 +1,7 @@
 package shoeWebshop.model;
 
+import shoeWebshop.model.Utils.Database;
+
 public class Customer {
     int id;
     String firstName;
@@ -11,7 +13,8 @@ public class Customer {
     String Address;
     City city;
 
-    public Customer(String firstName, String lastName, int phoneNumber, String email, String password, String socialSecurityNumber, String address, City city) {
+    public Customer(int id, String firstName, String lastName, int phoneNumber, String email, String password, String socialSecurityNumber, String address, City city) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
@@ -21,6 +24,7 @@ public class Customer {
         this.Address = address;
         this.city = city;
     }
+
 
     @Override
     public String toString() {
@@ -35,4 +39,9 @@ public class Customer {
                 ", city='" + city + '\'';
 
 
-}}
+    }
+    public static Customer getCustomer(int c){
+        return Database.getAllCustomers().stream().filter(b -> b.equals(c)).map(b -> new Customer(b.id, b.firstName, b.lastName, b.phoneNumber, b.email, b.password, b.ssn, b.Address, b.city)).findFirst().orElse(null);
+
+    }
+}
