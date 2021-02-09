@@ -117,6 +117,31 @@ public class Database extends Credentials {
         return ordersProducts;
     }
 
+    public static List<ProductCategory> getProductCategory() {
+        createConnection();
+        List<ProductCategory> productCategories = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM product_category");
+
+            while (rs.next()) {
+                int id = (rs.getInt("id"));
+                int cId = (rs.getInt("fk_category_id"));
+                Category categoryId = Category.getCategory(cId);
+
+                int product_id = (rs.getInt("fk_product_id"));
+                Product productId= Product.getProduct(product_id);
+
+                productCategories.add(new ProductCategory(id, categoryId, productId));
+
+            }
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return productCategories;
+    }
+
     public static List<Brand> getBrands() {
         List<Brand> brands = new ArrayList<>();
         createConnection();
@@ -138,7 +163,7 @@ public class Database extends Credentials {
         return brands;
     }
 
-    public List<City> getCitys() {
+    public static List<City> getCitys() {
         createConnection();
         List<City> citys = new ArrayList<>();
         try {
@@ -159,7 +184,7 @@ public class Database extends Credentials {
         return citys;
     }
 
-    public List<Category> getCategorys() {
+    public static List<Category> getCategorys() {
         List<Category> category = new ArrayList<>();
         createConnection();
         try {
