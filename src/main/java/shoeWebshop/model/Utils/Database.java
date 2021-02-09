@@ -141,6 +141,27 @@ public class Database extends Credentials {
         }
         return productCategories;
     }
+    public static List<Rate> getRates() {
+        createConnection();
+        List<Rate> ratings = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM rating");
+
+            while (rs.next()) {
+                int id = (rs.getInt("id"));
+                String ratingText = (rs.getString("rating_text"));
+                int ratingNumber = (rs.getInt("rating_number"));
+
+                ratings.add(new Rate(id, ratingText, ratingNumber));
+
+            }
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return ratings;
+    }
 
     public static List<Brand> getBrands() {
         List<Brand> brands = new ArrayList<>();
