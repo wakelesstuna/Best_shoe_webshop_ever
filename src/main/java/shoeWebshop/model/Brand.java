@@ -11,7 +11,7 @@ public class Brand {
     }
     
     public static Brand getBrand(String c){
-        return Database.brands.stream().filter(b -> b.equals(c)).map(b -> new Brand(b.id, c)).findFirst().orElse(null);
+        return Database.getBrands().stream().filter(b -> b.equals(c)).map(b -> new Brand(b.id, c)).findFirst().orElse(null);
 
     }
 }

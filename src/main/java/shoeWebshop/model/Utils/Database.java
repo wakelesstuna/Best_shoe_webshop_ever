@@ -17,24 +17,16 @@ public class Database extends Credentials {
 
     private static Connection connection;
 
-    public static List<Customer> customers = new ArrayList<>();
-    public static List<Product> products = new ArrayList<>();
-    public static List<Brand> brands = new ArrayList<>();
-    public static List<Category> category = new ArrayList<>();
-    public static List<Color> colors = new ArrayList<>();
-    public static List<Size> sizes = new ArrayList<>();
-    public static List<City> citys = new ArrayList<>();
-
     public static void main(String[] args) {
         Database pro = new Database();
         pro.createConnection();
         pro.getAllCustomers();
         pro.getAllProducts();
-        pro.writeAllInfo(customers);
-        pro.writeAllInfo(products);
+        //pro.writeAllInfo(customers);
+        //pro.writeAllInfo(products);
     }
 
-    public void createConnection() {
+    public static void createConnection() {
         try {
             connection = DriverManager.getConnection(CONNECTION_STRING + DB_NAME, USER_NAME, PASSWORD);
             System.out.println("DataBase connection Success");
@@ -44,11 +36,13 @@ public class Database extends Credentials {
         }
     }
 
-    public void getAllCustomers(){
+    public List<Customer> getAllCustomers() {
+        createConnection();
+        List<Customer> customers = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
-            while (rs.next()){
+            while (rs.next()) {
                 String firstName = rs.getString("first_name");
                 String lastName = rs.getString("last_name");
                 int phoneNumber = rs.getInt("phone_number");
@@ -59,72 +53,88 @@ public class Database extends Credentials {
                 String tempCity = rs.getString("city_name");
                 City city = City.getCity(tempCity);
 
-                customers.add(new Customer(firstName,lastName,phoneNumber,email,password,socialSecurityNumber,address,city));
+                customers.add(new Customer(firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
             }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return customers;
+    }
 
-    }    public void getAllSizes(){
+    public static List<Size> getSizes() {
+        createConnection();
+        List<Size> sizes = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM size ");
 
-            while (rs.next()){
+            while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
                 double eu = Double.parseDouble(rs.getString("eu"));
                 double us = Double.parseDouble(rs.getString("us"));
                 double uk = Double.parseDouble(rs.getString("uk"));
                 double cm = Double.parseDouble(rs.getString("cm"));
+                sizes.add(new Size(id, eu, us, uk, cm));
 
-                sizes.add(new Size(id,eu, us,uk,cm));
+            }
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return sizes;
+    }
+
+    public static List<Brand> getBrands() {
+        List<Brand> brands = new ArrayList<>();
+        createConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM brand ");
+
+            while (rs.next()) {
+                int id = Integer.parseInt(rs.getString("id"));
+                String brand = (rs.getString("brand_name"));
+
+                brands.add(new Brand(id, brand));
             }
 
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
-    }   public void getBrands(){
+        return brands;
+    }
+
+    public List<City> getCitys() {
+        createConnection();
+        List<City> citys = new ArrayList<>();
         try {
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM brand ");
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM city ");
 
-        while (rs.next()){
-            int id = Integer.parseInt(rs.getString("id"));
-            String brand = (rs.getString("brand_name"));
+            while (rs.next()) {
+                int id = Integer.parseInt(rs.getString("id"));
+                String tempCity = (rs.getString("city_name"));
 
-            brands.add(new Brand(id,brand));
+                citys.add(new City(id, tempCity));
+            }
+
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
-
-
-    } catch (SQLException throwable) {
-        throwable.printStackTrace();
+        return citys;
     }
-}
-    public void getCitys(){
-    try {
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM city ");
 
-        while (rs.next()){
-            int id = Integer.parseInt(rs.getString("id"));
-            String tempCity = (rs.getString("city_name"));
-
-            citys.add(new City(id, tempCity));
-        }
-
-
-    } catch (SQLException throwable) {
-        throwable.printStackTrace();
-    }
-}
-    public void getCategorys(){
+    public List<Category> getCategorys() {
+        List<Category> category = new ArrayList<>();
+        createConnection();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM category ");
 
-            while (rs.next()){
+            while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
                 String categoryName = (rs.getString("category_name"));
 
@@ -135,27 +145,33 @@ public class Database extends Credentials {
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
+        return category;
     }
 
-    public void getColors(){
-    try {
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM color ");
+    public static List<Color> getColors() {
+        List<Color> colors = new ArrayList<>();
+        createConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM color ");
 
-        while (rs.next()){
-            int id = Integer.parseInt(rs.getString("id"));
-            String color = (rs.getString("color"));
+            while (rs.next()) {
+                int id = Integer.parseInt(rs.getString("id"));
+                String color = (rs.getString("color"));
 
-            colors.add(new Color(id,color));
+                colors.add(new Color(id, color));
+            }
+
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
-
-
-    } catch (SQLException throwable) {
-        throwable.printStackTrace();
+        return colors;
     }
-}
 
-    public void getAllProducts(){
+    public  List<Product> getAllProducts() {
+        createConnection();
+        List<Product> products = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM product " +
@@ -163,7 +179,7 @@ public class Database extends Credentials {
                     "JOIN size ON product.fk_size_id = size.id " +
                     "JOIN brand ON product.fk_brand_id = brand.id");
 
-            while (rs.next()){
+            while (rs.next()) {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
@@ -175,20 +191,21 @@ public class Database extends Credentials {
                 String tempBrand = rs.getString("brand_name");
                 Brand brand = Brand.getBrand(tempBrand);
 
-                int stock = Integer.parseInt( rs.getString("stock"));
+                int stock = Integer.parseInt(rs.getString("stock"));
 
-                products.add(new Product(productName,priceSek,color,size,brand, stock));
+                products.add(new Product(productName, priceSek, color, size, brand, stock));
             }
 
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
+        return products;
     }
 
-    public void writeAllInfo(List<?> list){
+    public void writeAllInfo(List<?> list) {
         int count = 1;
-        for (Object e:list) {
+        for (Object e : list) {
             System.out.println(count + ": " + e);
             count++;
         }
