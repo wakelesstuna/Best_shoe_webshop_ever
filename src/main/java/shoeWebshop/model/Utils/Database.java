@@ -106,13 +106,13 @@ public class Database extends Credentials {
                 String socialSecurityNumber = rs.getString("social_security_number");
                 String address = rs.getString("address");
                 String tempCity = rs.getString("city_name");
-                City city = City.getCity(tempCity);
+                City city = City.getCity(rs.getInt("fk_city_id"));
 
                 customers.add(new Customer(id, firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
             }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
         }
         return customers;
     }
