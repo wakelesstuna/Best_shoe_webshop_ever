@@ -421,7 +421,7 @@ public class Database extends Credentials {
 
                 int stock = Integer.parseInt(rs.getString("stock"));
 
-                products.add(new Product(productName, priceSek, color, size, brand, stock));
+                products.add(new Product(id productName, priceSek, color, size, brand, stock));
             }
 
 
