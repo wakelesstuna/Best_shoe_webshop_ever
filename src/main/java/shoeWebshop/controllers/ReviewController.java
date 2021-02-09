@@ -75,7 +75,7 @@ public class ReviewController implements Initializable {
         reviewThree.setToggleGroup(reviewGroup);
         reviewFour.setToggleGroup(reviewGroup);
         reviewFive.setToggleGroup(reviewGroup);
-        fillReviewTable(Main.list);
+        fillReviewTable(Database.getAllProducts());
 
         if (FxmlUtils.isLoggedIn) {
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());

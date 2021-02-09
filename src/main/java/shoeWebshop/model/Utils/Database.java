@@ -175,10 +175,6 @@ public class Database extends Credentials {
         }
         return sizes;
     }
-    Orders ordersId;
-    Product productId;
-    double productPrice; // denna ska ta värdet ifrån product klassen när den skapas
-    int quantity;
 
     public static List<OrdersProduct> getOrderProduct() {
         createConnection();
@@ -420,6 +416,7 @@ public class Database extends Credentials {
                 Brand brand = Brand.getBrand(tempBrand);
 
                 int stock = Integer.parseInt(rs.getString("stock"));
+                System.out.println(id + " " + productName + " " + priceSek + " " + color + " " + size +" " + brand + " "+ stock);
 
                 products.add(new Product(id, productName, priceSek, color, size, brand, stock));
             }
