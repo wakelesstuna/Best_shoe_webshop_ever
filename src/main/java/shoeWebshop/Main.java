@@ -35,7 +35,7 @@ public class Main extends Application {
         });
         Credentials c = new Credentials();
         FxmlUtils.setCurrentStage(primaryStage);
-        Database.getAllCustomers().forEach(System.out::println);
+        //Database.getAllCustomers().forEach(System.out::println);
 
 
         //list.add(new Product("runner",399, 3, "blue", 36, "Nike"));

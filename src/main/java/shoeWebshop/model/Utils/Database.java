@@ -120,9 +120,7 @@ public class Database extends Credentials {
     public static void createNewReview(Product product, int rating, String review) {
         createConnection();
         try {
-            System.out.println(product.getId() + " " +  FxmlUtils.whoIsLoggedIn.getId() + " " + review);
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (?,?,1,?)");
-            // (SELECT id FROM rating WHERE rating.rating_number = " + rating + ")
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (?,?,(SELECT id FROM rating WHERE rating.rating_number = '" + rating + "'),?)");
             stmt.setInt(1, product.getId());
             stmt.setInt(2, FxmlUtils.whoIsLoggedIn.getId());
             stmt.setString(3,review);
@@ -404,6 +402,8 @@ public class Database extends Credentials {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
+
+            /*
                 String tempColor = rs.getString("color");
                 Color color = Color.getColor(rs.getInt("fk_color_id"));
 
@@ -414,9 +414,19 @@ public class Database extends Credentials {
                 Brand brand = Brand.getBrand(tempBrand);
 
                 int stock = Integer.parseInt(rs.getString("stock"));
-                System.out.println(id + " " + productName + " " + priceSek + " " + color + " " + size +" " + brand + " "+ stock);
 
-                products.add(new Product(id, productName, priceSek, color, size, brand, stock));
+                System.out.println(id + " " + productName + " " + priceSek + " " + color + " " + size +" " + brand + " "+ stock);
+            */
+                int stock = Integer.parseInt(rs.getString("stock"));
+                //products.add(new Product(id, productName, priceSek, color, size, brand, stock));
+
+                Color color2 = new Color(rs.getInt("fk_color_id"),rs.getString("color"));
+                Size size2 = new Size(rs.getInt("fk_size_id"),rs.getDouble("eu"));
+                Brand brand2 = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
+
+                System.out.println(id + " " + productName + " " + priceSek + " " + color2 + " " + size2 +" " + brand2 + " "+ stock);
+
+                products.add(new Product(id, productName, priceSek, color2, size2, brand2, stock));
             }
 
 

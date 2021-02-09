@@ -1,5 +1,7 @@
 package shoeWebshop.controllers;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -103,14 +105,10 @@ public class ReviewController implements Initializable {
     }
 
     public void leaveReview(){
-        // TODO: 2021-02-03 send review to database
-
         Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
-        int rating = 1; //(int) reviewGroup.getSelectedToggle().getUserData();
-        System.out.println(selectedProduct.getId());
-        System.out.println(reviewText.getText());
+        int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 
-        Database.createNewReview(selectedProduct,rating,reviewText.getText());
+        Database.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
     }
 
     public void fillReviewTable(List<Product> list) {
