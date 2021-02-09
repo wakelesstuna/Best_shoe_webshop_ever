@@ -19,12 +19,12 @@ public class Database extends Credentials {
     private static List<Brand> brand = new ArrayList<>();
     private static List<Category> category = new ArrayList<>();
     private static List<Color> color = new ArrayList<>();
+    private static List<City> citys = new ArrayList<>();
 
     // for testing database methods
     public static void main(String[] args) {
-        Database dao = new Database();
-        dao.getAllCustomers();
-        dao.writeAllInfo(customers);
+        Credentials c = new Credentials();
+        getAllCustomers().forEach(System.out::println);
     }
 
     public static void createConnection() {
@@ -41,6 +41,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.password = ?");
+            //PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer WHERE customer.email = ? AND customer.aes_decrypt(password,UNHEX(SHA2(" + DECRYPT_KEY + "," + DECRYPT_VALUE + "))) = ?");
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
@@ -69,14 +70,13 @@ public class Database extends Credentials {
                 new City());
     }
 
-    public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address) {
+    public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address, String city,int zipCode) {
         createConnection();
-        getAllCustomers();
         try {
-            if (customers.stream().anyMatch(e -> e.getEmail().equals(email))) {
+            if (getAllCustomers().stream().anyMatch(e -> e.getEmail().equals(email))) {
                 FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
             } else {
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address) VALUES (?,?,?,?,?,?,?)");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,?,?,?,(SELECT id FROM city WHERE city_name = '"+ city +"'))");
                 stmt.setString(1, firstName);
                 stmt.setString(2, lastName);
                 stmt.setString(3, phoneNumber);
@@ -96,7 +96,8 @@ public class Database extends Credentials {
 
     }
 
-    public static void getAllCustomers() {
+    public static List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
         createConnection();
         try {
             Statement stmt = connection.createStatement();
@@ -109,15 +110,37 @@ public class Database extends Credentials {
                 String password = rs.getString("password");
                 String socialSecurityNumber = rs.getString("social_security_number");
                 String address = rs.getString("address");
-                //City city = rs.getString("city_name");
+                int city_id = rs.getInt(12);
+                String city = rs.getString("city_name");
                 int zipCode = rs.getInt("zip_code");
 
-                customers.add(new Customer(firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, new City()));
+                customers.add(new Customer(firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, new City(city_id,city,zipCode)));
             }
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return customers;
+    }
+
+    public static List<City> getAllCities() {
+        List<City> cities = new ArrayList<>();
+        createConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM city;");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String cityName = rs.getString("city_name");
+                int zipNumber = rs.getInt("zip_code");
+
+                cities.add(new City(id,cityName, zipNumber));
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return cities;
     }
 
     public void getAllProducts() {
@@ -141,7 +164,6 @@ public class Database extends Credentials {
 
                 //products.add(new Product(productName,priceSek,color,sizeEu,sizeUk,sizeUs,sizeCm,brand));
             }
-
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -154,6 +176,4 @@ public class Database extends Credentials {
             count++;
         }
     }
-
-
 }

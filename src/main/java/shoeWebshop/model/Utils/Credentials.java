@@ -12,6 +12,8 @@ public class Credentials {
     private static String databaseName;
     private static String databaseUsername;
     private static String databasePassword;
+    private static String decryptKey;
+    private static String decryptValue;
 
     public Credentials(){
         Properties prop = new Properties();
@@ -26,6 +28,8 @@ public class Credentials {
         databaseName = prop.getProperty("databaseName");
         databaseUsername = prop.getProperty("databaseUser");
         databasePassword = prop.getProperty("databasePassword");
+        decryptKey = prop.getProperty("decryptkey");
+        decryptValue = prop.getProperty("decryptvalue");
     }
 
     public enum USER {
@@ -34,7 +38,9 @@ public class Credentials {
         CONNECTION_STRING(connectionString),
         DATABASE_NAME(databaseName),
         DATABASE_USERNAME(databaseUsername),
-        DATABASE_PASSWORD(databasePassword);
+        DATABASE_PASSWORD(databasePassword),
+        DECRYPT_KEY(decryptKey),
+        DECRYPT_VALUE(decryptValue);
 
         private final String s;
 
@@ -46,6 +52,8 @@ public class Credentials {
         public String toString() {
             return s;
         }
+
+        public Integer toInt() {return Integer.parseInt(s);}
     }
 }
 
