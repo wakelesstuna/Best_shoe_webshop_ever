@@ -73,9 +73,7 @@ public class CreateUserContoller implements Initializable {
         String customerPhoneNumber = phoneNumber.getText();
         String customerAddress = Address.getText();
         int customerZipCode = Integer.parseInt(zipCode.getText());
-        // String customerCity = city.getText();
 
-        // TODO: 2021-02-09 get value from box!
         String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
 

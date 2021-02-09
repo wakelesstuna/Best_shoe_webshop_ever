@@ -38,8 +38,8 @@ public class Main extends Application {
         Database.getAllCustomers().forEach(System.out::println);
 
 
-        list.add(new Product("runner",399, 3, "blue", 36, "Nike"));
-        list.add(new Product("not runner",499, 5, "red", 37, "Nike"));
+        list.add(new Product(1,"runner",399, 3, "blue", 36, "Nike"));
+        list.add(new Product(2,"not runner",499, 5, "red", 37, "Nike"));
     }
 
     public static void main(String[] args) {

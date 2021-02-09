@@ -2,6 +2,7 @@ package shoeWebshop.model;
 
 public class Product {
 
+    int id;
     String productName;
     double priceSek;
     int stock;
@@ -9,14 +10,18 @@ public class Product {
     int size;
     String brand;
 
-    public Product(String productName, double priceSek, int stock, String color, int size, String brand) {
-
+    public Product(int id,String productName, double priceSek, int stock, String color, int size, String brand) {
+        this.id = id;
         this.productName = productName;
         this.priceSek = priceSek;
         this.stock = stock;
         this.color = color;
         this.size = size;
         this.brand = brand;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getProductName() {

@@ -112,13 +112,13 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </HBox>
-      <TableView layoutX="94.0" layoutY="232.0" prefHeight="350.0" prefWidth="506.0" styleClass="box-shadow-light">
+      <TableView fx:id="choseShoeToReview" layoutX="94.0" layoutY="232.0" prefHeight="350.0" prefWidth="506.0" styleClass="box-shadow-light">
          <columns>
-            <TableColumn prefWidth="116.0" text="Model" />
-            <TableColumn prefWidth="94.0" text="Brand" />
-            <TableColumn prefWidth="99.0" text="Price" />
-            <TableColumn prefWidth="76.0" text="Size" />
-            <TableColumn prefWidth="120.0" text="Color" />
+            <TableColumn fx:id="modelCol" prefWidth="116.0" text="Model" />
+            <TableColumn fx:id="brandCol" prefWidth="94.0" text="Brand" />
+            <TableColumn fx:id="priceCol" prefWidth="99.0" text="Price" />
+            <TableColumn fx:id="sizeCol" prefWidth="76.0" text="Size" />
+            <TableColumn fx:id="colorCol" prefWidth="120.0" text="Color" />
          </columns>
       </TableView>
       <Label layoutX="94.0" layoutY="182.0" styleClass="leave-review-text" text="Choose a model to look at reviews or leave a review " />
