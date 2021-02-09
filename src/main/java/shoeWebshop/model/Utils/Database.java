@@ -115,7 +115,6 @@ public class Database extends Credentials {
             throwables.printStackTrace();
         }
         return customers;
-        return customers;
     }
 
     public static void createNewReview(Product product, int rating, String review) {
@@ -408,6 +407,7 @@ public class Database extends Credentials {
                     "JOIN brand ON product.fk_brand_id = brand.id");
 
             while (rs.next()){
+                int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 String tempColor = rs.getString("color");
@@ -421,7 +421,7 @@ public class Database extends Credentials {
 
                 int stock = Integer.parseInt(rs.getString("stock"));
 
-                products.add(new Product(id productName, priceSek, color, size, brand, stock));
+                products.add(new Product(id, productName, priceSek, color, size, brand, stock));
             }
 
 
