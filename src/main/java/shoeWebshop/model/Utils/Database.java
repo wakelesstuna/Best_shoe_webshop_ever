@@ -94,7 +94,6 @@ public class Database extends Credentials {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     public static List<Customer> getAllCustomers() {
