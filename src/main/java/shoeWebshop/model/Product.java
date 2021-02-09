@@ -1,5 +1,7 @@
 package shoeWebshop.model;
 
+import shoeWebshop.model.Utils.Database;
+
 public class Product {
     String productName;
     double priceSek;
@@ -57,4 +59,9 @@ public class Product {
         return brand.brandName;
     }
 
+
+    public static Product getProduct(int c){
+        return Database.getAllProducts().stream().filter(b -> b.equals(c)).map(b -> new Product(b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
+
+    }
 }

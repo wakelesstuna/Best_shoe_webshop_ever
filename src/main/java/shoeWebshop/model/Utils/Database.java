@@ -85,6 +85,37 @@ public class Database extends Credentials {
         }
         return sizes;
     }
+    Orders ordersId;
+    Product productId;
+    double productPrice; // denna ska ta värdet ifrån product klassen när den skapas
+    int quantity;
+
+    public static List<OrdersProduct> getOrderProduct() {
+        createConnection();
+        List<OrdersProduct> ordersProducts = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM orders_product ");
+
+            while (rs.next()) {
+                int id = Integer.parseInt(rs.getString("id"));
+                int orders_id = (rs.getInt("fk_orders_id"));
+                Orders ordersId = getOrders().get(orders_id);
+
+                int product_id = (rs.getInt("fk_product_id"));
+                Product productId= Product.getProduct(product_id);
+
+                double productPrice =(rs.getDouble("product_price"));
+                int quantity = (rs.getInt("quantity"));
+                ordersProducts.add(new OrdersProduct(id, ordersId, productId, productPrice, quantity));
+
+            }
+
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return ordersProducts;
+    }
 
     public static List<Brand> getBrands() {
         List<Brand> brands = new ArrayList<>();
@@ -195,7 +226,7 @@ public class Database extends Credentials {
         return orders;
     }
 
-    public  List<Product> getAllProducts() {
+    public static List<Product> getAllProducts() {
         createConnection();
         List<Product> products = new ArrayList<>();
         try {
