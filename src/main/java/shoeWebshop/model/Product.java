@@ -68,7 +68,7 @@ public class Product {
 
 
     public static Product getProduct(int c){
-        return Database.getAllProducts().stream().filter(b -> b.equals(c)).map(b -> new Product(b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
+        return Database.getAllProducts().stream().filter(b -> b.equals(c)).map(b -> new Product(b.id,b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
 
     }
 }
