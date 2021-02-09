@@ -14,8 +14,8 @@ public class Rate {
         this.rateNumber = ratingNumber;
     }
 
-    public static Rate getRatings(int c){
-        return Database.getRates().stream().filter(b -> b.equals(c)).map(b -> new Rate(b.id, b.rateText, b.rateNumber)).findFirst().orElse(null);
+    public static Rate getRatings(int id){
+        return Database.getRates().stream().filter(b -> b.id== id).map(b -> new Rate(b.id, b.rateText, b.rateNumber)).findFirst().orElse(null);
 
     }
 }
