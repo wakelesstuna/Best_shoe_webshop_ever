@@ -3,9 +3,14 @@ package shoeWebshop.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import shoeWebshop.Main;
+import shoeWebshop.model.Product;
+import shoeWebshop.model.Utils.Database;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class ReviewController implements Initializable {
@@ -15,6 +20,24 @@ public class ReviewController implements Initializable {
 
     @FXML
     private Label leaveReviewText;
+
+    @FXML
+    private TableView<Product> choseShoeToReview;
+
+    @FXML
+    private TableColumn<Product, String> modelCol;
+
+    @FXML
+    private TableColumn<Product, String> brandCol;
+
+    @FXML
+    private TableColumn<Product, Double> priceCol;
+
+    @FXML
+    private TableColumn<Product, Integer> sizeCol;
+
+    @FXML
+    private TableColumn<Product, String> colorCol;
 
     @FXML
     private HBox radioButtonBox;
@@ -42,18 +65,20 @@ public class ReviewController implements Initializable {
 
     String selectedShoe = "runner";
     int reviewScore = 8;
+    ToggleGroup reviewGroup;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ToggleGroup reviewGroup = new ToggleGroup();
+        reviewGroup = new ToggleGroup();
         reviewOne.setToggleGroup(reviewGroup);
         reviewTwo.setToggleGroup(reviewGroup);
         reviewThree.setToggleGroup(reviewGroup);
         reviewFour.setToggleGroup(reviewGroup);
         reviewFive.setToggleGroup(reviewGroup);
+        fillReviewTable(Main.list);
 
         if (FxmlUtils.isLoggedIn) {
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             leaveReviewText.setText("Fill in the form to leave a review");
             radioButtonBox.setDisable(false);
             reviewText.setDisable(false);
@@ -80,8 +105,23 @@ public class ReviewController implements Initializable {
     public void leaveReview(){
         // TODO: 2021-02-03 send review to database
 
-        FxmlUtils.showMessage("Review", "Review sent",
-                null, Alert.AlertType.INFORMATION);
+        Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
+        int rating = 1; //(int) reviewGroup.getSelectedToggle().getUserData();
+        System.out.println(selectedProduct.getId());
+        System.out.println(reviewText.getText());
+
+        Database.createNewReview(selectedProduct,rating,reviewText.getText());
+    }
+
+    public void fillReviewTable(List<Product> list) {
+
+        modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
+        colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
+
+        choseShoeToReview.getItems().setAll(list);
     }
 
 
@@ -109,7 +149,8 @@ public class ReviewController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        loggedIn.setText("");
+        FxmlUtils.whoIsLoggedIn = null;
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 

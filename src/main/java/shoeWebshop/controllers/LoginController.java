@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import shoeWebshop.model.Utils.Database;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,9 +26,6 @@ public class LoginController implements Initializable {
     private Label loginText;
 
 
-    String emailCheck = "oscar";
-    String passwordCheck = "1234";
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginEmail.setPromptText("Email");
@@ -39,25 +37,23 @@ public class LoginController implements Initializable {
         }
     }
 
-
     public void authorizeLogin(){
-        // TODO: 2021-02-03 check with database if email and password is right
 
         if (loginEmail.getText().isEmpty() || loginPassword.getText().isEmpty()){
-            FxmlUtils.showMessage("Input",
-                    "Input","You need to enter a email\nand a password",
-                    Alert.AlertType.ERROR);
-        } else if(loginEmail.getText().equals(emailCheck) && loginPassword.getText().equals(passwordCheck)){
-            loginText.setText("Welcome " + emailCheck);
+
+            FxmlUtils.showMessage("Input", "Input","You need to enter a email\nand a password", Alert.AlertType.ERROR);
+
+        } else if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
+
             FxmlUtils.isLoggedIn = true;
-            FxmlUtils.whoIsLoggedIn = emailCheck;
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+
+            loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             loginEmail.setText("");
             loginPassword.setText("");
+
         }else {
-            FxmlUtils.showMessage("Warning",
-                    "Couldn't find any user","Wrong email or password, try again",
-                    Alert.AlertType.ERROR);
+            FxmlUtils.showMessage("Warning", "Couldn't find any user","Wrong email or password, try again", Alert.AlertType.ERROR);
         }
     }
 
@@ -89,7 +85,8 @@ public class LoginController implements Initializable {
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
-        FxmlUtils.whoIsLoggedIn = "not logged in";
+        loggedIn.setText("");
+        FxmlUtils.whoIsLoggedIn = null;
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
 

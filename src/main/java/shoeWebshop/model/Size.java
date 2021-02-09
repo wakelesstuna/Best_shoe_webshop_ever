@@ -23,7 +23,7 @@ public class Size {
     }
 
     public static Size getSize(double c){
-        return Database.sizes.stream().filter(b -> b.equals(c)).map(b -> new Size(b.id, c)).findFirst().orElse(null);
+        return Database.getSizes().stream().filter(b -> b.equals(c)).map(b -> new Size(b.id, c)).findFirst().orElse(null);
 
     }
 }

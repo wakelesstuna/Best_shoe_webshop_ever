@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.Credentials;
+import shoeWebshop.model.Utils.Database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,11 @@ public class Main extends Application {
         });
         Credentials c = new Credentials();
         FxmlUtils.setCurrentStage(primaryStage);
+        Database.getAllCustomers().forEach(System.out::println);
 
 
-        list.add(new Product("runner",399, 3, "blue", 36, "Nike"));
-        list.add(new Product("not runner",499, 5, "red", 37, "Nike"));
+        //list.add(new Product("runner",399, 3, "blue", 36, "Nike"));
+        //list.add(new Product("not runner",499, 5, "red", 37, "Nike"));
     }
 
     public static void main(String[] args) {

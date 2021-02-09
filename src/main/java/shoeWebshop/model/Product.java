@@ -1,6 +1,10 @@
 package shoeWebshop.model;
 
+import shoeWebshop.model.Utils.Database;
+
 public class Product {
+
+    int id;
     String productName;
     double priceSek;
     Color color;
@@ -8,7 +12,8 @@ public class Product {
     Brand brand;
     int stock;
 
-    public Product(String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
+    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
+        this.id = id;
         this.productName = productName;
         this.priceSek = priceSek;
         this.color = color;
@@ -32,6 +37,10 @@ public class Product {
                 '}';
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getProductName() {
         return productName;
     }
@@ -45,7 +54,7 @@ public class Product {
     }
 
     public String getColor() {
-        return color;
+        return color.color;
     }
 
     public double getSize() {
@@ -57,4 +66,9 @@ public class Product {
         return brand.brandName;
     }
 
+
+    public static Product getProduct(int c){
+        return Database.getAllProducts().stream().filter(b -> b.equals(c)).map(b -> new Product(b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
+
+    }
 }
