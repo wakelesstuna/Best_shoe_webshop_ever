@@ -5,7 +5,6 @@ import shoeWebshop.controllers.FxmlUtils;
 import shoeWebshop.model.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.sql.*;
 
@@ -33,7 +32,7 @@ public class Database extends Credentials {
     public static boolean isAuthorizeLogin(String userName, String password) {
         createConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer JOIN city ON city.id = customer.fk_city_id WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM sql_shoe_webshop.customer JOIN sql_shoe_webshop.city ON city.id = customer.fk_city_id WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?");
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
@@ -41,7 +40,7 @@ public class Database extends Credentials {
             if (rs.next()) {
                 FxmlUtils.showMessage("Logged in", "Logged in", "Logged in sucsses", Alert.AlertType.INFORMATION);
                 FxmlUtils.isLoggedIn = true;
-                createLoggedInCustomer(rs);
+                FxmlUtils.whoIsLoggedIn = createLoggedInCustomer(rs);
                 return true;
             }
         } catch (SQLException e) {
@@ -51,8 +50,8 @@ public class Database extends Credentials {
         return false;
     }
 
-    private static void createLoggedInCustomer(ResultSet rs) throws SQLException {
-        FxmlUtils.whoIsLoggedIn = new Customer(rs.getInt(1),rs.getString("first_name"),
+    private static Customer createLoggedInCustomer(ResultSet rs) throws SQLException {
+         return new Customer(rs.getInt(1),rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getInt("phone_number"),
                 rs.getString("email"),
@@ -60,8 +59,6 @@ public class Database extends Credentials {
                 rs.getString("social_security_number"),
                 rs.getString("address"),
                 new City(rs.getInt(12), rs.getString(13), rs.getInt(14)));
-        // TODO: 2021-02-09 Lägg till så man får rätt city, hämta id, namn, och zip code
-        System.out.println(FxmlUtils.whoIsLoggedIn);
     }
 
     public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address, String city, int zipCode) {
@@ -70,7 +67,7 @@ public class Database extends Credentials {
             if (getAllCustomers().stream().anyMatch(e -> e.getEmail().equals(email))) {
                 FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
             } else {
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?,(SELECT id FROM city WHERE city.city_name = '" + city + "'))");
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO sql_shoe_webshop.customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?,(SELECT id FROM sql_shoe_webshop.city WHERE city.city_name = '" + city + "'))");
                 stmt.setString(1, firstName);
                 stmt.setString(2, lastName);
                 stmt.setString(3, phoneNumber);
@@ -95,7 +92,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.customer JOIN sql_shoe_webshop.city ON customer.fk_city_id = city.id");
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
                 String firstName = rs.getString("first_name");
@@ -120,7 +117,7 @@ public class Database extends Credentials {
     public static void createNewReview(Product product, int rating, String review) {
         createConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (?,?,(SELECT id FROM rating WHERE rating.rating_number = '" + rating + "'),?)");
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO sql_shoe_webshop.product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (?,?,(SELECT id FROM sql_shoe_webshop.rating WHERE rating.rating_number = '" + rating + "'),?)");
             stmt.setInt(1, product.getId());
             stmt.setInt(2, FxmlUtils.whoIsLoggedIn.getId());
             stmt.setString(3,review);
@@ -137,7 +134,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM city;");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.city;");
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String cityName = rs.getString("city_name");
@@ -156,7 +153,7 @@ public class Database extends Credentials {
         List<Size> sizes = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM size ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.size ");
 
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
@@ -179,7 +176,7 @@ public class Database extends Credentials {
         List<OrdersProduct> ordersProducts = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM orders_product ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.orders_product ");
 
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
@@ -206,7 +203,7 @@ public class Database extends Credentials {
         List<ProductCategory> productCategories = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product_category");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product_category");
 
             while (rs.next()) {
                 int id = (rs.getInt("id"));
@@ -231,7 +228,7 @@ public class Database extends Credentials {
         List<Rate> ratings = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM rating");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.rating");
 
             while (rs.next()) {
                 int id = (rs.getInt("id"));
@@ -253,7 +250,7 @@ public class Database extends Credentials {
         List<ProductRate> productRatings = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product_review");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product_review");
 
             while (rs.next()) {
                 int id = (rs.getInt("id"));
@@ -286,7 +283,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM brand ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.brand ");
 
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
@@ -307,7 +304,7 @@ public class Database extends Credentials {
         List<City> citys = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM city ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.city ");
 
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
@@ -328,7 +325,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM category ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.category ");
 
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
@@ -349,7 +346,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM color ");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.color ");
 
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
@@ -367,7 +364,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM orders JOIN customer ON orders.fk_customer_id = costumer.id");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.orders JOIN sql_shoe_webshop.customer ON orders.fk_customer_id = customer.id");
 
             while (rs.next()) {
                 int id = (rs.getInt("id"));
@@ -393,10 +390,10 @@ public class Database extends Credentials {
         List<Product> products = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product " +
-                    "JOIN color ON product.fk_color_id = color.id " +
-                    "JOIN size ON product.fk_size_id = size.id " +
-                    "JOIN brand ON product.fk_brand_id = brand.id");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
+                    "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
+                    "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
+                    "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id");
 
             while (rs.next()){
                 int id = rs.getInt("id");

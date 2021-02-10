@@ -238,9 +238,10 @@ INSERT INTO orders_product (fk_orders_id, fk_product_id, product_price, quantity
 
 INSERT INTO rating (rating_text, rating_number) VALUES
 ('missnöjd',1),
-('ganska nöjd',2),
-('nöjd',3),
-('mycket nöjd',4);
+('inte nöjd',2),
+('ganska nöjd',3),
+('nöjd',4),
+('mycket nöjd',5);
 
 INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id,review) VALUES
 (4,1,4,'Väldigt nöjd med kvalitet samt storlek'),
