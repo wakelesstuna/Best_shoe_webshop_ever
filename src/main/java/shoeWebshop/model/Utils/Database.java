@@ -3,8 +3,6 @@ package shoeWebshop.model.Utils;
 import javafx.scene.control.Alert;
 import shoeWebshop.controllers.FxmlUtils;
 import shoeWebshop.model.*;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -393,7 +391,8 @@ public class Database extends Credentials {
         List<Orders> orders = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT orders.id, orders.date,count(orders_product.fk_product_id) AS totalShoes, sum(product_price) AS totalPrice FROM sql_shoe_webshop.orders \n" +
+            ResultSet rs = stmt.executeQuery("SELECT orders.id, orders.date,count(orders_product.fk_product_id) AS totalShoes, sum(product_price) AS totalPrice " +
+                    "FROM sql_shoe_webshop.orders " +
                     "JOIN sql_shoe_webshop.orders_product ON orders.id = orders_product.fk_orders_id " +
                     "JOIN sql_shoe_webshop.customer ON customer.id = orders.fk_customer_id " +
                     "WHERE customer.id = " + customer.getId() + " " +

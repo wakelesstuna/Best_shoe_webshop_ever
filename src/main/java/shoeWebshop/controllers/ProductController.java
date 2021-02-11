@@ -113,7 +113,8 @@ public class ProductController implements Initializable {
 
         // TODO: 2021-02-11 AddToCart funktion
 
-        SendEmail.sendOrderConfirmMail("nackademinJava20A@gmail.com", "Shoe Order", products, FxmlUtils.whoIsLoggedIn.getFullName());
+
+        SendEmail.sendOrderConfirmMail(FxmlUtils.whoIsLoggedIn.getEmail(), "Shoe Order", products, FxmlUtils.whoIsLoggedIn.getFullName());
         FxmlUtils.showMessage("Order", "Order Sent!", "Thank you for ordering from\nBest Shoe Shop Ever!", Alert.AlertType.INFORMATION);
         cartTable.getItems().clear();
         showTotalPrice.setText("0");
