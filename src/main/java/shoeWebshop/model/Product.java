@@ -23,6 +23,16 @@ public class Product {
 
     }
 
+    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand) {
+        this.id = id;
+        this.productName = productName;
+        this.priceSek = priceSek;
+        this.color = color;
+        this.size = size;
+        this.brand = brand;
+
+    }
+
     @Override
     public String toString() {
         return "Product{" +

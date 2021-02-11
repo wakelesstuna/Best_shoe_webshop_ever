@@ -96,10 +96,11 @@ public class SendEmail {
 
         double totalprice = 0;
         for (Product product : list) {
-            sb.append(String.format("%-28s %-5d %-13s %-3.2f",product.getProductName(), product.getSize(), product.getBrand(), product.getPriceSek()))
+            sb.append(String.format("%-28s %-5f %-13s %-3.2f",product.getProductName(), product.getSize(), product.getBrand(), product.getPriceSek()))
             .append("\n");
             totalprice += product.getPriceSek();
         }
+
         sb.append("\n")
         .append(String.format("%45s %9.2f","Total price: ", totalprice))
         .append("\n")

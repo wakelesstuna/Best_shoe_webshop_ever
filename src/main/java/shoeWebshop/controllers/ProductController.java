@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import shoeWebshop.Main;
 import shoeWebshop.model.Product;
+import shoeWebshop.model.Utils.Database;
 import shoeWebshop.model.Utils.SendEmail;
 
 import java.net.URL;
@@ -104,19 +105,18 @@ public class ProductController implements Initializable {
             cartBox.setDisable(true);
             sendOrder.setDisable(true);
         }
-        fillProductTable(Main.list);
-
-        // TODO: 2021-02-03 fill the table with all shoes in the database
+        fillProductTable(Database.getAllProducts());
     }
 
     public void sendOrder(){
         List<Product> products = cartTable.getItems();
+
+        // TODO: 2021-02-11 AddToCart funktion
+
         SendEmail.sendOrderConfirmMail("nackademinJava20A@gmail.com", "Shoe Order", products, FxmlUtils.whoIsLoggedIn.getFullName());
         FxmlUtils.showMessage("Order", "Order Sent!", "Thank you for ordering from\nBest Shoe Shop Ever!", Alert.AlertType.INFORMATION);
         cartTable.getItems().clear();
         showTotalPrice.setText("0");
-
-        System.out.println("sending");
     }
 
     public void fillProductTable(List<Product> list){
