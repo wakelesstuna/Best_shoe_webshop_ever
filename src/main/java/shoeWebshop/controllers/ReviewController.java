@@ -1,16 +1,12 @@
 package shoeWebshop.controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import shoeWebshop.Main;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -92,9 +88,7 @@ public class ReviewController implements Initializable {
             reviewText.setDisable(true);
             leaveReviewButton.setDisable(true);
         }
-
         // TODO: 2021-02-03 fill the table with shoes that have a review
-
     }
 
     public void showReview(){
@@ -121,7 +115,6 @@ public class ReviewController implements Initializable {
 
         choseShoeToReview.getItems().setAll(list);
     }
-
 
     //---- Nav Links ----\\
 

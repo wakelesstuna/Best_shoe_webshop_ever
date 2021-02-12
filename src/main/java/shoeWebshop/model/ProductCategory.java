@@ -12,5 +12,12 @@ public class ProductCategory {
         this.category = category;
     }
 
-
+    @Override
+    public String toString() {
+        return "ProductCategory{" +
+                "id=" + id +
+                ", product=" + product +
+                ", category=" + category +
+                '}';
+    }
 }

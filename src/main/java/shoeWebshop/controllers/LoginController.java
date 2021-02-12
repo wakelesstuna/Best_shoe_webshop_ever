@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,7 +24,6 @@ public class LoginController implements Initializable {
     @FXML
     private Label loginText;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loginEmail.setPromptText("Email");
@@ -41,7 +39,7 @@ public class LoginController implements Initializable {
 
         if (loginEmail.getText().isEmpty() || loginPassword.getText().isEmpty()){
 
-            FxmlUtils.showMessage("Input", "Input","You need to enter a email\nand a password", Alert.AlertType.ERROR);
+            FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
 
         } else if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
@@ -53,7 +51,7 @@ public class LoginController implements Initializable {
             loginPassword.setText("");
 
         }else {
-            FxmlUtils.showMessage("Warning", "Couldn't find any user","Wrong email or password, try again", Alert.AlertType.ERROR);
+            FxmlUtils.showMessage("Warning", "Wrong email or password, try again",null, Alert.AlertType.ERROR);
         }
     }
 
@@ -80,8 +78,6 @@ public class LoginController implements Initializable {
     public void changeToCreateUserView(){
         FxmlUtils.changeScenes(FxmlUtils.createUserView());
     }
-
-
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;

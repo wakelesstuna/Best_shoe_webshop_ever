@@ -10,12 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.City;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class CreateUserContoller implements Initializable {
+public class CreateUserController implements Initializable {
 
     @FXML
     private Label loggedIn;
@@ -40,9 +39,6 @@ public class CreateUserContoller implements Initializable {
 
     @FXML
     private TextField zipCode;
-
-    @FXML
-    private TextField city;
 
     @FXML
     private ComboBox cityBox;
@@ -73,14 +69,10 @@ public class CreateUserContoller implements Initializable {
         String customerPhoneNumber = phoneNumber.getText();
         String customerAddress = Address.getText();
         int customerZipCode = Integer.parseInt(zipCode.getText());
-
         String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
 
-        System.out.println("City: " + customerCity);
-
         Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
-
         eraseAllTextFields();
 
         FxmlUtils.changeScenes(FxmlUtils.loginView());
@@ -95,7 +87,6 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setText("");
         Address.setText("");
         zipCode.setText("");
-        //city.setText("");
         password.setText("");
 
         firstName.setPromptText("first name");
@@ -105,7 +96,6 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setPromptText("phone number");
         Address.setPromptText("address");
         zipCode.setPromptText("zip code");
-        //city.setPromptText("city");
         password.setPromptText("password");
     }
 
@@ -123,7 +113,6 @@ public class CreateUserContoller implements Initializable {
         ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCountyName).collect(Collectors.toList()));
         comboBox.setItems(list);
     }
-
 
     //---- Nav Links ----\\
 

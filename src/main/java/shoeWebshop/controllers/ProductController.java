@@ -1,7 +1,5 @@
 package shoeWebshop.controllers;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -9,12 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import shoeWebshop.Main;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.Database;
 import shoeWebshop.model.Utils.SendEmail;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -109,8 +105,6 @@ public class ProductController implements Initializable {
         fillProductTable(Database.getAllProducts());
     }
 
-    // TODO: 2021-02-12 make call to removeFromCart SP in databse then update UI
-
     public void createNewOrder(){
         FxmlUtils.currentCustomerOrder = Database.createNewOrder(FxmlUtils.whoIsLoggedIn);
         addToCart.setDisable(false);
@@ -120,47 +114,39 @@ public class ProductController implements Initializable {
         newOrderBtn.setDisable(true);
     }
 
-    public void sendOrder(){
-        SendEmail.sendOrderConfirmMail(FxmlUtils.whoIsLoggedIn.getEmail(), "Shoe Order", cartTable.getItems(), FxmlUtils.whoIsLoggedIn.getFullName());
-        FxmlUtils.showMessage("Order", "Order Sent!", "Thank you for ordering from\nBest Shoe Shop Ever!", Alert.AlertType.INFORMATION);
-
-        cartTable.getItems().clear();
-        showTotalPrice.setText("0");
-        customerLoggedInButNoOrderCreated();
-    }
-
     public void addToCart(){
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
+
         if (selectedItem.getStock() == 0){
             FxmlUtils.showMessage("Error", "Sorry, selected product is out of stock!", null, Alert.AlertType.ERROR);
         }else{
-            // TODO: 2021-02-12 make call to addtocart SP in databse then update UI
             Database.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, selectedItem.getId());
+
             fillProductTable(Database.getAllProducts());
             fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
-
-            // add to price
-            double price = Double.parseDouble(showTotalPrice.getText());
-            showTotalPrice.setText(price + selectedItem.getPriceSek() + "");
+            addToTotalPrice(selectedItem);
         }
     }
 
     public void removeFromCart(){
-        System.out.println("-");
-
-        // TODO: 2021-02-12 make ordertable update after you remove item
-
         Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
+
         Database.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
         fillProductTable(Database.getAllProducts());
         cartTable.getItems().remove(selectedItem);
+
         Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn);
         fillCartTable(Database.getSelectedOrder(tempOrder));
+        substractFromTotalPrice(selectedItem);
+    }
 
+    public void sendOrder(){
+        SendEmail.sendOrderConfirmMail(FxmlUtils.whoIsLoggedIn.getEmail(), "Shoe Order", cartTable.getItems(), FxmlUtils.whoIsLoggedIn.getFullName());
+        FxmlUtils.showMessage("Order", "Order Sent!\nThank you for ordering from\nBest Shoe Shop Ever!", null, Alert.AlertType.INFORMATION);
 
-        // remove from price
-        double price = Double.parseDouble(showTotalPrice.getText());
-        showTotalPrice.setText(price - selectedItem.getPriceSek() + "");
+        cartTable.getItems().clear();
+        showTotalPrice.setText("0");
+        customerLoggedInButNoOrderCreated();
     }
 
     public void fillProductTable(List<Product> list){
@@ -175,7 +161,6 @@ public class ProductController implements Initializable {
     }
 
     public void fillCartTable(List<Product> list){
-        list.forEach(System.out::println);
         cartModelCul.setCellValueFactory(new PropertyValueFactory<>("productName"));
         cartBrandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
         cartPriceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
@@ -193,6 +178,16 @@ public class ProductController implements Initializable {
         cartBox.setDisable(false);
         newOrderBtn.setDisable(false);
         sendOrder.setDisable(true);
+    }
+
+    public void addToTotalPrice(Product product){
+        double price = Double.parseDouble(showTotalPrice.getText());
+        showTotalPrice.setText(price + product.getPriceSek() + "");
+    }
+
+    public void substractFromTotalPrice(Product product){
+        double price = Double.parseDouble(showTotalPrice.getText());
+        showTotalPrice.setText(price - product.getPriceSek() + "");
     }
 
     //---- Nav Links ----\\

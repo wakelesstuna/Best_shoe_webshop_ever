@@ -16,6 +16,14 @@ public class Rate {
 
     public static Rate getRatings(int c){
         return Database.getRates().stream().filter(b -> b.equals(c)).map(b -> new Rate(b.id, b.rateText, b.rateNumber)).findFirst().orElse(null);
+    }
 
+    @Override
+    public String toString() {
+        return "Rate{" +
+                "id=" + id +
+                ", rateText='" + rateText + '\'' +
+                ", rateNumber=" + rateNumber +
+                '}';
     }
 }

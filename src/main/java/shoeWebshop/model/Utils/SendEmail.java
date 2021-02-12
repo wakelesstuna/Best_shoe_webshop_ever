@@ -1,7 +1,6 @@
 package shoeWebshop.model.Utils;
 
 import shoeWebshop.model.Product;
-
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -11,10 +10,8 @@ import java.util.Properties;
 public class SendEmail {
 
     private static Session connectToMailServer(){
-        String host = "smtp.gmail.com";
-
         Properties properties = System.getProperties();
-        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "465");
         properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtp.auth", "true");
@@ -37,7 +34,6 @@ public class SendEmail {
             message.setText(buildOrderConfirmMail(list,customerName));
 
             System.out.println("sending...");
-
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException e) {
@@ -56,7 +52,6 @@ public class SendEmail {
             message.setText(buildCreateCustomerMail(customerName,emailAddressToSendTo,customerPassword));
 
             System.out.println("sending...");
-
             Transport.send(message);
             System.out.println("Sent message successfully....");
         } catch (MessagingException e) {
@@ -94,15 +89,14 @@ public class SendEmail {
         .append(String.format("%-28s %-5s %-13s %-3s","Product name", "Size", "Brand", "Price"))
         .append("\n");
 
-        double totalprice = 0;
+        double totalPrice = 0;
         for (Product product : list) {
             sb.append(String.format("%-28s %-5f %-13s %-3.2f",product.getProductName(), product.getSize(), product.getBrand(), product.getPriceSek()))
             .append("\n");
-            totalprice += product.getPriceSek();
+            totalPrice += product.getPriceSek();
         }
-
         sb.append("\n")
-        .append(String.format("%45s %9.2f","Total price: ", totalprice))
+        .append(String.format("%45s %9.2f","Total price: ", totalPrice))
         .append("\n")
         .append("\n")
         .append("If you have any questions about you're order\n")

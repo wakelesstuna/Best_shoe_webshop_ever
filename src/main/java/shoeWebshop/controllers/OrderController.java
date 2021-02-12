@@ -4,14 +4,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -91,7 +88,6 @@ public class OrderController implements Initializable {
     }
 
     public void fillSelectedOrderToTable() {
-
         Orders selectedOrder = ordersTable.getSelectionModel().getSelectedItem();
 
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
@@ -106,7 +102,6 @@ public class OrderController implements Initializable {
     }
 
     public void fillOrdersTable(List<Orders> list) {
-
         ordersOrderIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         ordersDateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         ordersTotalPriceCol.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));

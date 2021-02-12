@@ -26,5 +26,16 @@ public class Size {
         return Database.getSizes().stream().filter(b -> b.equals(c)).map(b -> new Size(b.id, c)).findFirst().orElse(null);
 
     }
+
+    @Override
+    public String toString() {
+        return "Size{" +
+                "id=" + id +
+                ", eu=" + eu +
+                ", uk=" + uk +
+                ", us=" + us +
+                ", cm=" + cm +
+                '}';
+    }
 }
 

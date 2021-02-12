@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import shoeWebshop.model.Customer;
-
 import java.io.IOException;
 import java.util.Objects;
 

@@ -70,7 +70,6 @@ public class Product {
     }
 
     public double getSize() {
-
         return size.eu;
     }
 

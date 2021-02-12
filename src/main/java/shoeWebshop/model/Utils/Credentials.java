@@ -32,15 +32,6 @@ public class Credentials {
         decryptValue = prop.getProperty("decryptvalue");
     }
 
-    // TODO: 2021-02-09 kan implementeras om man vill fixa alla fel...
-    /*private static Credentials credentials = null;
-    public static Credentials getInstance() {
-        if (credentials == null){
-            credentials = new Credentials();
-        }
-        return credentials;
-    }*/
-
     public enum USER {
         SENDER_EMAIL(username),
         SENDER_PASSWORD(password),
@@ -62,7 +53,6 @@ public class Credentials {
             return s;
         }
 
-        public Integer toInt() {return Integer.parseInt(s);}
     }
 }
 
