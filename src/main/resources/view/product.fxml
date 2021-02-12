@@ -179,5 +179,14 @@
             <String fx:value="login-text" />
          </styleClass>
       </Button>
+      <Button fx:id="newOrderBtn" layoutX="382.0" layoutY="583.0" mnemonicParsing="false" onAction="#createNewOrder" text="New order">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <styleClass>
+            <String fx:value="login-button" />
+            <String fx:value="login-text" />
+         </styleClass>
+      </Button>
     </children>
 </AnchorPane>

@@ -1,7 +1,6 @@
 package shoeWebshop.model;
 
 import java.sql.Date;
-import java.time.LocalDate;
 
 public class Orders {
     int id;

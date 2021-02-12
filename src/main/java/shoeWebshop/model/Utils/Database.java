@@ -13,10 +13,10 @@ public class Database extends Credentials {
 
     private static Connection connection;
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Credentials c = new Credentials();
         getAllCustomers().forEach(System.out::println);
-    }
+    }*/
 
     public static void createConnection() {
         try {
@@ -430,9 +430,10 @@ public class Database extends Credentials {
                 double priceSek = rs.getDouble("price_sek");
                 Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
                 Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                int amountOrdered = rs.getInt("quantity");
                 Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
 
-                products.add(new Product(id,productName,priceSek,color,size,brand));
+                products.add(new Product(id,productName,priceSek,color,size,amountOrdered,brand));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -486,6 +487,63 @@ public class Database extends Credentials {
         }
         return products;
     }
+
+    public static void main(String[] args) {
+        Credentials c = new Credentials();
+        Customer cust = new Customer(1,null,null,0,null,null,null,null,null);
+        int i = createNewOrder(cust);
+        System.out.println(i);
+    }
+    
+    // works uppdates database to
+    public static int createNewOrder(Customer customer) {
+        createConnection();
+        int orderId = 0;
+        try {
+            CallableStatement cstmt = connection.prepareCall("{? = CALL new_order(?)}");
+            cstmt.registerOutParameter(1,Types.INTEGER);
+            cstmt.setInt(2,customer.getId());
+            cstmt.execute();
+            orderId = cstmt.getInt(1);
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return orderId;
+    }
+
+    // works updattes the database correct
+    public static void addToCart(Integer currentCustomerOrder, Customer whoIsLoggedIn, int id) {
+        createConnection();
+        System.out.println("database SP add to cart");
+        try {
+            CallableStatement cstmt = connection.prepareCall("{CALL addToCart(?,?,?)}");
+            cstmt.setInt(1, currentCustomerOrder);
+            cstmt.setInt(2,whoIsLoggedIn.getId());
+            cstmt.setInt(3,id);
+            cstmt.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void removeFromCart(Integer currentCustomerOrder, Customer whoIsLoggedIn, int id) {
+        createConnection();
+        System.out.println("database SP remove from cart");
+        try {
+            CallableStatement cstmt = connection.prepareCall("{CALL remove_form_cart(?,?,?)}");
+            cstmt.setInt(1,currentCustomerOrder);
+            cstmt.setInt(2,whoIsLoggedIn.getId());
+            cstmt.setInt(3,id);
+            cstmt.execute();
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
 
     public void writeAllInfo(List<?> list) {
         int count = 1;

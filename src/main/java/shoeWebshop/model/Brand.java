@@ -14,4 +14,12 @@ public class Brand {
         return Database.getBrands().stream().filter(b -> b.equals(c)).map(b -> new Brand(b.id, c)).findFirst().orElse(null);
 
     }
+
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "id=" + id +
+                ", brandName='" + brandName + '\'' +
+                '}';
+    }
 }

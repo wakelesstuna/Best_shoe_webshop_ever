@@ -14,6 +14,7 @@ public class FxmlUtils {
 
     public static boolean isLoggedIn = false;
     public static Customer whoIsLoggedIn;
+    public static Integer currentCustomerOrder;
     private static Stage currentStage;
 
     public static void showMessage(String title, String header, String message, Alert.AlertType alertType){

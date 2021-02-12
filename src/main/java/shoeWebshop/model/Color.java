@@ -14,4 +14,12 @@ public class Color {
     public static Color getColor(int c){
         return Database.getColors().stream().filter(e -> e.id == c).map(b -> new Color(b.id, b.color)).findFirst().orElse(null);
     }
+
+    @Override
+    public String toString() {
+        return "Color{" +
+                "id=" + id +
+                ", color='" + color + '\'' +
+                '}';
+    }
 }

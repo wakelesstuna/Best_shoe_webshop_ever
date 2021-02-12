@@ -11,6 +11,7 @@ public class Product {
     Size size;
     Brand brand;
     int stock;
+    int amountOrdered;
 
     public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
         this.id = id;
@@ -23,12 +24,13 @@ public class Product {
 
     }
 
-    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand) {
+    public Product(int id, String productName, double priceSek, Color color, Size size, int amountOrdered ,Brand brand) {
         this.id = id;
         this.productName = productName;
         this.priceSek = priceSek;
         this.color = color;
         this.size = size;
+        this.amountOrdered = amountOrdered;
         this.brand = brand;
 
     }
@@ -76,6 +78,9 @@ public class Product {
         return brand.brandName;
     }
 
+    public int getAmountOrdered() {
+        return amountOrdered;
+    }
 
     public static Product getProduct(int c){
         return Database.getAllProducts().stream().filter(b -> b.equals(c)).map(b -> new Product(b.id,b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
