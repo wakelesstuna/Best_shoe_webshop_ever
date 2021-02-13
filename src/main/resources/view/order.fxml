@@ -126,13 +126,14 @@
             <String fx:value="login-text" />
          </styleClass>
       </Button>
-      <TableView fx:id="selectedOrderTable" layoutX="600.0" layoutY="252.0" prefHeight="260.0" prefWidth="423.0">
+      <TableView fx:id="selectedOrderTable" layoutX="600.0" layoutY="252.0" prefHeight="260.0" prefWidth="499.0">
         <columns>
           <TableColumn fx:id="productNameCol" prefWidth="121.0" text="Model" />
           <TableColumn fx:id="brandNameCol" prefWidth="87.0" text="Brand" />
             <TableColumn fx:id="sizeCol" prefWidth="73.0" text="Size" />
             <TableColumn fx:id="colorCol" minWidth="0.0" prefWidth="59.0" text="Color" />
             <TableColumn fx:id="priceCol" prefWidth="82.0" text="Price" />
+            <TableColumn fx:id="quantityCol" prefWidth="75.0" text="Quantity" />
         </columns>
       </TableView>
       <VBox fx:id="selectOrderText" layoutX="600.0" layoutY="161.0" prefHeight="91.0" prefWidth="320.0">

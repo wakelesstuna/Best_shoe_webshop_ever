@@ -6,9 +6,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import shoeWebshop.model.Product;
+import shoeWebshop.model.ReviewObject;
 import shoeWebshop.model.Utils.Database;
 import java.net.URL;
 import java.util.List;
+import java.util.OptionalDouble;
 import java.util.ResourceBundle;
 
 public class ReviewController implements Initializable {
@@ -88,19 +90,22 @@ public class ReviewController implements Initializable {
             reviewText.setDisable(true);
             leaveReviewButton.setDisable(true);
         }
-        // TODO: 2021-02-03 fill the table with shoes that have a review
-
     }
 
     public void showReview(){
-        // TODO: 2021-02-03 get review from database based on selecetedShoe
+        // TODO: 2021-02-13 fråga sigrun om detta är regelrätt?
+        Product selectedItem = choseShoeToReview.getSelectionModel().getSelectedItem();
+        String message;
+        try{
+            message = buildReviewString(Database.getReviewObject(selectedItem));
+        } catch (IndexOutOfBoundsException e){
+            message = "No review yet on the selected product";
+        }
 
-        FxmlUtils.showMessage("Reviews", "Review of " + selectedShoe + "\nReview score: " + reviewScore,
-                "Mycket bra sko, fin passform", Alert.AlertType.INFORMATION);
+        FxmlUtils.showMessage("Review", message, null, Alert.AlertType.INFORMATION);
     }
 
     public void leaveReview(){
-        // TODO: 2021-02-13 ändra i databasen till 5 betygssteg
         Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
         int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 
@@ -116,6 +121,38 @@ public class ReviewController implements Initializable {
         colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
 
         choseShoeToReview.getItems().setAll(list);
+    }
+
+    private String buildReviewString(List<ReviewObject> list){
+        StringBuilder sb = new StringBuilder();
+        String productName = list.get(0).getProductName();
+        double size = list.get(0).getSize();
+        double averageReviewScore = list.stream().mapToDouble(ReviewObject::getRating).average().orElseThrow();
+
+        sb.append("Review of shoe: ")
+                .append(productName)
+                .append("\n")
+                .append("Product size: ")
+                .append(size)
+                .append("\n")
+                .append("Average product score: ")
+                .append(averageReviewScore)
+                .append("\n")
+                .append("\n");
+
+        for (int i = 0; i < list.size(); i++) {
+            sb.append("Review nr: ")
+                    .append(i+1)
+                    .append("\n")
+                    .append("Score: ")
+                    .append(list.get(i).getRating())
+                    .append("\n")
+                    .append(list.get(i).getReview())
+                    .append("\n")
+                    .append("\n");
+        }
+
+        return sb.toString();
     }
 
     //---- Nav Links ----\\

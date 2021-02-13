@@ -2,6 +2,7 @@ package shoeWebshop.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
@@ -61,11 +62,15 @@ public class OrderController implements Initializable {
     private TableColumn<Product, Double> priceCol;
 
     @FXML
+    private TableColumn<Product, Integer> quantityCol;
+
+    @FXML
     private TextField totalPrice;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        totalPrice.setAlignment(Pos.CENTER_RIGHT);
         if (FxmlUtils.isLoggedIn) {
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             ordersText.setText("Your orders");
@@ -95,6 +100,7 @@ public class OrderController implements Initializable {
         sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
         colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
         priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("amountOrdered"));
 
         selectedOrderTable.getItems().setAll(Database.getSelectedOrder(selectedOrder));
 

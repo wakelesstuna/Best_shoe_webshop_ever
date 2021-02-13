@@ -48,8 +48,4 @@ public class MainController implements Initializable {
         FxmlUtils.whoIsLoggedIn = null;
         FxmlUtils.changeScenes(FxmlUtils.homeView());
     }
-
-
-
-
 }

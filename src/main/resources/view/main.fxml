@@ -113,5 +113,6 @@
          </cursor>
       </HBox>
       <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
+      <Pane layoutX="-9.0" layoutY="110.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

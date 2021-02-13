@@ -136,6 +136,33 @@ public class Database extends Credentials {
         }
     }
 
+    public static List<ReviewObject> getReviewObject(Product product){
+        createConnection();
+        List<ReviewObject> reviewObjects = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT product.id, product.product_name, size.eu, rating.rating_number, review FROM sql_shoe_webshop.product_review " +
+                    "JOIN sql_shoe_webshop.product ON product.id = product_review.fk_product_id " +
+                    "JOIN sql_shoe_webshop.rating ON rating.id = product_review.fk_rating_id " +
+                    "JOIN sql_shoe_webshop.size ON size.id = product.fk_size_id " +
+                    "WHERE product.id =" + product.getId() + "");
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String productName = rs.getString("product_name");
+                double size = rs.getDouble("eu");
+                double rating = rs.getDouble("rating_number");
+                String review = rs.getString("review");
+
+                reviewObjects.add(new ReviewObject(id,productName,size,rating,review));
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return reviewObjects;
+
+    }
+
     public static List<City> getAllCities() {
         List<City> cities = new ArrayList<>();
         createConnection();
