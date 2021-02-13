@@ -51,7 +51,7 @@ public class Database extends Credentials {
     }
 
     private static Customer createLoggedInCustomer(ResultSet rs) throws SQLException {
-        return new Customer(rs.getInt(1), rs.getString("first_name"),
+        return new Customer(rs.getInt("id"), rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getInt("phone_number"),
                 rs.getString("email"),
@@ -130,6 +130,8 @@ public class Database extends Credentials {
             stmt.setString(3, review);
             stmt.execute();
 
+            System.out.println("Kund: left review" + FxmlUtils.whoIsLoggedIn);
+
             FxmlUtils.showMessage("Review", "Thank you for you're review", null, Alert.AlertType.INFORMATION);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -141,19 +143,21 @@ public class Database extends Credentials {
         List<ReviewObject> reviewObjects = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT product.id, product.product_name, size.eu, rating.rating_number, review FROM sql_shoe_webshop.product_review " +
+            ResultSet rs = stmt.executeQuery("SELECT product.id, product.product_name, customer.first_name, customer.last_name, size.eu, rating.rating_number, review FROM sql_shoe_webshop.product_review " +
                     "JOIN sql_shoe_webshop.product ON product.id = product_review.fk_product_id " +
                     "JOIN sql_shoe_webshop.rating ON rating.id = product_review.fk_rating_id " +
                     "JOIN sql_shoe_webshop.size ON size.id = product.fk_size_id " +
+                    "JOIN sql_shoe_webshop.customer ON product_review.fk_customer_id = customer.id " +
                     "WHERE product.id =" + product.getId() + "");
             while (rs.next()){
                 int id = rs.getInt("id");
+                String customerName = (rs.getString("first_name") + " " + rs.getString("last_name"));
                 String productName = rs.getString("product_name");
                 double size = rs.getDouble("eu");
                 double rating = rs.getDouble("rating_number");
                 String review = rs.getString("review");
 
-                reviewObjects.add(new ReviewObject(id,productName,size,rating,review));
+                reviewObjects.add(new ReviewObject(id,customerName,productName,size,rating,review));
             }
 
         }catch (SQLException e){

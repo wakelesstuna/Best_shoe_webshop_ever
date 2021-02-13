@@ -29,7 +29,7 @@ public class LoginController implements Initializable {
         setPromptTextOnLoggIn();
 
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             loginText.setText("Logged in as " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
             loggedIn.setText("Logged in: not logged in");
@@ -46,6 +46,8 @@ public class LoginController implements Initializable {
             if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
                 FxmlUtils.showMessage("Logged in", "You are logged in", null, Alert.AlertType.INFORMATION);
+
+                System.out.println(FxmlUtils.whoIsLoggedIn);
 
                 loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
                 loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());

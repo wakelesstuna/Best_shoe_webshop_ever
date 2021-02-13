@@ -3,13 +3,15 @@ package shoeWebshop.model;
 public class ReviewObject {
 
     int id;
+    String customerName;
     String productName;
     double size;
     double rating;
     String review;
 
-    public ReviewObject(int id, String productName, double size, double rating, String review) {
+    public ReviewObject(int id, String customerName, String productName, double size, double rating, String review) {
         this.id = id;
+        this.customerName = customerName;
         this.productName = productName;
         this.size = size;
         this.rating = rating;
@@ -25,6 +27,10 @@ public class ReviewObject {
                 ", averageRating=" + rating +
                 ", review='" + review + '\'' +
                 '}';
+    }
+
+    public String getCustomerName() {
+        return customerName;
     }
 
     public String getProductName() {

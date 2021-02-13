@@ -63,8 +63,6 @@ public class ReviewController implements Initializable {
     @FXML
     private Button leaveReviewButton;
 
-    String selectedShoe = "runner";
-    int reviewScore = 8;
     ToggleGroup reviewGroup;
 
     @Override
@@ -75,6 +73,7 @@ public class ReviewController implements Initializable {
         reviewThree.setToggleGroup(reviewGroup);
         reviewFour.setToggleGroup(reviewGroup);
         reviewFive.setToggleGroup(reviewGroup);
+        reviewText.setText("");
         fillReviewTable(Database.getAllProducts());
 
         if (FxmlUtils.isLoggedIn) {
@@ -110,6 +109,9 @@ public class ReviewController implements Initializable {
         int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 
         Database.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
+        reviewGroup.getSelectedToggle().setSelected(false);
+        reviewText.setText("");
+
     }
 
     public void fillReviewTable(List<Product> list) {
@@ -131,8 +133,7 @@ public class ReviewController implements Initializable {
 
         sb.append("Review of shoe: ")
                 .append(productName)
-                .append("\n")
-                .append("Product size: ")
+                .append("   Product size: ")
                 .append(size)
                 .append("\n")
                 .append("Average product score: ")
@@ -143,10 +144,13 @@ public class ReviewController implements Initializable {
         for (int i = 0; i < list.size(); i++) {
             sb.append("Review nr: ")
                     .append(i+1)
+                    .append("   Review by: ")
+                    .append(list.get(i).getCustomerName())
                     .append("\n")
                     .append("Score: ")
                     .append(list.get(i).getRating())
                     .append("\n")
+                    .append("Comment: ")
                     .append(list.get(i).getReview())
                     .append("\n")
                     .append("\n");
