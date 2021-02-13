@@ -137,4 +137,3 @@ SELECT * FROM orders;
 
 DELETE FROM customer
 WHERE id IN (1);
-
