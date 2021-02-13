@@ -26,10 +26,11 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loginEmail.setPromptText("Email");
-        loginPassword.setPromptText("Password");
+        setPromptTextOnLoggIn();
+
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loginText.setText("Logged in as " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
@@ -41,18 +42,25 @@ public class LoginController implements Initializable {
 
             FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
 
-        } else if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
+        } else {
+            if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
-            FxmlUtils.isLoggedIn = true;
+                FxmlUtils.showMessage("Logged in", "You are logged in", null, Alert.AlertType.INFORMATION);
 
-            loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
-            loginEmail.setText("");
-            loginPassword.setText("");
-
-        }else {
-            FxmlUtils.showMessage("Warning", "Wrong email or password, try again",null, Alert.AlertType.ERROR);
+                loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
+                loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
+            } else {
+                FxmlUtils.showMessage("Warning", "Wrong username or password", null, Alert.AlertType.ERROR);
+            }
+            setPromptTextOnLoggIn();
         }
+    }
+
+    public void setPromptTextOnLoggIn(){
+        loginEmail.setText("");
+        loginPassword.setText("");
+        loginEmail.setPromptText("Email");
+        loginPassword.setPromptText("Password");
     }
 
     //---- Nav Links ----\\

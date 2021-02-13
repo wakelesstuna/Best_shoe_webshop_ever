@@ -172,7 +172,7 @@
                   <Image url="@../img/login-shoe.jpg" />
                </image>
             </ImageView>
-            <Label fx:id="loginText" alignment="CENTER" layoutX="63.0" layoutY="62.0" prefHeight="45.0" prefWidth="317.0" styleClass="main-title" text="Please Login" />
+            <Label fx:id="loginText" alignment="CENTER" layoutX="63.0" layoutY="37.0" prefHeight="100.0" prefWidth="317.0" styleClass="main-title" text="Please Login" wrapText="true" />
          </children>
       </Pane>
       <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />

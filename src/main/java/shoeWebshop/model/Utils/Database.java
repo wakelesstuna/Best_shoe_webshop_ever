@@ -40,7 +40,6 @@ public class Database extends Credentials {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                FxmlUtils.showMessage("Logged in", "Logged in", "Logged in sucsses", Alert.AlertType.INFORMATION);
                 FxmlUtils.isLoggedIn = true;
                 FxmlUtils.whoIsLoggedIn = createLoggedInCustomer(rs);
                 return true;
@@ -48,7 +47,6 @@ public class Database extends Credentials {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        FxmlUtils.showMessage("Warning", "Not logged in", "Wrong username or password", Alert.AlertType.ERROR);
         return false;
     }
 

@@ -89,6 +89,7 @@ public class ReviewController implements Initializable {
             leaveReviewButton.setDisable(true);
         }
         // TODO: 2021-02-03 fill the table with shoes that have a review
+
     }
 
     public void showReview(){
@@ -99,6 +100,7 @@ public class ReviewController implements Initializable {
     }
 
     public void leaveReview(){
+        // TODO: 2021-02-13 ändra i databasen till 5 betygssteg
         Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
         int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 

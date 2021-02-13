@@ -121,6 +121,7 @@ public class ProductController implements Initializable {
             FxmlUtils.showMessage("Error", "Sorry, selected product is out of stock!", null, Alert.AlertType.ERROR);
         }else{
             Database.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, selectedItem.getId());
+            FxmlUtils.showMessage("Added to cart", "New item added to your cart", null, Alert.AlertType.INFORMATION);
 
             fillProductTable(Database.getAllProducts());
             fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
@@ -131,13 +132,15 @@ public class ProductController implements Initializable {
     public void removeFromCart(){
         Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
 
-        Database.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
-        fillProductTable(Database.getAllProducts());
-        cartTable.getItems().remove(selectedItem);
+        if (!(selectedItem.getAmountOrdered() == 0)){
+            Database.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
+            fillProductTable(Database.getAllProducts());
+            cartTable.getItems().remove(selectedItem);
 
-        Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn);
-        fillCartTable(Database.getSelectedOrder(tempOrder));
-        substractFromTotalPrice(selectedItem);
+            Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn);
+            fillCartTable(Database.getSelectedOrder(tempOrder));
+            substractFromTotalPrice(selectedItem);
+        }
     }
 
     public void sendOrder(){
