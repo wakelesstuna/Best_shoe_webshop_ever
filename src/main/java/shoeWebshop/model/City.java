@@ -12,7 +12,7 @@ public class City {
         this.zipCode = zipCode;
     }
 
-    public String getCountyName() {
+    public String getCityName() {
         return cityName;
     }
 

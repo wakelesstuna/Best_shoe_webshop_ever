@@ -112,7 +112,7 @@ public class CreateUserController implements Initializable {
     }
 
     public void fillComboBox(ComboBox<String> comboBox){
-        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCountyName).collect(Collectors.toList()));
+        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
         comboBox.setItems(list);
     }
 
