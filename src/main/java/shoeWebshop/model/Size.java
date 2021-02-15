@@ -22,11 +22,6 @@ public class Size {
         this.eu = eu;
     }
 
-    public static Size getSize(double c){
-        return Database.getSizes().stream().filter(b -> b.equals(c)).map(b -> new Size(b.id, c)).findFirst().orElse(null);
-
-    }
-
     @Override
     public String toString() {
         return "Size{" +
