@@ -90,7 +90,6 @@ public class ProductController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
-        System.out.println(FxmlUtils.orderCreatedButNotSent);
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             if (FxmlUtils.orderCreatedButNotSent){
