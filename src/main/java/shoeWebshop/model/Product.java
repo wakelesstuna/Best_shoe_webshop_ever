@@ -19,10 +19,6 @@ public class Product {
         this.averageScore = averageScore;
     }
 
-    public double getAverageScore() {
-        return averageScore;
-    }
-
     public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, Category category, int stock) {
         this.id = id;
         this.productName = productName;
@@ -32,17 +28,6 @@ public class Product {
         this.brand = brand;
         this.category = category;
         this.stock = stock;
-    }
-
-    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
-        this.id = id;
-        this.productName = productName;
-        this.priceSek = priceSek;
-        this.color = color;
-        this.size = size;
-        this.brand = brand;
-        this.stock = stock;
-
     }
 
     public Product(int id, String productName, double priceSek, Color color, Size size, int amountOrdered ,Brand brand) {
@@ -102,8 +87,4 @@ public class Product {
         return amountOrdered;
     }
 
-    public static Product getProduct(int c){
-        return Database.getAllProducts().stream().filter(b -> b.equals(c)).map(b -> new Product(b.id,b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
-
-    }
 }

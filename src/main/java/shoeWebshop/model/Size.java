@@ -1,7 +1,5 @@
 package shoeWebshop.model;
 
-import shoeWebshop.model.Utils.Database;
-
 public class Size {
     int id;
     double eu;
