@@ -14,6 +14,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import static shoeWebshop.controllers.FxmlUtils.View.*;
+
 public class CreateUserController implements Initializable {
 
     @FXML
@@ -116,28 +118,30 @@ public class CreateUserController implements Initializable {
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
-    }
-
     public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToReviewView() { FxmlUtils.changeScenes(FxmlUtils.reviewView());}
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
+    }
+
+    public void changeToReviewView() {
+        FxmlUtils.changeView(REVIEW);
+    }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         FxmlUtils.whoIsLoggedIn = null;
         loggedIn.setText("");
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 }

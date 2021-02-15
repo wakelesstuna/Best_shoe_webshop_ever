@@ -3,6 +3,8 @@ package shoeWebshop.model.Utils;
 import javafx.scene.control.Alert;
 import shoeWebshop.controllers.FxmlUtils;
 import shoeWebshop.model.*;
+
+import java.lang.ref.PhantomReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -121,16 +123,14 @@ public class Database extends Credentials {
     public static void createNewReview(Product product, int rating, String review) {
         createConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement(
-                    "INSERT INTO sql_shoe_webshop.product_review (fk_product_id,fk_customer_id,fk_rating_id, review) " +
-                            "VALUES (?,?,(SELECT id FROM sql_shoe_webshop.rating WHERE rating.rating_number = '" + rating + "'),?)");
+            CallableStatement cstmt = connection.prepareCall("{CALL rate(?,?,(SELECT id FROM sql_shoe_webshop.rating WHERE rating.rating_number = " + rating + "),?)}");
 
-            stmt.setInt(1, product.getId());
-            stmt.setInt(2, FxmlUtils.whoIsLoggedIn.getId());
-            stmt.setString(3, review);
-            stmt.execute();
+            cstmt.setInt(1, FxmlUtils.whoIsLoggedIn.getId());
+            cstmt.setInt(2, product.getId());
+            cstmt.setString(3,review);
+            cstmt.execute();
 
-            System.out.println("Kund: left review" + FxmlUtils.whoIsLoggedIn);
+            System.out.println("Calling Stored procedure rate from database");
 
             FxmlUtils.showMessage("Review", "Thank you for you're review", null, Alert.AlertType.INFORMATION);
         } catch (SQLException e) {
@@ -535,6 +535,8 @@ public class Database extends Credentials {
             cstmt.execute();
             orderId = cstmt.getInt(1);
 
+            System.out.println("Calling function new_order");
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -552,6 +554,8 @@ public class Database extends Credentials {
             cstmt.setInt(3,id);
             cstmt.execute();
 
+            System.out.println("Calling Stored procedure addToCart");
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -567,6 +571,8 @@ public class Database extends Credentials {
             cstmt.setInt(2,whoIsLoggedIn.getId());
             cstmt.setInt(3,id);
             cstmt.execute();
+
+            System.out.println("Calling Stored procedure remove_from_cart");
 
         }catch (SQLException e){
             e.printStackTrace();

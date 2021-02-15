@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static shoeWebshop.controllers.FxmlUtils.View.*;
+
 public class OrderController implements Initializable {
 
     @FXML
@@ -102,9 +104,9 @@ public class OrderController implements Initializable {
         priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("amountOrdered"));
 
-        selectedOrderTable.getItems().setAll(Database.getSelectedOrder(selectedOrder));
-
-        sumAllPricesInTable(selectedOrderTable, 4);
+        List<Product> products = Database.getSelectedOrder(selectedOrder);
+        selectedOrderTable.getItems().setAll(products);
+        sumAllPricesInTable(products);
     }
 
     public void fillOrdersTable(List<Orders> list) {
@@ -116,37 +118,39 @@ public class OrderController implements Initializable {
         ordersTable.getItems().setAll(list);
     }
 
-    public void sumAllPricesInTable(TableView<?> tableView, int sizeOfTable) {
-        int totalSum = 0;
-        for (int i = 0; i < tableView.getItems().size(); i++) {
-            totalSum += Double.parseDouble(String.valueOf(tableView.getColumns().get(sizeOfTable).getCellObservableValue(i).getValue()));
-        }
+    public void sumAllPricesInTable(List<Product> list) {
+        double totalSum = list.stream().mapToDouble(e -> e.getPriceSek() * e.getAmountOrdered()).sum();
+
         totalPrice.setText(String.valueOf(totalSum));
     }
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView() {
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+    public void changeToProductView(){
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToProductView() {
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
     }
 
     public void changeToReviewView() {
-        FxmlUtils.changeScenes(FxmlUtils.reviewView());
+        FxmlUtils.changeView(REVIEW);
     }
 
-    public void changeToOrderView() { FxmlUtils.changeScenes(FxmlUtils.orderView()); }
+    public void changeToOrderView(){
+        FxmlUtils.changeView(ORDER);
+    }
 
-    public void changeToLoginView() { FxmlUtils.changeScenes(FxmlUtils.loginView()); }
+    public void changeToLoginView(){
+        FxmlUtils.changeView(LOGIN);
+    }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 
 }

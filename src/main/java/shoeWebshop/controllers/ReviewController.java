@@ -10,8 +10,9 @@ import shoeWebshop.model.ReviewObject;
 import shoeWebshop.model.Utils.Database;
 import java.net.URL;
 import java.util.List;
-import java.util.OptionalDouble;
 import java.util.ResourceBundle;
+
+import static shoeWebshop.controllers.FxmlUtils.View.*;
 
 public class ReviewController implements Initializable {
 
@@ -38,6 +39,8 @@ public class ReviewController implements Initializable {
 
     @FXML
     private TableColumn<Product, String> colorCol;
+
+    private TableColumn<Product, Double> avgScoreCol;
 
     @FXML
     private HBox radioButtonBox;
@@ -125,6 +128,14 @@ public class ReviewController implements Initializable {
         choseShoeToReview.getItems().setAll(list);
     }
 
+    public void setAvgScore(List<ReviewObject> list){
+        double averageReviewScore = list.stream().mapToDouble(ReviewObject::getRating).average().orElseThrow();
+        avgScoreCol.setCellValueFactory(new PropertyValueFactory<>("averageScore"));
+        Product tempProduct = new Product(averageReviewScore);
+        choseShoeToReview.getItems().set(6,tempProduct);
+
+    }
+
     private String buildReviewString(List<ReviewObject> list){
         StringBuilder sb = new StringBuilder();
         String productName = list.get(0).getProductName();
@@ -161,31 +172,31 @@ public class ReviewController implements Initializable {
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView() {
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+    public void changeToProductView(){
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToProductView() {
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
     }
 
     public void changeToReviewView() {
-        FxmlUtils.changeScenes(FxmlUtils.reviewView());
+        FxmlUtils.changeView(REVIEW);
     }
 
-    public void changeToOrderView() {
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+    public void changeToOrderView(){
+        FxmlUtils.changeView(ORDER);
     }
 
-    public void changeToLoginView() {
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+    public void changeToLoginView(){
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 
 }

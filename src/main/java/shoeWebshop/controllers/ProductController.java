@@ -15,6 +15,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static shoeWebshop.controllers.FxmlUtils.View.*;
+
 public class ProductController implements Initializable {
 
     @FXML
@@ -87,11 +89,15 @@ public class ProductController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        showTotalPrice.setText("0");
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
+        System.out.println(FxmlUtils.orderCreatedButNotSent);
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
-            customerLoggedInButNoOrderCreated();
+            if (FxmlUtils.orderCreatedButNotSent){
+                fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
+            }else {
+                customerLoggedInButNoOrderCreated();
+            }
         }else{
             loggedIn.setText("Logged in: not logged in");
             addToCart.setDisable(true);
@@ -105,6 +111,8 @@ public class ProductController implements Initializable {
         fillProductTable(Database.getAllProducts());
     }
 
+
+
     public void createNewOrder(){
         FxmlUtils.currentCustomerOrder = Database.createNewOrder(FxmlUtils.whoIsLoggedIn);
         addToCart.setDisable(false);
@@ -112,6 +120,8 @@ public class ProductController implements Initializable {
         cartTable.setDisable(false);
         sendOrder.setDisable(false);
         newOrderBtn.setDisable(true);
+
+        FxmlUtils.orderCreatedButNotSent = true;
     }
 
     public void addToCart(){
@@ -146,6 +156,8 @@ public class ProductController implements Initializable {
     public void sendOrder(){
         SendEmail.sendOrderConfirmMail(FxmlUtils.whoIsLoggedIn.getEmail(), "Shoe Order", cartTable.getItems(), FxmlUtils.whoIsLoggedIn.getFullName());
         FxmlUtils.showMessage("Order", "Order Sent!\nThank you for ordering from\nBest Shoe Shop Ever!", null, Alert.AlertType.INFORMATION);
+
+        FxmlUtils.orderCreatedButNotSent = false;
 
         cartTable.getItems().clear();
         showTotalPrice.setText("0");
@@ -195,30 +207,30 @@ public class ProductController implements Initializable {
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+    public void changeToProductView(){
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
     }
 
     public void changeToReviewView() {
-        FxmlUtils.changeScenes(FxmlUtils.reviewView());
+        FxmlUtils.changeView(REVIEW);
     }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 }

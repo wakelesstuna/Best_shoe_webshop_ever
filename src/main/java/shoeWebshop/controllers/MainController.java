@@ -3,13 +3,23 @@ package shoeWebshop.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static shoeWebshop.controllers.FxmlUtils.View.*;
 
 public class MainController implements Initializable {
 
     @FXML
     private Label loggedIn;
+
+    @FXML
+    private ImageView imageTest;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -18,34 +28,42 @@ public class MainController implements Initializable {
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
+
+        try {
+            FileInputStream file = new FileInputStream(".\\src\\main\\resources\\img\\create-user-shoe.png");
+            Image img = new Image(file);
+            imageTest.setImage(img);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+    public void changeToProductView(){
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
     }
 
     public void changeToReviewView() {
-        FxmlUtils.changeScenes(FxmlUtils.reviewView());
+        FxmlUtils.changeView(REVIEW);
     }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 }

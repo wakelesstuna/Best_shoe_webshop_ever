@@ -10,6 +10,8 @@ import shoeWebshop.model.Utils.Database;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static shoeWebshop.controllers.FxmlUtils.View.*;
+
 public class LoginController implements Initializable {
 
     @FXML
@@ -39,7 +41,6 @@ public class LoginController implements Initializable {
     public void authorizeLogin(){
 
         if (loginEmail.getText().isEmpty() || loginPassword.getText().isEmpty()){
-
             FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
 
         } else {
@@ -67,33 +68,35 @@ public class LoginController implements Initializable {
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
-    }
-
     public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToReviewView() { FxmlUtils.changeScenes(FxmlUtils.reviewView()); }
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
+    }
+
+    public void changeToReviewView() {
+        FxmlUtils.changeView(REVIEW);
+    }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void changeToCreateUserView(){
-        FxmlUtils.changeScenes(FxmlUtils.createUserView());
+        FxmlUtils.changeView(CREATE_USEER);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 
 }

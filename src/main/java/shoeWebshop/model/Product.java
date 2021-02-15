@@ -12,6 +12,15 @@ public class Product {
     Brand brand;
     int stock;
     int amountOrdered;
+    double averageScore;
+
+    public Product(double averageScore) {
+        this.averageScore = averageScore;
+    }
+
+    public double getAverageScore() {
+        return averageScore;
+    }
 
     public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
         this.id = id;
@@ -38,14 +47,14 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "productName='" + productName + '\'' +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
                 ", priceSek=" + priceSek +
-                ", color='" + color + '\'' +
-                ", sizeEu=" + size.eu +
-                ", sizeUk=" + size.uk +
-                ", sizeUs=" + size.us +
-                ", sizeCm=" + size.cm +
-                ", brand='" + brand + '\'' +
+                ", color=" + color +
+                ", size=" + size +
+                ", brand=" + brand +
+                ", stock=" + stock +
+                ", amountOrdered=" + amountOrdered +
                 '}';
     }
 
