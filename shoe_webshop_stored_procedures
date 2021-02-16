@@ -1,0 +1,147 @@
+USE sql_shoe_webshop;
+
+-- ----------------------------------------
+-- ---------- STORED PROCEDURE ------------
+-- ----------------------------------------
+
+-- Use addToCart
+-- CALL addToCart(1,45,1); -- customer does not exist
+-- CALL addToCart(1,1,3000); -- product does not exist
+-- CALL addToCart(1000,1,1);
+-- CALL remove_form_cart(1,1,74);
+
+-- G SQL
+-- Skapa en stored procedure ”AddToCart”. Denna procedur skall ta kundid, beställningsid och
+-- produktid som inparametrar. (Beroende på hur din implementation ser ut kan du behöva använda
+-- andra värden som inparametrar, justera i så fall parameterlistan för att kunna peka ut en produkt,
+-- kund och beställning.) AddToCart ska uppfylla följande:
+-- • Om beställningen inte finns eller om vi skickar in null som beställningsid ska en ny beställning skapas och produkten läggas till i den.
+-- • Om beställningen redan finns ska produkten läggas till i beställningen.
+-- • Om beställningen finns och produkten redan finns i den ska vi lägga till ytterligare ett exemplar av produkten i beställningen.
+-- • För varje produkt som blir tillagd i en beställning ska lagerantalet av produkten minska.
+-- • Använd dig av transaktioner och felhantering
+
+DROP PROCEDURE IF EXISTS addToCart;
+DELIMITER //
+CREATE PROCEDURE addToCart (orders_id INT, customer_id INT, product_id INT)
+add_to_cart: BEGIN
+DECLARE new_order_id INT;
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+		ROLLBACK;
+        SELECT('SQLEXCEPTION, changes not saved') AS MESSAGE;
+END;
+START TRANSACTION;
+		-- KOLLAR OM KUNDEN FINNS
+		IF NOT customer_exists(customer_id) THEN 
+			SELECT("Error: customer doesn't exist") AS MESSAGE;
+				LEAVE add_to_cart;
+		-- KOLLAR OM PRODUCTEN FINNS
+        ELSEIF NOT product_exists(product_id) THEN 
+			SELECT("Error: product doesn't exist") AS MESSAGE;
+				LEAVE add_to_cart;
+		-- KOLLAR OM PRODUCTEN FINNS I LAGER
+		ELSEIF product_in_stock(product_id) = 0 THEN
+			SELECT("Error: product not in stock") AS MESSAGE;
+				LEAVE add_to_cart;
+		ELSE
+			-- KOLLAR OM ORDERN INTE FINNS
+			IF NOT current_order_exists(orders_id) THEN 
+				INSERT INTO orders(fk_customer_id, date, time) VALUES (customer_id, CURRENT_DATE(), CURRENT_TIME());
+					SET new_order_id = LAST_INSERT_ID();
+				INSERT INTO orders_product(fk_orders_id, fk_product_id, quantity, product_price) 
+					VALUES (orders_id, product_id, 1,(SELECT price_sek FROM product WHERE product.id = product_id));
+				SELECT('Message: New product added to order') AS MESSAGE;
+			-- OM ORDERN FINNS
+            ELSE 
+				-- OM PRODUCTEN FINNS I ORDER
+				IF is_product_in_current_order(orders_id, product_id) THEN 
+					UPDATE orders_product SET quantity = (quantity) + 1
+						WHERE fk_orders_id = orders_id AND fk_product_id = product_id;
+				SELECT('Message: Added 1 more product') AS MESSAGE;
+				-- OM PRODUKTEN INTE FINNS I ORDER
+				ELSE 
+					INSERT INTO orders_product(fk_orders_id, fk_product_id, quantity, product_price) 
+						VALUES (orders_id, product_id, 1,(SELECT price_sek FROM product WHERE product.id = product_id));
+				SELECT('Message: New product added to order') AS MESSAGE;
+				END IF;
+			END IF;
+		END IF;
+        
+	UPDATE product SET stock = (stock) -1 
+		WHERE product.id = product_id;
+	SELECT('Removed 1 from stock');
+COMMIT;
+END //
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS remove_form_cart;
+DELIMITER //
+CREATE PROCEDURE remove_form_cart (orders_id INT, customer_id INT, product_id INT)
+remove_form_cart: BEGIN
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+		ROLLBACK;
+        SELECT('SQLEXCEPTION, changes not saved') AS MESSAGE;
+END;
+START TRANSACTION;
+				-- KOLLAR OM ORDERN INTE FINNS
+			IF NOT current_order_exists(orders_id) THEN 
+				SELECT('Message: No order with that ordernumber') AS MESSAGE;
+					LEAVE remove_form_cart;
+			-- OM ORDERN FINNS
+            ELSE 
+				-- OM PRODUCTEN FINNS I ORDER
+				IF is_product_in_current_order(orders_id, product_id) THEN 
+					UPDATE orders_product SET quantity = (quantity) - 1
+						WHERE fk_orders_id = orders_id AND fk_product_id = product_id;
+							SELECT('Message: Removed 1 product') AS MESSAGE;
+					UPDATE product SET stock = (stock) + 1
+						WHERE product.id = product_id;
+				-- OM PRODUCTEN INTE FINNS I ORDER
+                ELSE
+					SELECT("Message: Couldn't remove product from order") AS MESSAGE;
+						LEAVE remove_form_cart;
+				END IF;    
+			END IF;
+COMMIT;
+END //
+DELIMITER ;
+
+
+
+DROP PROCEDURE IF EXISTS rate;
+-- VG SQL
+-- Skapa en stored procedure ”Rate” som lägger till ett betyg och en kommentar på en specifik produkt
+-- för en specifik kund
+DELIMITER //
+CREATE PROCEDURE rate(input_customer_id INT, input_product_id INT, input_rating_id INT, input_review_text VARCHAR(100))
+rate:BEGIN
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+		ROLLBACK;
+        SELECT('SQLEXCEPTION, changes not saved') AS MESSAGE;
+END;	
+START TRANSACTION;
+	IF NOT customer_exists(input_customer_id) THEN
+		SELECT 'Customer does not exist in the database' AS ERROR;
+			LEAVE rate;
+	ELSEIF NOT product_exists(input_product_id) THEN
+		SELECT 'Shoe does not exist in the database' AS ERROR;
+			LEAVE rate;
+	ELSEIF NOT rating_exists(input_rating_id) THEN
+		SELECT 'Rating does not exist in the database' AS ERROR;
+			LEAVE rate;
+	ELSE
+		INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (input_product_id, input_customer_id, input_rating_id, input_review_text);
+            
+	END IF;
+COMMIT;
+END //
+DELIMITER ;
+
+
+
+CALL rate(1,47,5,'fin sko');
+
+
