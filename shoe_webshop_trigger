@@ -1,0 +1,23 @@
+USE sql_shoe_webshop;
+
+-- ----------------------------------------
+-- ----- TRIGGER -----------------------
+-- ----------------------------------------
+
+-- G SQL
+-- Vi vill även kunna kolla upp hur ofta en viss produkt säljer slut. Skapa därför en trigger som lägger in
+-- en rad i en tabell som heter Slutilager om en produkt tar slut i lager. Slutilager skall innehålla datum
+-- och produktId
+
+DROP TRIGGER IF EXISTS out_of_stock;
+DELIMITER //
+CREATE TRIGGER out_of_stock
+AFTER UPDATE ON product
+FOR EACH ROW 
+BEGIN
+	IF (NEW.stock = 0) THEN
+		INSERT INTO not_in_stock(fk_product_id, date_out_of_stock) 
+        VALUES (OLD.id, CURRENT_DATE());
+	END IF;
+END //
+DELIMITER ;    
