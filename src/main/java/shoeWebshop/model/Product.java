@@ -10,30 +10,48 @@ public class Product {
     Color color;
     Size size;
     Brand brand;
+    Category category;
     int stock;
+    int amountOrdered;
+    double averageScore;
 
-    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
+    public Product(double averageScore) {
+        this.averageScore = averageScore;
+    }
+
+    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, Category category, int stock) {
         this.id = id;
         this.productName = productName;
         this.priceSek = priceSek;
         this.color = color;
         this.size = size;
         this.brand = brand;
+        this.category = category;
         this.stock = stock;
+    }
+
+    public Product(int id, String productName, double priceSek, Color color, Size size, int amountOrdered ,Brand brand) {
+        this.id = id;
+        this.productName = productName;
+        this.priceSek = priceSek;
+        this.color = color;
+        this.size = size;
+        this.amountOrdered = amountOrdered;
+        this.brand = brand;
 
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "productName='" + productName + '\'' +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
                 ", priceSek=" + priceSek +
-                ", color='" + color + '\'' +
-                ", sizeEu=" + size.eu +
-                ", sizeUk=" + size.uk +
-                ", sizeUs=" + size.us +
-                ", sizeCm=" + size.cm +
-                ", brand='" + brand + '\'' +
+                ", color=" + color +
+                ", size=" + size +
+                ", brand=" + brand +
+                ", stock=" + stock +
+                ", amountOrdered=" + amountOrdered +
                 '}';
     }
 
@@ -58,7 +76,6 @@ public class Product {
     }
 
     public double getSize() {
-
         return size.eu;
     }
 
@@ -66,9 +83,8 @@ public class Product {
         return brand.brandName;
     }
 
-
-    public static Product getProduct(int id){
-        return Database.getAllProducts().stream().filter(b -> b.id==id).map(b -> new Product(b.id,b.productName, b.priceSek, b.color, b.size, b.brand, b.stock)).findFirst().orElse(null);
-
+    public int getAmountOrdered() {
+        return amountOrdered;
     }
+
 }

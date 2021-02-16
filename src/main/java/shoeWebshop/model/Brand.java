@@ -1,5 +1,4 @@
 package shoeWebshop.model;
-import shoeWebshop.model.Utils.Database;
 
 public class Brand {
     int id;
@@ -9,9 +8,12 @@ public class Brand {
         this.id = id;
         this.brandName = brandName;
     }
-    
-    public static Brand getBrand(int c){
-        return Database.getBrands().stream().filter(b -> b.id==c).map(b -> new Brand(b.id, b.brandName)).findFirst().orElse(null);
 
+    @Override
+    public String toString() {
+        return "Brand{" +
+                "id=" + id +
+                ", brandName='" + brandName + '\'' +
+                '}';
     }
 }

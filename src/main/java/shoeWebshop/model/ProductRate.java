@@ -14,4 +14,15 @@ public class ProductRate {
         this.rateId = rating;
         this.review = review;
     }
+
+    @Override
+    public String toString() {
+        return "ProductRate{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", customerId=" + customerId +
+                ", rateId=" + rateId +
+                ", review='" + review + '\'' +
+                '}';
+    }
 }

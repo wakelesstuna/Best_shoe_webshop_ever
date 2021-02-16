@@ -4,7 +4,7 @@ public class OrdersProduct {
     int id;
     Orders orders;
     Product product;
-    double productPrice; // denna ska ta värdet ifrån product klassen när den skapas
+    double productPrice;
     int quantity;
 
     public OrdersProduct(int id, Orders orders, Product product, double productPrice, int quantity) {
@@ -13,5 +13,16 @@ public class OrdersProduct {
         this.product = product;
         this.productPrice = productPrice;
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrdersProduct{" +
+                "id=" + id +
+                ", orders=" + orders +
+                ", product=" + product +
+                ", productPrice=" + productPrice +
+                ", quantity=" + quantity +
+                '}';
     }
 }

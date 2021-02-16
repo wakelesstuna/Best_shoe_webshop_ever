@@ -5,13 +5,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import shoeWebshop.Main;
 import shoeWebshop.model.Product;
+import shoeWebshop.model.ReviewObject;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static shoeWebshop.controllers.FxmlUtils.View.*;
 
 public class ReviewController implements Initializable {
 
@@ -39,6 +40,8 @@ public class ReviewController implements Initializable {
     @FXML
     private TableColumn<Product, String> colorCol;
 
+    private TableColumn<Product, Double> avgScoreCol;
+
     @FXML
     private HBox radioButtonBox;
 
@@ -63,8 +66,6 @@ public class ReviewController implements Initializable {
     @FXML
     private Button leaveReviewButton;
 
-    String selectedShoe = "runner";
-    int reviewScore = 8;
     ToggleGroup reviewGroup;
 
     @Override
@@ -75,7 +76,8 @@ public class ReviewController implements Initializable {
         reviewThree.setToggleGroup(reviewGroup);
         reviewFour.setToggleGroup(reviewGroup);
         reviewFive.setToggleGroup(reviewGroup);
-        fillReviewTable(Main.list);
+        reviewText.setText("");
+        fillReviewTable(Database.getAllProducts());
 
         if (FxmlUtils.isLoggedIn) {
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
@@ -90,27 +92,29 @@ public class ReviewController implements Initializable {
             reviewText.setDisable(true);
             leaveReviewButton.setDisable(true);
         }
-
-        // TODO: 2021-02-03 fill the table with shoes that have a review
-
     }
 
     public void showReview(){
-        // TODO: 2021-02-03 get review from database based on selecetedShoe
+        // TODO: 2021-02-13 fråga sigrun om detta är regelrätt?
+        Product selectedItem = choseShoeToReview.getSelectionModel().getSelectedItem();
+        String message;
+        try{
+            message = buildReviewString(Database.getReviewObject(selectedItem));
+        } catch (IndexOutOfBoundsException e){
+            message = "No review yet on the selected product";
+        }
 
-        FxmlUtils.showMessage("Reviews", "Review of " + selectedShoe + "\nReview score: " + reviewScore,
-                "Mycket bra sko, fin passform", Alert.AlertType.INFORMATION);
+        FxmlUtils.showMessage("Review", message, null, Alert.AlertType.INFORMATION);
     }
 
     public void leaveReview(){
-        // TODO: 2021-02-03 send review to database
-
         Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
-        int rating = 1; //(int) reviewGroup.getSelectedToggle().getUserData();
-        System.out.println(selectedProduct.getId());
-        System.out.println(reviewText.getText());
+        int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 
-        Database.createNewReview(selectedProduct,rating,reviewText.getText());
+        Database.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
+        reviewGroup.getSelectedToggle().setSelected(false);
+        reviewText.setText("");
+
     }
 
     public void fillReviewTable(List<Product> list) {
@@ -124,34 +128,75 @@ public class ReviewController implements Initializable {
         choseShoeToReview.getItems().setAll(list);
     }
 
+    public void setAvgScore(List<ReviewObject> list){
+        double averageReviewScore = list.stream().mapToDouble(ReviewObject::getRating).average().orElseThrow();
+        avgScoreCol.setCellValueFactory(new PropertyValueFactory<>("averageScore"));
+        Product tempProduct = new Product(averageReviewScore);
+        choseShoeToReview.getItems().set(6,tempProduct);
+
+    }
+
+    private String buildReviewString(List<ReviewObject> list){
+        StringBuilder sb = new StringBuilder();
+        String productName = list.get(0).getProductName();
+        double size = list.get(0).getSize();
+        double averageReviewScore = list.stream().mapToDouble(ReviewObject::getRating).average().orElseThrow();
+
+        sb.append("Review of shoe: ")
+                .append(productName)
+                .append("   Product size: ")
+                .append(size)
+                .append("\n")
+                .append("Average product score: ")
+                .append(averageReviewScore)
+                .append("\n")
+                .append("\n");
+
+        for (int i = 0; i < list.size(); i++) {
+            sb.append("Review nr: ")
+                    .append(i+1)
+                    .append("   Review by: ")
+                    .append(list.get(i).getCustomerName())
+                    .append("\n")
+                    .append("Score: ")
+                    .append(list.get(i).getRating())
+                    .append("\n")
+                    .append("Comment: ")
+                    .append(list.get(i).getReview())
+                    .append("\n")
+                    .append("\n");
+        }
+
+        return sb.toString();
+    }
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView() {
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+    public void changeToProductView(){
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToProductView() {
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
     }
 
     public void changeToReviewView() {
-        FxmlUtils.changeScenes(FxmlUtils.reviewView());
+        FxmlUtils.changeView(REVIEW);
     }
 
-    public void changeToOrderView() {
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+    public void changeToOrderView(){
+        FxmlUtils.changeView(ORDER);
     }
 
-    public void changeToLoginView() {
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+    public void changeToLoginView(){
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 
 }

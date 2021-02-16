@@ -1,7 +1,5 @@
 package shoeWebshop.model;
 
-import shoeWebshop.model.Utils.Database;
-
 public class Size {
     int id;
     double eu;
@@ -22,7 +20,15 @@ public class Size {
         this.eu = eu;
     }
 
-    public static Size getSize(int id){
-        return Database.getSizes().stream().filter(b -> b.id==id).map(b -> new Size(b.id, b.eu)).findFirst().orElse(null);
+    @Override
+    public String toString() {
+        return "Size{" +
+                "id=" + id +
+                ", eu=" + eu +
+                ", uk=" + uk +
+                ", us=" + us +
+                ", cm=" + cm +
+                '}';
     }
 }
+

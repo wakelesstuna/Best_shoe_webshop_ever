@@ -10,12 +10,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.City;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-public class CreateUserContoller implements Initializable {
+import static shoeWebshop.controllers.FxmlUtils.View.*;
+
+public class CreateUserController implements Initializable {
 
     @FXML
     private Label loggedIn;
@@ -40,9 +41,6 @@ public class CreateUserContoller implements Initializable {
 
     @FXML
     private TextField zipCode;
-
-    @FXML
-    private TextField city;
 
     @FXML
     private ComboBox cityBox;
@@ -73,14 +71,10 @@ public class CreateUserContoller implements Initializable {
         String customerPhoneNumber = phoneNumber.getText();
         String customerAddress = Address.getText();
         int customerZipCode = Integer.parseInt(zipCode.getText());
-
         String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
 
-        System.out.println("City: " + customerCity);
-
         Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
-
         eraseAllTextFields();
 
         FxmlUtils.changeScenes(FxmlUtils.loginView());
@@ -95,7 +89,6 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setText("");
         Address.setText("");
         zipCode.setText("");
-        //city.setText("");
         password.setText("");
 
         firstName.setPromptText("first name");
@@ -105,7 +98,6 @@ public class CreateUserContoller implements Initializable {
         phoneNumber.setPromptText("phone number");
         Address.setPromptText("address");
         zipCode.setPromptText("zip code");
-        //city.setPromptText("city");
         password.setPromptText("password");
     }
 
@@ -120,35 +112,36 @@ public class CreateUserContoller implements Initializable {
     }
 
     public void fillComboBox(ComboBox<String> comboBox){
-        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCountyName).collect(Collectors.toList()));
+        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
         comboBox.setItems(list);
     }
 
-
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
-    }
-
     public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToReviewView() { FxmlUtils.changeScenes(FxmlUtils.reviewView());}
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
+    }
+
+    public void changeToReviewView() {
+        FxmlUtils.changeView(REVIEW);
+    }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         FxmlUtils.whoIsLoggedIn = null;
         loggedIn.setText("");
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 }

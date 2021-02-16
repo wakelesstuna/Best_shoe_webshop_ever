@@ -1,6 +1,5 @@
 package shoeWebshop.controllers;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -8,13 +7,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import shoeWebshop.Main;
+import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
+import shoeWebshop.model.Utils.Database;
 import shoeWebshop.model.Utils.SendEmail;
-
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static shoeWebshop.controllers.FxmlUtils.View.*;
 
 public class ProductController implements Initializable {
 
@@ -82,19 +83,20 @@ public class ProductController implements Initializable {
     @FXML
     private TableColumn<Product, Integer> cartQuantityCol;
 
+    @FXML
+    private Button newOrderBtn;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        showTotalPrice.setText("0");
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
-            addToCart.setDisable(false);
-            removeFromCart.setDisable(false);
-            cartTable.setDisable(false);
-            totalPrice.setDisable(false);
-            cartBox.setDisable(false);
-            sendOrder.setDisable(false);
+            if (FxmlUtils.orderCreatedButNotSent){
+                fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
+            }else {
+                customerLoggedInButNoOrderCreated();
+            }
         }else{
             loggedIn.setText("Logged in: not logged in");
             addToCart.setDisable(true);
@@ -103,88 +105,131 @@ public class ProductController implements Initializable {
             totalPrice.setDisable(true);
             cartBox.setDisable(true);
             sendOrder.setDisable(true);
+            newOrderBtn.setDisable(true);
         }
-        fillProductTable(Main.list);
-
-        // TODO: 2021-02-03 fill the table with all shoes in the database
+        fillProductTable(Database.getAllProducts());
     }
 
-    public void sendOrder(){
-        List<Product> products = cartTable.getItems();
-        SendEmail.sendOrderConfirmMail("nackademinJava20A@gmail.com", "Shoe Order", products, FxmlUtils.whoIsLoggedIn.getFullName());
-        FxmlUtils.showMessage("Order", "Order Sent!", "Thank you for ordering from\nBest Shoe Shop Ever!", Alert.AlertType.INFORMATION);
-        cartTable.getItems().clear();
-        showTotalPrice.setText("0");
 
-        System.out.println("sending");
-    }
 
-    public void fillProductTable(List<Product> list){
-            modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
-            brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
-            priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
-            sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
-            colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
-            stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+    public void createNewOrder(){
+        FxmlUtils.currentCustomerOrder = Database.createNewOrder(FxmlUtils.whoIsLoggedIn);
+        addToCart.setDisable(false);
+        removeFromCart.setDisable(false);
+        cartTable.setDisable(false);
+        sendOrder.setDisable(false);
+        newOrderBtn.setDisable(true);
 
-            productTable.getItems().setAll(list);
+        FxmlUtils.orderCreatedButNotSent = true;
     }
 
     public void addToCart(){
-        System.out.println("+");
-
         Product selectedItem = productTable.getSelectionModel().getSelectedItem();
 
+        if (selectedItem.getStock() == 0){
+            FxmlUtils.showMessage("Error", "Sorry, selected product is out of stock!", null, Alert.AlertType.ERROR);
+        }else{
+            Database.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, selectedItem.getId());
+            FxmlUtils.showMessage("Added to cart", "New item added to your cart", null, Alert.AlertType.INFORMATION);
+
+            fillProductTable(Database.getAllProducts());
+            fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
+            addToTotalPrice(selectedItem);
+        }
+    }
+
+    public void removeFromCart(){
+        Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
+
+        if (!(selectedItem.getAmountOrdered() == 0)){
+            Database.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
+            fillProductTable(Database.getAllProducts());
+            cartTable.getItems().remove(selectedItem);
+
+            Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn);
+            fillCartTable(Database.getSelectedOrder(tempOrder));
+            substractFromTotalPrice(selectedItem);
+        }
+    }
+
+    public void sendOrder(){
+        SendEmail.sendOrderConfirmMail(FxmlUtils.whoIsLoggedIn.getEmail(), "Shoe Order", cartTable.getItems(), FxmlUtils.whoIsLoggedIn.getFullName());
+        FxmlUtils.showMessage("Order", "Order Sent!\nThank you for ordering from\nBest Shoe Shop Ever!", null, Alert.AlertType.INFORMATION);
+
+        FxmlUtils.orderCreatedButNotSent = false;
+
+        cartTable.getItems().clear();
+        showTotalPrice.setText("0");
+        customerLoggedInButNoOrderCreated();
+    }
+
+    public void fillProductTable(List<Product> list){
+        modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
+        brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
+        sizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
+        colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
+        stockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
+        productTable.getItems().setAll(list);
+    }
+
+    public void fillCartTable(List<Product> list){
         cartModelCul.setCellValueFactory(new PropertyValueFactory<>("productName"));
         cartBrandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
         cartPriceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
         cartSizeCol.setCellValueFactory(new PropertyValueFactory<>("size"));
-        cartQuantityCol.setCellValueFactory(e -> new SimpleIntegerProperty(1).asObject());
+        cartQuantityCol.setCellValueFactory(new PropertyValueFactory<>("amountOrdered"));
 
-        cartTable.getItems().add(selectedItem);
-
-        // add to price
-        double price = Double.parseDouble(showTotalPrice.getText());
-        showTotalPrice.setText(price + selectedItem.getPriceSek() + "");
+        cartTable.getItems().setAll(list);
     }
 
-    public void removeFromCart(){
-        System.out.println("-");
+    private void customerLoggedInButNoOrderCreated(){
+        addToCart.setDisable(true);
+        removeFromCart.setDisable(true);
+        cartTable.setDisable(true);
+        totalPrice.setDisable(false);
+        cartBox.setDisable(false);
+        newOrderBtn.setDisable(false);
+        sendOrder.setDisable(true);
+    }
 
-        Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
-        cartTable.getItems().remove(selectedItem);
-
-        // remove from price
+    public void addToTotalPrice(Product product){
         double price = Double.parseDouble(showTotalPrice.getText());
-        showTotalPrice.setText(price - selectedItem.getPriceSek() + "");
+        showTotalPrice.setText(price + product.getPriceSek() + "");
+    }
+
+    public void substractFromTotalPrice(Product product){
+        double price = Double.parseDouble(showTotalPrice.getText());
+        showTotalPrice.setText(price - product.getPriceSek() + "");
     }
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+    public void changeToProductView(){
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
     }
 
     public void changeToReviewView() {
-        FxmlUtils.changeScenes(FxmlUtils.reviewView());
+        FxmlUtils.changeView(REVIEW);
     }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 }

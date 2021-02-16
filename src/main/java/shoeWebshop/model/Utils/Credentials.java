@@ -15,11 +15,11 @@ public class Credentials {
     private static String decryptKey;
     private static String decryptValue;
 
-    public Credentials(){
+    public Credentials() {
         Properties prop = new Properties();
-        try (FileReader file = new FileReader("src/main/java/shoeWebshop/user.properties")){
+        try (FileReader file = new FileReader("src/main/java/shoeWebshop/user.properties")) {
             prop.load(file);
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Couldn't read properties");
         }
         username = prop.getProperty("username");
@@ -31,15 +31,6 @@ public class Credentials {
         decryptKey = prop.getProperty("decryptkey");
         decryptValue = prop.getProperty("decryptvalue");
     }
-
-    // TODO: 2021-02-09 kan implementeras om man vill fixa alla fel...
-    /*private static Credentials credentials = null;
-    public static Credentials getInstance() {
-        if (credentials == null){
-            credentials = new Credentials();
-        }
-        return credentials;
-    }*/
 
     public enum USER {
         SENDER_EMAIL(username),
@@ -62,7 +53,6 @@ public class Credentials {
             return s;
         }
 
-        public Integer toInt() {return Integer.parseInt(s);}
     }
 }
 

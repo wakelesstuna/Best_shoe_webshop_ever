@@ -7,9 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.Utils.Database;
-
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static shoeWebshop.controllers.FxmlUtils.View.*;
 
 public class LoginController implements Initializable {
 
@@ -25,13 +26,13 @@ public class LoginController implements Initializable {
     @FXML
     private Label loginText;
 
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loginEmail.setPromptText("Email");
-        loginPassword.setPromptText("Password");
+        setPromptTextOnLoggIn();
+
         if (FxmlUtils.isLoggedIn){
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn);
+            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
+            loginText.setText("Logged in as " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
@@ -40,54 +41,62 @@ public class LoginController implements Initializable {
     public void authorizeLogin(){
 
         if (loginEmail.getText().isEmpty() || loginPassword.getText().isEmpty()){
+            FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
 
-            FxmlUtils.showMessage("Input", "Input","You need to enter a email\nand a password", Alert.AlertType.ERROR);
+        } else {
+            if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
-        } else if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
+                FxmlUtils.showMessage("Logged in", "You are logged in", null, Alert.AlertType.INFORMATION);
 
-            FxmlUtils.isLoggedIn = true;
+                System.out.println(FxmlUtils.whoIsLoggedIn);
 
-            loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
-            loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
-            loginEmail.setText("");
-            loginPassword.setText("");
-
-        }else {
-            FxmlUtils.showMessage("Warning", "Couldn't find any user","Wrong email or password, try again", Alert.AlertType.ERROR);
+                loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
+                loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
+            } else {
+                FxmlUtils.showMessage("Warning", "Wrong username or password", null, Alert.AlertType.ERROR);
+            }
+            setPromptTextOnLoggIn();
         }
+    }
+
+    public void setPromptTextOnLoggIn(){
+        loginEmail.setText("");
+        loginPassword.setText("");
+        loginEmail.setPromptText("Email");
+        loginPassword.setPromptText("Password");
     }
 
     //---- Nav Links ----\\
 
-    public void changeToHomeView(){
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
-    }
-
     public void changeToProductView(){
-        FxmlUtils.changeScenes(FxmlUtils.productView());
+        FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToReviewView() { FxmlUtils.changeScenes(FxmlUtils.reviewView()); }
+    public void changeToHomeView(){
+        FxmlUtils.changeView(MAIN);
+    }
+
+    public void changeToReviewView() {
+        FxmlUtils.changeView(REVIEW);
+    }
 
     public void changeToOrderView(){
-        FxmlUtils.changeScenes(FxmlUtils.orderView());
+        FxmlUtils.changeView(ORDER);
     }
 
     public void changeToLoginView(){
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
     }
 
     public void changeToCreateUserView(){
-        FxmlUtils.changeScenes(FxmlUtils.createUserView());
+        FxmlUtils.changeView(CREATE_USEER);
     }
-
-
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
-        FxmlUtils.changeScenes(FxmlUtils.homeView());
+        changeToHomeView();
     }
 
 }

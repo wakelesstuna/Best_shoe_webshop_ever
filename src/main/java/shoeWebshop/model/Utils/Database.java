@@ -5,7 +5,6 @@ import shoeWebshop.controllers.FxmlUtils;
 import shoeWebshop.model.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.sql.*;
 
@@ -14,11 +13,6 @@ import static shoeWebshop.model.Utils.Credentials.USER.*;
 public class Database extends Credentials {
 
     private static Connection connection;
-
-    public static void main(String[] args) {
-        Credentials c = new Credentials();
-        getAllCustomers().forEach(System.out::println);
-    }
 
     public static void createConnection() {
         try {
@@ -30,29 +24,32 @@ public class Database extends Credentials {
         }
     }
 
+    //------------------------------------------ CUSTOMER FUNCTIONS ---------------------------------------------------\\
+
     public static boolean isAuthorizeLogin(String userName, String password) {
         createConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM customer JOIN city ON city.id = customer.fk_city_id WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?");
+            PreparedStatement stmt = connection.prepareStatement(
+                    "SELECT * FROM sql_shoe_webshop.customer " +
+                            "JOIN sql_shoe_webshop.city ON city.id = customer.fk_city_id " +
+                            "WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?");
             stmt.setString(1, userName);
             stmt.setString(2, password);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                FxmlUtils.showMessage("Logged in", "Logged in", "Logged in sucsses", Alert.AlertType.INFORMATION);
                 FxmlUtils.isLoggedIn = true;
-                createLoggedInCustomer(rs);
+                FxmlUtils.whoIsLoggedIn = createLoggedInCustomer(rs);
                 return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        FxmlUtils.showMessage("Warning", "Not logged in", "Wrong username or password", Alert.AlertType.ERROR);
         return false;
     }
 
-    private static void createLoggedInCustomer(ResultSet rs) throws SQLException {
-        FxmlUtils.whoIsLoggedIn = new Customer(rs.getInt(1),rs.getString("first_name"),
+    private static Customer createLoggedInCustomer(ResultSet rs) throws SQLException {
+        return new Customer(rs.getInt("id"), rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getInt("phone_number"),
                 rs.getString("email"),
@@ -60,8 +57,6 @@ public class Database extends Credentials {
                 rs.getString("social_security_number"),
                 rs.getString("address"),
                 new City(rs.getInt(12), rs.getString(13), rs.getInt(14)));
-        // TODO: 2021-02-09 Lägg till så man får rätt city, hämta id, namn, och zip code
-        System.out.println(FxmlUtils.whoIsLoggedIn);
     }
 
     public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address, String city, int zipCode) {
@@ -70,7 +65,12 @@ public class Database extends Credentials {
             if (getAllCustomers().stream().anyMatch(e -> e.getEmail().equals(email))) {
                 FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
             } else {
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?,(SELECT id FROM city WHERE city.city_name = '" + city + "'))");
+                PreparedStatement stmt = connection.prepareStatement(
+                        "INSERT INTO sql_shoe_webshop.customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) " +
+                                "VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?," +
+                                "(SELECT id FROM sql_shoe_webshop.city WHERE city.city_name = '" + city + "'))");
+                // TODO: 2021-02-15 fixa så man lägger in zipCode också
+
                 stmt.setString(1, firstName);
                 stmt.setString(2, lastName);
                 stmt.setString(3, phoneNumber);
@@ -87,50 +87,6 @@ public class Database extends Credentials {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-    }
-
-    public static List<Customer> getAllCustomers() {
-        List<Customer> customers = new ArrayList<>();
-        createConnection();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM customer JOIN city ON customer.fk_city_id = city.id");
-            while (rs.next()) {
-                int id = Integer.parseInt(rs.getString("id"));
-                String firstName = rs.getString("first_name");
-                String lastName = rs.getString("last_name");
-                int phoneNumber = rs.getInt("phone_number");
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                String socialSecurityNumber = rs.getString("social_security_number");
-                String address = rs.getString("address");
-                City city = City.getCity(rs.getInt("fk_city_id"));
-
-                customers.add(new Customer(id, firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
-            }
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return customers;
-    }
-
-    public static void createNewReview(Product product, int rating, String review) {
-        createConnection();
-        try {
-            System.out.println(product.getId() + " " +  FxmlUtils.whoIsLoggedIn.getId() + " " + review);
-            PreparedStatement stmt = connection.prepareStatement("INSERT INTO product_review (fk_product_id,fk_customer_id,fk_rating_id, review) VALUES (?,?,1,?)");
-            // (SELECT id FROM rating WHERE rating.rating_number = " + rating + ")
-            stmt.setInt(1, product.getId());
-            stmt.setInt(2, FxmlUtils.whoIsLoggedIn.getId());
-            stmt.setString(3,review);
-            stmt.execute();
-
-            FxmlUtils.showMessage("Review", "Thank you for you're review", null, Alert.AlertType.INFORMATION);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public static List<City> getAllCities() {
@@ -138,7 +94,7 @@ public class Database extends Credentials {
         createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM city;");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.city;");
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String cityName = rs.getString("city_name");
@@ -152,247 +108,137 @@ public class Database extends Credentials {
         return cities;
     }
 
-    public static List<Size> getSizes() {
+    public static List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
         createConnection();
-        List<Size> sizes = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM size ");
-
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT * FROM sql_shoe_webshop.customer " +
+                            "JOIN sql_shoe_webshop.city ON customer.fk_city_id = city.id");
             while (rs.next()) {
                 int id = Integer.parseInt(rs.getString("id"));
-                double eu = Double.parseDouble(rs.getString("eu"));
-                double us = Double.parseDouble(rs.getString("us"));
-                double uk = Double.parseDouble(rs.getString("uk"));
-                double cm = Double.parseDouble(rs.getString("cm"));
-                sizes.add(new Size(id, eu, us, uk, cm));
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                int phoneNumber = rs.getInt("phone_number");
+                String email = rs.getString("email");
+                String password = rs.getString("password");
+                String socialSecurityNumber = rs.getString("social_security_number");
+                String address = rs.getString("address");
+                City city = new City(rs.getInt("fk_city_id"), rs.getString("city_name"), rs.getInt("zip_code"));
 
+                customers.add(new Customer(id, firstName, lastName, phoneNumber, email, password, socialSecurityNumber, address, city));
             }
 
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
-        return sizes;
-    }
-    Orders ordersId;
-    Product productId;
-    double productPrice; // denna ska ta värdet ifrån product klassen när den skapas
-    int quantity;
-
-    public static List<OrdersProduct> getOrderProduct() {
-        createConnection();
-        List<OrdersProduct> ordersProducts = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM orders_product ");
-
-            while (rs.next()) {
-                int id = Integer.parseInt(rs.getString("id"));
-                int orders_id = (rs.getInt("fk_orders_id"));
-                Orders ordersId = getOrders().get(orders_id);
-
-                int product_id = (rs.getInt("fk_product_id"));
-                Product productId= Product.getProduct(product_id);
-
-                double productPrice =(rs.getDouble("product_price"));
-                int quantity = (rs.getInt("quantity"));
-                ordersProducts.add(new OrdersProduct(id, ordersId, productId, productPrice, quantity));
-
-            }
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return ordersProducts;
+        return customers;
     }
 
-    public static List<ProductCategory> getProductCategory() {
-        createConnection();
-        List<ProductCategory> productCategories = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product_category");
+    //--------------------------------------------- REVIEW FUNCTIONS ---------------------------------------------------\\
 
-            while (rs.next()) {
-                int id = (rs.getInt("id"));
-                int cId = (rs.getInt("fk_category_id"));
-                Category categoryId = Category.getCategory(cId);
-
-                int product_id = (rs.getInt("fk_product_id"));
-                Product productId= Product.getProduct(product_id);
-
-                productCategories.add(new ProductCategory(id, categoryId, productId));
-
-            }
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return productCategories;
-    }
-
-    public static List<Rate> getRates() {
-        createConnection();
-        List<Rate> ratings = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM rating");
-
-            while (rs.next()) {
-                int id = (rs.getInt("id"));
-                String ratingText = (rs.getString("rating_text"));
-                int ratingNumber = (rs.getInt("rating_number"));
-
-                ratings.add(new Rate(id, ratingText, ratingNumber));
-
-            }
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return ratings;
-    }
-
-    public static List<ProductRate> getProductRatings() {
-        createConnection();
-        List<ProductRate> productRatings = new ArrayList<>();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product_review");
-
-            while (rs.next()) {
-                int id = (rs.getInt("id"));
-
-                int product_id = (rs.getInt("fk_product_id"));
-                Product productId= Product.getProduct(product_id);
-
-                int cId = (rs.getInt("fk_customer_id"));
-                Customer customer = Customer.getCustomer(cId);
-
-                int rId = (rs.getInt("fk_rating_id"));
-                Rate rating = Rate.getRatings(rId);
-
-                String review = (rs.getString("review"));
-
-
-                productRatings.add(new ProductRate(id, productId, customer,rating, review  ));
-
-            }
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return productRatings;
-    }
-
-
-    public static List<Brand> getBrands() {
-        List<Brand> brands = new ArrayList<>();
+    public static void createNewReview(Product product, int rating, String review) {
         createConnection();
         try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM brand ");
+            CallableStatement cstmt = connection.prepareCall("{CALL rate(?,?,(SELECT id FROM sql_shoe_webshop.rating WHERE rating.rating_number = " + rating + "),?)}");
 
-            while (rs.next()) {
-                int id = Integer.parseInt(rs.getString("id"));
-                String brand = (rs.getString("brand_name"));
+            cstmt.setInt(1, FxmlUtils.whoIsLoggedIn.getId());
+            cstmt.setInt(2, product.getId());
+            cstmt.setString(3, review);
+            cstmt.execute();
 
-                brands.add(new Brand(id, brand));
-            }
+            System.out.println("Calling Stored procedure rate from database");
 
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
+            FxmlUtils.showMessage("Review", "Thank you for you're review", null, Alert.AlertType.INFORMATION);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return brands;
     }
 
-    public static List<City> getCitys() {
+    public static List<ReviewObject> getReviewObject(Product product) {
         createConnection();
-        List<City> citys = new ArrayList<>();
+        List<ReviewObject> reviewObjects = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM city ");
-
+            ResultSet rs = stmt.executeQuery("SELECT product.id, product.product_name, customer.first_name, customer.last_name, size.eu, rating.rating_number, review FROM sql_shoe_webshop.product_review " +
+                    "JOIN sql_shoe_webshop.product ON product.id = product_review.fk_product_id " +
+                    "JOIN sql_shoe_webshop.rating ON rating.id = product_review.fk_rating_id " +
+                    "JOIN sql_shoe_webshop.size ON size.id = product.fk_size_id " +
+                    "JOIN sql_shoe_webshop.customer ON product_review.fk_customer_id = customer.id " +
+                    "WHERE product.id =" + product.getId() + "");
             while (rs.next()) {
-                int id = Integer.parseInt(rs.getString("id"));
-                String tempCity = (rs.getString("city_name"));
+                int id = rs.getInt("id");
+                String customerName = (rs.getString("first_name") + " " + rs.getString("last_name"));
+                String productName = rs.getString("product_name");
+                double size = rs.getDouble("eu");
+                double rating = rs.getDouble("rating_number");
+                String review = rs.getString("review");
 
-                citys.add(new City(id, tempCity));
+                reviewObjects.add(new ReviewObject(id, customerName, productName, size, rating, review));
             }
-
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return citys;
+        return reviewObjects;
     }
 
-    public static List<Category> getCategorys() {
-        List<Category> category = new ArrayList<>();
+
+    //--------------------------------------------- ORDERS FUNCTIONS ---------------------------------------------------\\
+
+    public static List<Orders> getCustomerOrders(Customer customer) {
         createConnection();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM category ");
-
-            while (rs.next()) {
-                int id = Integer.parseInt(rs.getString("id"));
-                String categoryName = (rs.getString("category_name"));
-
-                category.add(new Category(id, categoryName));
-            }
-
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return category;
-    }
-
-    public static List<Color> getColors() {
-        List<Color> colors = new ArrayList<>();
-        createConnection();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM color ");
-
-            while (rs.next()) {
-                int id = Integer.parseInt(rs.getString("id"));
-                String color = (rs.getString("color"));
-
-                colors.add(new Color(id, color));
-            }
-
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
-        }
-        return colors;
-    }
-    public static List<Orders> getOrders() {
         List<Orders> orders = new ArrayList<>();
-        createConnection();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM orders JOIN customer ON orders.fk_customer_id = costumer.id");
+            ResultSet rs = stmt.executeQuery("SELECT orders.id, orders.date,count(orders_product.fk_product_id) AS totalShoes, sum(product_price) AS totalPrice " +
+                    "FROM sql_shoe_webshop.orders " +
+                    "JOIN sql_shoe_webshop.orders_product ON orders.id = orders_product.fk_orders_id " +
+                    "JOIN sql_shoe_webshop.customer ON customer.id = orders.fk_customer_id " +
+                    "WHERE customer.id = " + customer.getId() + " " +
+                    "GROUP BY orders.id");
 
             while (rs.next()) {
-                int id = (rs.getInt("id"));
-                //String color = (rs.getString("date"));
-                // todo: lös hur man läser in datumet rätt
-
-                int cId = (rs.getInt("fk_customer_id"));
-                Customer customer = Customer.getCustomer(cId);
-
-
-                orders.add(new Orders(id, customer));
+                orders.add(new Orders(rs.getInt("id"),
+                        rs.getDate("date"),
+                        customer,
+                        rs.getDouble("totalPrice"),
+                        rs.getInt("totalShoes")));
             }
-
-
-        } catch (SQLException throwable) {
-            throwable.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return orders;
+    }
+
+    public static List<Product> getSelectedOrder(Orders order) {
+        createConnection();
+        List<Product> products = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
+                    "JOIN sql_shoe_webshop.orders_product ON product.id = orders_product.fk_product_id " +
+                    "JOIN sql_shoe_webshop.orders ON orders.id = orders_product.fk_orders_id " +
+                    "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
+                    "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
+                    "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
+                    "WHERE orders_product.fk_orders_id = " + order.getId() + " ");
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String productName = rs.getString("product_name");
+                double priceSek = rs.getDouble("price_sek");
+                Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
+                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                int amountOrdered = rs.getInt("quantity");
+                Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
+
+                products.add(new Product(id, productName, priceSek, color, size, amountOrdered, brand));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return products;
     }
 
     public static List<Product> getAllProducts() {
@@ -400,35 +246,85 @@ public class Database extends Credentials {
         List<Product> products = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM product " +
-                    "JOIN color ON product.fk_color_id = color.id " +
-                    "JOIN size ON product.fk_size_id = size.id " +
-                    "JOIN brand ON product.fk_brand_id = brand.id");
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
+                    "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
+                    "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
+                    "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
+                    "JOIN sql_shoe_webshop.product_category ON product.id = product_category.fk_product_id " +
+                    "JOIN sql_shoe_webshop.category ON product_category.fk_category_id = category.id");
 
-            while (rs.next()){
+            while (rs.next()) {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
-
-                Color color = Color.getColor(rs.getInt("fk_color_id"));
-                Size size = Size.getSize(rs.getInt("fk_size_id"));
-                Brand brand = Brand.getBrand(rs.getInt("fk_brand_id"));
+                Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
+                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
+                Category category = new Category(rs.getInt("fk_category_id"), rs.getString("category_name"));
                 int stock = Integer.parseInt(rs.getString("stock"));
-                products.add(new Product(id, productName, priceSek, color, size, brand, stock));
+
+                products.add(new Product(id, productName, priceSek, color, size, brand, category, stock));
             }
-
-
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
         return products;
     }
 
-    public void writeAllInfo(List<?> list) {
-        int count = 1;
-        for (Object e : list) {
-            System.out.println(count + ": " + e);
-            count++;
+    //--------------------------------------------- CART FUNCTIONS ---------------------------------------------------\\
+
+    public static int createNewOrder(Customer customer) {
+        createConnection();
+        int orderId = 0;
+        try {
+            CallableStatement cstmt = connection.prepareCall("{? = CALL new_order(?)}");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setInt(2, customer.getId());
+            cstmt.execute();
+            orderId = cstmt.getInt(1);
+
+            System.out.println("Calling function new_order");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderId;
+    }
+
+
+    public static void addToCart(Integer currentCustomerOrder, Customer whoIsLoggedIn, int id) {
+        createConnection();
+        System.out.println("database SP add to cart");
+        try {
+            CallableStatement cstmt = connection.prepareCall("{CALL addToCart(?,?,?)}");
+            cstmt.setInt(1, currentCustomerOrder);
+            cstmt.setInt(2, whoIsLoggedIn.getId());
+            cstmt.setInt(3, id);
+            cstmt.execute();
+
+            System.out.println("Calling Stored procedure addToCart");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void removeFromCart(Integer currentCustomerOrder, Customer whoIsLoggedIn, int id) {
+        createConnection();
+        System.out.println("database SP remove from cart");
+        try {
+            CallableStatement cstmt = connection.prepareCall("{CALL remove_form_cart(?,?,?)}");
+            cstmt.setInt(1, currentCustomerOrder);
+            cstmt.setInt(2, whoIsLoggedIn.getId());
+            cstmt.setInt(3, id);
+            cstmt.execute();
+
+            System.out.println("Calling Stored procedure remove_from_cart");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+
 }
