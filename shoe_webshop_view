@@ -1,0 +1,13 @@
+USE sql_shoe_webshop;
+
+-- VG SQL
+-- Skapa en vy som visar medelbetyget i siffror och i text för samtliga produkter (om en produkt inte
+-- har fått något betyg så skall den ändå visas, med null eller tomt värde, i medelbetyg). 
+
+DROP VIEW IF EXISTS average_rating_all_products;
+CREATE VIEW average_rating_all_products AS
+SELECT product.id,  average_rating_for_product(product.id) AS avg_score, (SELECT rating_text FROM rating WHERE rating_number = floor(avg_score)) AS rating_text, review FROM product 
+LEFT JOIN product_review ON product.id = fk_product_id
+LEFT JOIN rating ON product_review.fk_rating_id = rating.id
+GROUP BY product.id
+ORDER BY avg_score DESC;
