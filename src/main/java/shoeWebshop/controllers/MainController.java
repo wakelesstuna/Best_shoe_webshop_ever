@@ -29,13 +29,13 @@ public class MainController implements Initializable {
             loggedIn.setText("Logged in: not logged in");
         }
 
-        try {
+        /*try {
             FileInputStream file = new FileInputStream(".\\src\\main\\resources\\img\\create-user-shoe.png");
             Image img = new Image(file);
             imageTest.setImage(img);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     //---- Nav Links ----\\

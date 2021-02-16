@@ -87,7 +87,25 @@ public class Database extends Credentials {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
 
+    public static List<City> getAllCities() {
+        List<City> cities = new ArrayList<>();
+        createConnection();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.city;");
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String cityName = rs.getString("city_name");
+                int zipNumber = rs.getInt("zip_code");
+
+                cities.add(new City(id, cityName, zipNumber));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return cities;
     }
 
     public static List<Customer> getAllCustomers() {
@@ -163,25 +181,6 @@ public class Database extends Credentials {
             e.printStackTrace();
         }
         return reviewObjects;
-    }
-
-    public static List<City> getAllCities() {
-        List<City> cities = new ArrayList<>();
-        createConnection();
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.city;");
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String cityName = rs.getString("city_name");
-                int zipNumber = rs.getInt("zip_code");
-
-                cities.add(new City(id, cityName, zipNumber));
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return cities;
     }
 
 
