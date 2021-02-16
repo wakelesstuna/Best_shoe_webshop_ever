@@ -1,0 +1,113 @@
+USE sql_shoe_webshop;
+
+-- ----------------------------------------
+-- ----- FUNCTIONS -----------------------
+-- ----------------------------------------
+USE sql_shoe_webshop;
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+-- VG SQL
+-- Skapa en funktion som tar ett produktId som parameter och returnerar medelbetyget för den
+-- produkten. Om du inte har sifferbetyg sedan innan, lägg till dessa, så att en siffra motsvarar ett av de
+-- skriftliga betygsvärdena
+
+DROP FUNCTION IF EXISTS average_rating_for_product;
+DELIMITER $$
+CREATE FUNCTION average_rating_for_product(product_id INT)
+RETURNS DOUBLE
+BEGIN
+	DECLARE average_score DOUBLE;
+	SELECT AVG(rating.rating_number) INTO average_score
+    FROM product_review
+    JOIN rating ON product_review.fk_rating_id = rating.id
+    GROUP BY product_review.fk_product_id
+    HAVING product_review.fk_product_id = product_id;
+    RETURN IFNULL(average_score,0);
+END $$
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS new_order;
+DELIMITER //
+CREATE FUNCTION new_order (customer_id INT)
+RETURNS INT
+BEGIN 
+DECLARE new_order_id INT DEFAULT 0;
+	INSERT INTO orders (date, time, fk_customer_id) VALUES (CURRENT_DATE(),CURRENT_TIME(), customer_id);
+        SET new_order_id = LAST_INSERT_ID();
+		 RETURN new_order_id;
+END//
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS customer_exists;
+DELIMITER //
+CREATE FUNCTION customer_exists(input_customer_id INT)
+RETURNS BOOLEAN
+BEGIN
+	DECLARE customer_exsits BOOLEAN;
+	SELECT COUNT(*) INTO customer_exsits
+	FROM customer WHERE customer.id = input_customer_id;
+RETURN customer_exsits;
+END //
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS product_exists;
+DELIMITER //
+CREATE FUNCTION product_exists(input_product_id INT)
+RETURNS BOOLEAN
+BEGIN
+DECLARE product_exists BOOLEAN;
+SELECT COUNT(*) INTO product_exists
+FROM product WHERE product.id = input_product_id;
+RETURN product_exists;
+END //
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS  product_in_stock;
+DELIMITER //
+CREATE FUNCTION product_in_stock(input_product_id INT)
+RETURNS BOOLEAN
+BEGIN
+DECLARE product_in_stock BOOLEAN;
+SELECT SUM(stock) INTO product_in_stock
+FROM product WHERE product.id = input_product_id;
+RETURN product_in_stock;
+END //
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS current_order_exists;
+DELIMITER //
+CREATE FUNCTION current_order_exists(input_orders_id INT)
+RETURNS BOOLEAN
+BEGIN
+DECLARE order_exaits BOOLEAN;
+SELECT COUNT(*) INTO order_exaits
+FROM orders WHERE orders.id = input_orders_id;
+RETURN  order_exaits;
+END //
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS is_product_in_current_order;
+DELIMITER //
+CREATE FUNCTION is_product_in_current_order(input_orders_id INT ,input_product_id INT)
+RETURNS BOOLEAN
+BEGIN
+DECLARE is_product_in_order BOOLEAN;
+SELECT COUNT(*) INTO is_product_in_order
+FROM orders_product WHERE fk_product_id = input_product_id AND fk_orders_id = input_orders_id;
+RETURN is_product_in_order;
+END //
+DELIMITER ;
+
+
+
+DROP FUNCTION IF EXISTS rating_exists;
+DELIMITER //
+CREATE FUNCTION rating_exists(input_rating_id INT)
+RETURNS BOOLEAN
+BEGIN
+DECLARE rating_exists BOOLEAN;
+SELECT COUNT(*) INTO rating_exists
+FROM rating WHERE rating.id = input_rating_id;
+RETURN rating_exists;
+END //
+DELIMITER ;
