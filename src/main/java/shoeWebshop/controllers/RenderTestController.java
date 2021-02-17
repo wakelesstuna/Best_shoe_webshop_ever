@@ -20,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import shoeWebshop.model.Category;
 import shoeWebshop.model.City;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.Utils.Database;
@@ -50,10 +51,10 @@ public class RenderTestController implements Initializable {
     private ComboBox<String> sortCategory;
 
     @FXML
-    private ComboBox<Double> sortPrice;
+    private ComboBox<String> sortPrice;
 
     @FXML
-    private ComboBox<Double> sortSize;
+    private ComboBox<String> sortSize;
 
     @FXML
     private ComboBox<String> sortBrand;
@@ -70,41 +71,39 @@ public class RenderTestController implements Initializable {
     }
 
 
-    public void fillCategory(){
-        List<Product> products = Database.getAllProducts();
+    public void fillCategory() {
         System.out.println("fill category");
-        ObservableList<String> categorys = FXCollections.observableList(products.stream().map(e -> e.getCategory().getCategoryName()).distinct().collect(Collectors.toList()));
-        categorys.add(0,"Categorys");
-        sortCategory.setItems(categorys.sorted());
+        ObservableList<String> categories = FXCollections.observableList(Database.getAllCategories().stream().map(Category::getCategoryName).collect(Collectors.toList()));
+        categories.add(0, "Categories");
+        sortCategory.setItems(categories.sorted());
         filterByCategory();
     }
 
     public void filterByCategory(){
         sortCategory.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
-                    List<Product> categorys = Database.getAllProducts().stream()
-                            .filter(e -> e.getCategory().getCategoryName().equalsIgnoreCase(sortCategory.getItems().get(new_val.intValue())))
-                            .collect(Collectors.toList());
-                    addTo.getChildren().clear();
-                    renderAllProducts(categorys);
+                    System.out.println(sortCategory.getItems().get(new_val.intValue()));
                     setComboBoxToFirstValue(sortBrand,sortPrice,sortSize);
+                    List<Product> categories = Database.getProductsOfCategory(sortCategory.getItems().get(new_val.intValue()));
+                    addTo.getChildren().clear();
+                    renderAllProducts(categories);
+
                 });
     }
 
-
-
-    public void fillBrand(){
+    public void fillBrand() {
         List<Product> products = Database.getAllProducts();
         System.out.println("fill brand");
         ObservableList<String> brands = FXCollections.observableList(products.stream().map(Product::getBrand).distinct().collect(Collectors.toList()));
-        brands.add(0,"Brands");
+        brands.add(0, "Brands");
         sortBrand.setItems(brands.sorted());
         filterByBrand();
     }
 
-    public void filterByBrand(){
+    public void filterByBrand() {
         sortBrand.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+                    setComboBoxToFirstValue(sortCategory, sortPrice, sortSize);
                     List<Product> brands = Database.getAllProducts().stream()
                             .filter(e -> e.getBrand().equalsIgnoreCase(sortBrand.getItems().get(new_val.intValue())))
                             .collect(Collectors.toList());
@@ -114,40 +113,63 @@ public class RenderTestController implements Initializable {
     }
 
 
-    public void fillSizes(){
+    public void fillSizes() {
         List<Product> products = Database.getAllProducts();
         System.out.println("fill sizes");
-        ObservableList<Double> sizes = FXCollections.observableList(products.stream().map(Product::getSize).distinct().collect(Collectors.toList()));
-        //sizes.add(0, "Sizes"));
+        ObservableList<String> sizes = FXCollections.observableList(products.stream().map(e -> e.getSize() + "").distinct().collect(Collectors.toList()));
+        sizes.add(0, "Sizes");
         sortSize.setItems(sizes);
         filterBySizes();
     }
 
-    public void filterBySizes(){
+    public void filterBySizes() {
         sortSize.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
-                    List<Product> sizes = Database.getAllProducts().stream()
-                            .filter(e -> e.getSize() == sortSize.getItems().get(new_val.intValue()))
-                            .collect(Collectors.toList());
-                    addTo.getChildren().clear();
-                    renderAllProducts(sizes);
+                    setComboBoxToFirstValue(sortCategory, sortPrice, sortBrand);
+                    try {
+                        List<Product> sizes = Database.getAllProducts().stream()
+                                .filter(e -> e.getSize() == Double.parseDouble(sortSize.getItems().get(new_val.intValue())))
+                                .collect(Collectors.toList());
+                        addTo.getChildren().clear();
+                        renderAllProducts(sizes);
+                    } catch (NumberFormatException e) {
+                        System.out.println();
+                    }
                 });
     }
 
-    public void fillPrice(){
+    public void fillPrice() {
         List<Product> products = Database.getAllProducts();
         System.out.println("fill price");
-        ObservableList<Double> prices = FXCollections.observableList(products.stream().map(Product::getPriceSek).distinct().collect(Collectors.toList()));
-        sortPrice.setItems(prices.sorted());
+        ObservableList<String> prices = FXCollections.observableList(products.stream().map(e -> e.getPriceSek() + "").distinct().collect(Collectors.toList()));
+        prices.add(0, "Prices");
+        sortPrice.setItems(prices);
+        filterByPrice();
     }
 
-    public void setComboBoxToFirstValue(ComboBox<?> comboBox1, ComboBox<?> comboBox2, ComboBox<?> comboBox3){
+    public void filterByPrice() {
+        sortPrice.getSelectionModel().selectedIndexProperty().addListener(
+                (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+                    setComboBoxToFirstValue(sortCategory, sortSize, sortBrand);
+                    try {
+                        List<Product> prices = Database.getAllProducts().stream()
+                                .filter(e -> e.getPriceSek() == Double.parseDouble(sortPrice.getItems().get(new_val.intValue())))
+                                .collect(Collectors.toList());
+                        addTo.getChildren().clear();
+                        renderAllProducts(prices);
+                    } catch (NumberFormatException e) {
+                        System.out.println();
+                    }
+                });
+    }
+
+    public void setComboBoxToFirstValue(ComboBox<?> comboBox1, ComboBox<?> comboBox2, ComboBox<?> comboBox3) {
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
         comboBox3.getSelectionModel().selectFirst();
     }
 
-    public void renderAllProducts(List<Product> products){
+    public void renderAllProducts(List<Product> products) {
         int counter1 = 0;
         int counter2 = 1;
         addTo.setVisible(true);
@@ -193,7 +215,7 @@ public class RenderTestController implements Initializable {
             button.setOnAction(buttonHandler);
 
             button.setText("Add to cart");
-            button.setPadding(new Insets(3,2,3,2));
+            button.setPadding(new Insets(3, 2, 3, 2));
 
 
             ImageView productImage = null;
@@ -205,7 +227,7 @@ public class RenderTestController implements Initializable {
 
             VBox vBox = new VBox();
             vBox.setAlignment(Pos.TOP_CENTER);
-            vBox.setMinSize(300,250);
+            vBox.setMinSize(300, 250);
             vBox.setPrefHeight(330);
             vBox.getChildren().add(title);
             vBox.getChildren().add(productImage);
@@ -233,7 +255,7 @@ public class RenderTestController implements Initializable {
     public ImageView getImageOfProduct(Product p) throws FileNotFoundException {
         ImageView imageView = new ImageView();
         String product = "";
-        switch (p.getProductName()){
+        switch (p.getProductName()) {
             case "flex runner" -> product = "flexrunner";
             case "air max fusion" -> product = "airmaxfusion";
             case "solar boost" -> product = "solarboost";
@@ -272,11 +294,11 @@ public class RenderTestController implements Initializable {
     }
 
 
-    public void changeToProductView(){
+    public void changeToProductView() {
         FxmlUtils.changeView(PRODUCT);
     }
 
-    public void changeToHomeView(){
+    public void changeToHomeView() {
         FxmlUtils.changeView(MAIN);
     }
 
@@ -284,15 +306,15 @@ public class RenderTestController implements Initializable {
         FxmlUtils.changeView(REVIEW);
     }
 
-    public void changeToOrderView(){
+    public void changeToOrderView() {
         FxmlUtils.changeView(ORDER);
     }
 
-    public void changeToLoginView(){
+    public void changeToLoginView() {
         FxmlUtils.changeView(LOGIN);
     }
 
-    public void changeToRenderTest(){
+    public void changeToRenderTest() {
         FxmlUtils.changeView(RENDER_TEST);
     }
 

@@ -10,24 +10,12 @@ public class Product {
     Color color;
     Size size;
     Brand brand;
-    Category category;
     int stock;
     int amountOrdered;
     double averageScore;
 
     public Product(double averageScore) {
         this.averageScore = averageScore;
-    }
-
-    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, Category category, int stock) {
-        this.id = id;
-        this.productName = productName;
-        this.priceSek = priceSek;
-        this.color = color;
-        this.size = size;
-        this.brand = brand;
-        this.category = category;
-        this.stock = stock;
     }
 
     public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
@@ -91,10 +79,6 @@ public class Product {
 
     public String getBrand() {
         return brand.brandName;
-    }
-
-    public Category getCategory() {
-        return category;
     }
 
     public int getAmountOrdered() {

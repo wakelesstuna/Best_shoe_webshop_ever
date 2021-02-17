@@ -241,6 +241,8 @@ public class Database extends Credentials {
         return products;
     }
 
+    //--------------------------------------------- PRODUCT FUNCTIONS ---------------------------------------------------\\
+
     public static List<Product> getAllProducts() {
         createConnection();
         List<Product> products = new ArrayList<>();
@@ -249,10 +251,7 @@ public class Database extends Credentials {
             ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
                     "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
                     "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
-                    "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
-                    "JOIN sql_shoe_webshop.product_category ON product.id = product_category.fk_product_id " +
-                    "JOIN sql_shoe_webshop.category ON product_category.fk_category_id = category.id " +
-                    "WHERE fk_product_id = product.id; ");
+                    "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id; ");
 
             int counter = 0;
             while (rs.next()) {
@@ -262,10 +261,9 @@ public class Database extends Credentials {
                 Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
                 Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
                 Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
-                Category category = new Category(rs.getInt("fk_category_id"), rs.getString("category_name"));
                 int stock = Integer.parseInt(rs.getString("stock"));
 
-                products.add(new Product(id, productName, priceSek, color, size, brand, category, stock));
+                products.add(new Product(id, productName, priceSek, color, size, brand, stock));
 
                 System.out.println(counter++ + " " + id);
             }
@@ -275,6 +273,56 @@ public class Database extends Credentials {
         }
         System.out.println(products.size());
         return products;
+    }
+
+    public static List<Product> getProductsOfCategory(String categoryName){
+        createConnection();
+        System.out.println("i databasen " + categoryName);
+        List<Product> products = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
+                    "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
+                    "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
+                    "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
+                    "JOIN sql_shoe_webshop.product_category ON product_category.fk_product_id = product.id " +
+                    "JOIN sql_shoe_webshop.category ON product_category.fk_category_id = category.id " +
+                    "WHERE category_name = '"+categoryName+"'");
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String productName = rs.getString("product_name");
+                double priceSek = rs.getDouble("price_sek");
+                Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
+                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
+                int stock = Integer.parseInt(rs.getString("stock"));
+
+                products.add(new Product(id, productName, priceSek, color, size, brand, stock));
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return products;
+    }
+
+    public static List<Category> getAllCategories(){
+        createConnection();
+        List<Category> categories = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.category");
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String categoryName = rs.getString("category_name");
+
+                categories.add(new Category(id,categoryName));
+            }
+        } catch (SQLException throwable) {
+            throwable.printStackTrace();
+        }
+        return categories;
     }
 
     //--------------------------------------------- CART FUNCTIONS ---------------------------------------------------\\
