@@ -60,6 +60,10 @@ public class MainController implements Initializable {
         FxmlUtils.changeView(LOGIN);
     }
 
+    public void changeToRenderTest(){
+        FxmlUtils.changeView(RENDER_TEST);
+    }
+
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");

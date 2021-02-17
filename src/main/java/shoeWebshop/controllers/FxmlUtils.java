@@ -40,7 +40,8 @@ public class FxmlUtils {
         REVIEW("review"),
         ORDER("order"),
         LOGIN("login"),
-        CREATE_USEER("createUser");
+        CREATE_USER("createUser"),
+        RENDER_TEST("renderTest");
 
         final String s;
 

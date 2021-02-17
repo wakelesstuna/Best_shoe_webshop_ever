@@ -30,6 +30,16 @@ public class Product {
         this.stock = stock;
     }
 
+    public Product(int id, String productName, double priceSek, Color color, Size size, Brand brand, int stock) {
+        this.id = id;
+        this.productName = productName;
+        this.priceSek = priceSek;
+        this.color = color;
+        this.size = size;
+        this.brand = brand;
+        this.stock = stock;
+    }
+
     public Product(int id, String productName, double priceSek, Color color, Size size, int amountOrdered ,Brand brand) {
         this.id = id;
         this.productName = productName;
@@ -81,6 +91,10 @@ public class Product {
 
     public String getBrand() {
         return brand.brandName;
+    }
+
+    public Category getCategory() {
+        return category;
     }
 
     public int getAmountOrdered() {

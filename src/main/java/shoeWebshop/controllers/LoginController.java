@@ -89,7 +89,7 @@ public class LoginController implements Initializable {
     }
 
     public void changeToCreateUserView(){
-        FxmlUtils.changeView(CREATE_USEER);
+        FxmlUtils.changeView(CREATE_USER);
     }
 
     public void loggOut() {

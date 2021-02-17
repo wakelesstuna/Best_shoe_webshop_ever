@@ -9,6 +9,10 @@ public class Category {
         this.CategoryName= categoryName;
     }
 
+    public String getCategoryName() {
+        return CategoryName;
+    }
+
     @Override
     public String toString() {
         return "Category{" +

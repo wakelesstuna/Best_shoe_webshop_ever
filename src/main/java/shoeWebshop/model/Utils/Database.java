@@ -251,8 +251,10 @@ public class Database extends Credentials {
                     "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
                     "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
                     "JOIN sql_shoe_webshop.product_category ON product.id = product_category.fk_product_id " +
-                    "JOIN sql_shoe_webshop.category ON product_category.fk_category_id = category.id");
+                    "JOIN sql_shoe_webshop.category ON product_category.fk_category_id = category.id " +
+                    "WHERE fk_product_id = product.id; ");
 
+            int counter = 0;
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
@@ -264,10 +266,14 @@ public class Database extends Credentials {
                 int stock = Integer.parseInt(rs.getString("stock"));
 
                 products.add(new Product(id, productName, priceSek, color, size, brand, category, stock));
+
+                System.out.println(counter++ + " " + id);
             }
+
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
+        System.out.println(products.size());
         return products;
     }
 
@@ -326,5 +332,4 @@ public class Database extends Credentials {
             e.printStackTrace();
         }
     }
-
 }
