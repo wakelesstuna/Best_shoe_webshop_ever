@@ -9,7 +9,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.City;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.model.Utils.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -74,7 +74,7 @@ public class CreateUserController implements Initializable {
         String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
 
-        Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
+        Repository.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
         eraseAllTextFields();
 
         FxmlUtils.changeScenes(FxmlUtils.loginView());
@@ -112,7 +112,7 @@ public class CreateUserController implements Initializable {
     }
 
     public void fillComboBox(ComboBox<String> comboBox){
-        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
+        ObservableList<String> list = FXCollections.observableList(Repository.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
         comboBox.setItems(list);
     }
 

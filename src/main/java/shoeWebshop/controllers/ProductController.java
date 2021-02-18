@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.model.Utils.Repository;
 import shoeWebshop.model.Utils.SendEmail;
 import java.net.URL;
 import java.util.List;
@@ -93,7 +93,7 @@ public class ProductController implements Initializable {
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             if (FxmlUtils.orderCreatedButNotSent){
-                fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
+                fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
             }else {
                 customerLoggedInButNoOrderCreated();
             }
@@ -107,13 +107,13 @@ public class ProductController implements Initializable {
             sendOrder.setDisable(true);
             newOrderBtn.setDisable(true);
         }
-        fillProductTable(Database.getAllProducts());
+        fillProductTable(Repository.getAllProducts());
     }
 
 
 
     public void createNewOrder(){
-        FxmlUtils.currentCustomerOrder = Database.createNewOrder(FxmlUtils.whoIsLoggedIn);
+        FxmlUtils.currentCustomerOrder = Repository.createNewOrder(FxmlUtils.whoIsLoggedIn);
         addToCart.setDisable(false);
         removeFromCart.setDisable(false);
         cartTable.setDisable(false);
@@ -129,11 +129,11 @@ public class ProductController implements Initializable {
         if (selectedItem.getStock() == 0){
             FxmlUtils.showMessage("Error", "Sorry, selected product is out of stock!", null, Alert.AlertType.ERROR);
         }else{
-            Database.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, selectedItem.getId());
+            Repository.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, selectedItem.getId());
             FxmlUtils.showMessage("Added to cart", "New item added to your cart", null, Alert.AlertType.INFORMATION);
 
-            fillProductTable(Database.getAllProducts());
-            fillCartTable(Database.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
+            fillProductTable(Repository.getAllProducts());
+            fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
             addToTotalPrice(selectedItem);
         }
     }
@@ -142,12 +142,12 @@ public class ProductController implements Initializable {
         Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
 
         if (!(selectedItem.getAmountOrdered() == 0)){
-            Database.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
-            fillProductTable(Database.getAllProducts());
+            Repository.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
+            fillProductTable(Repository.getAllProducts());
             cartTable.getItems().remove(selectedItem);
 
             Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn);
-            fillCartTable(Database.getSelectedOrder(tempOrder));
+            fillCartTable(Repository.getSelectedOrder(tempOrder));
             substractFromTotalPrice(selectedItem);
         }
     }

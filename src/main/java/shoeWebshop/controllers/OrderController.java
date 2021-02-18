@@ -8,7 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.model.Utils.Repository;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -81,7 +81,7 @@ public class OrderController implements Initializable {
             showOrderButton.setDisable(false);
             selectedOrderTable.setDisable(false);
             totalPrice.setDisable(false);
-            fillOrdersTable(Database.getCustomerOrders(FxmlUtils.whoIsLoggedIn));
+            fillOrdersTable(Repository.getCustomerOrders(FxmlUtils.whoIsLoggedIn));
 
         } else {
             loggedIn.setText("Logged in: not logged in");
@@ -104,7 +104,7 @@ public class OrderController implements Initializable {
         priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("amountOrdered"));
 
-        List<Product> products = Database.getSelectedOrder(selectedOrder);
+        List<Product> products = Repository.getSelectedOrder(selectedOrder);
         selectedOrderTable.getItems().setAll(products);
         sumAllPricesInTable(products);
     }

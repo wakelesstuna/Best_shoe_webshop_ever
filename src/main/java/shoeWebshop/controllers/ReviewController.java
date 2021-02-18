@@ -7,7 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.ReviewObject;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.model.Utils.Repository;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -77,7 +77,7 @@ public class ReviewController implements Initializable {
         reviewFour.setToggleGroup(reviewGroup);
         reviewFive.setToggleGroup(reviewGroup);
         reviewText.setText("");
-        fillReviewTable(Database.getAllProducts());
+        fillReviewTable(Repository.getAllProducts());
 
         if (FxmlUtils.isLoggedIn) {
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
@@ -99,7 +99,7 @@ public class ReviewController implements Initializable {
         Product selectedItem = choseShoeToReview.getSelectionModel().getSelectedItem();
         String message;
         try{
-            message = buildReviewString(Database.getReviewObject(selectedItem));
+            message = buildReviewString(Repository.getReviewObject(selectedItem));
         } catch (IndexOutOfBoundsException e){
             message = "No review yet on the selected product";
         }
@@ -111,7 +111,7 @@ public class ReviewController implements Initializable {
         Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
         int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 
-        Database.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
+        Repository.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
         reviewGroup.getSelectedToggle().setSelected(false);
         reviewText.setText("");
 
@@ -160,6 +160,8 @@ public class ReviewController implements Initializable {
                     .append("\n")
                     .append("Score: ")
                     .append(list.get(i).getRating())
+                    .append(" Date: ")
+                    .append(list.get(i).getDate())
                     .append("\n")
                     .append("Comment: ")
                     .append(list.get(i).getReview())

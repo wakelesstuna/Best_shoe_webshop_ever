@@ -6,7 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.model.Utils.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -44,7 +44,7 @@ public class LoginController implements Initializable {
             FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
 
         } else {
-            if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
+            if(Repository.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
                 FxmlUtils.showMessage("Logged in", "You are logged in", null, Alert.AlertType.INFORMATION);
 
