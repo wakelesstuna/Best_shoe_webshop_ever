@@ -91,8 +91,6 @@ public class RenderTestController implements Initializable {
     @FXML
     private Button removeFromCart;
 
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
@@ -421,6 +419,7 @@ public class RenderTestController implements Initializable {
             case "lace-up" -> product = "laceup";
             case "lace-up-b" -> product = "laceupb";
             case "tanjun" -> product = "tanjun";
+            case "ultra boost" -> product = "ultraboost";
 
             default -> product = "noimage";
         }
