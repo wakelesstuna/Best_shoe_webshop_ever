@@ -12,13 +12,10 @@ import static shoeWebshop.model.Utils.Credentials.USER.*;
 
 public class Repository extends Credentials {
 
-
     private static Connection createConnection() {
         Connection con = null;
         try {
             con = DriverManager.getConnection(CONNECTION_STRING.toString() + DATABASE_NAME.toString(), DATABASE_USERNAME.toString(), DATABASE_PASSWORD.toString());
-            System.out.println("DataBase connection Success");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

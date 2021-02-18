@@ -29,11 +29,6 @@ public class FxmlUtils {
         currentStage = primaryStage;
     }
 
-    public static void changeScenes(Scene scene){
-            currentStage.setScene(scene);
-            currentStage.show();
-    }
-
     enum View {
         MAIN("main"),
         PRODUCT("product"),
@@ -55,10 +50,9 @@ public class FxmlUtils {
     }
 
     public static void changeView(View view) {
-        Scene scene = null;
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/" + view.getStringValue() + ".fxml")));
-            scene = new Scene(root);
+            Scene scene = new Scene(root);
             currentStage.setScene(scene);
             currentStage.show();
         }catch (IOException e){
@@ -66,70 +60,4 @@ public class FxmlUtils {
         }
     }
 
-    public static Scene homeView() {
-        Scene scene = null;
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/main.fxml")));
-            scene = new Scene(root);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return scene;
-    }
-
-    public static Scene productView() {
-        Scene scene = null;
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/product.fxml")));
-            scene = new Scene(root);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return scene;
-    }
-
-    public static Scene reviewView() {
-        Scene scene = null;
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/review.fxml")));
-            scene = new Scene(root);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return scene;
-    }
-
-    public static Scene orderView() {
-        Scene scene = null;
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/order.fxml")));
-            scene = new Scene(root);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return scene;
-    }
-
-
-    public static Scene loginView() {
-        Scene scene = null;
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/login.fxml")));
-            scene = new Scene(root);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return scene;
-    }
-
-    public static Scene createUserView() {
-        Scene scene = null;
-        try {
-            Parent root = FXMLLoader.load(Objects.requireNonNull(FxmlUtils.class.getClassLoader().getResource("view/createUser.fxml")));
-            scene = new Scene(root);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return scene;
-    }
 }
