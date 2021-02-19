@@ -147,6 +147,7 @@ public class CreateUserController implements Initializable {
         FxmlUtils.isLoggedIn = false;
         FxmlUtils.whoIsLoggedIn = null;
         loggedIn.setText("");
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 }

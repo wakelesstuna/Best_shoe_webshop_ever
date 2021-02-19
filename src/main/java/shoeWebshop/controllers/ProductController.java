@@ -134,6 +134,8 @@ public class ProductController implements Initializable {
         new DateClock(dateTimeLabel);
     }
 
+    //---------------------- CART FUNCTIONS ---------------------------------------------------------------------------\\
+
     private void customerLoggedInButNoOrderCreated(){
         removeFromCart.setDisable(true);
         cartTable.setDisable(true);
@@ -141,6 +143,7 @@ public class ProductController implements Initializable {
         cartBox.setDisable(false);
         newOrderBtn.setDisable(false);
         sendOrder.setDisable(true);
+        discardOrderBtn.setDisable(true);
     }
 
     public void createNewOrder(){
@@ -153,9 +156,8 @@ public class ProductController implements Initializable {
         discardOrderBtn.setDisable(false);
 
         FxmlUtils.orderCreatedButNotSent = true;
+        renderAllProducts(Repository.getAllProducts());
     }
-
-
 
     public void addToCart(Product p){
 
@@ -236,6 +238,7 @@ public class ProductController implements Initializable {
         showTotalPrice.setText(price - product.getPriceSek() + "");
     }
 
+    //---------------------- FILTER BOXES ---------------------------------------------------------------------------\\
 
     public void fillCategory() {
         System.out.println("fill category");
@@ -243,6 +246,33 @@ public class ProductController implements Initializable {
         categories.add(0, "Categories");
         sortCategory.setItems(categories.sorted());
         filterByCategory();
+    }
+
+    public void fillBrand() {
+        List<Product> products = Repository.getAllProducts();
+        System.out.println("fill brand");
+        ObservableList<String> brands = FXCollections.observableList(products.stream().map(Product::getBrand).distinct().collect(Collectors.toList()));
+        brands.add(0, "Brands");
+        sortBrand.setItems(brands.sorted());
+        filterByBrand();
+    }
+
+    public void fillSizes() {
+        List<Product> products = Repository.getAllProducts();
+        System.out.println("fill sizes");
+        ObservableList<String> sizes = FXCollections.observableList(products.stream().map(e -> e.getSize() + "").distinct().collect(Collectors.toList()));
+        sizes.add(0, "Sizes");
+        sortSize.setItems(sizes);
+        filterBySizes();
+    }
+
+    public void fillPrice() {
+        List<Product> products = Repository.getAllProducts();
+        System.out.println("fill price");
+        ObservableList<String> prices = FXCollections.observableList(products.stream().map(e -> e.getPriceSek() + "").distinct().collect(Collectors.toList()));
+        prices.add(0, "Prices");
+        sortPrice.setItems(prices);
+        filterByPrice();
     }
 
     public void filterByCategory(){
@@ -256,15 +286,6 @@ public class ProductController implements Initializable {
                 });
     }
 
-    public void fillBrand() {
-        List<Product> products = Repository.getAllProducts();
-        System.out.println("fill brand");
-        ObservableList<String> brands = FXCollections.observableList(products.stream().map(Product::getBrand).distinct().collect(Collectors.toList()));
-        brands.add(0, "Brands");
-        sortBrand.setItems(brands.sorted());
-        filterByBrand();
-    }
-
     public void filterByBrand() {
         sortBrand.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
@@ -275,16 +296,6 @@ public class ProductController implements Initializable {
                     productView.getChildren().clear();
                     renderAllProducts(brands);
                 });
-    }
-
-
-    public void fillSizes() {
-        List<Product> products = Repository.getAllProducts();
-        System.out.println("fill sizes");
-        ObservableList<String> sizes = FXCollections.observableList(products.stream().map(e -> e.getSize() + "").distinct().collect(Collectors.toList()));
-        sizes.add(0, "Sizes");
-        sortSize.setItems(sizes);
-        filterBySizes();
     }
 
     public void filterBySizes() {
@@ -301,15 +312,6 @@ public class ProductController implements Initializable {
                         System.out.println();
                     }
                 });
-    }
-
-    public void fillPrice() {
-        List<Product> products = Repository.getAllProducts();
-        System.out.println("fill price");
-        ObservableList<String> prices = FXCollections.observableList(products.stream().map(e -> e.getPriceSek() + "").distinct().collect(Collectors.toList()));
-        prices.add(0, "Prices");
-        sortPrice.setItems(prices);
-        filterByPrice();
     }
 
     public void filterByPrice() {
@@ -333,6 +335,8 @@ public class ProductController implements Initializable {
         comboBox2.getSelectionModel().selectFirst();
         comboBox3.getSelectionModel().selectFirst();
     }
+
+    //---------------------- RENDER PRODUCTS ---------------------------------------------------------------------------\\
 
     public void renderAllProducts(List<Product> products) {
         int counter1 = 0;
@@ -376,7 +380,7 @@ public class ProductController implements Initializable {
                     "-fx-font-weight: BOLD; " +
                     "-fx-font-size: 12;");
 
-            if (FxmlUtils.isLoggedIn){
+            if (FxmlUtils.isLoggedIn && FxmlUtils.orderCreatedButNotSent){
                 EventHandler<ActionEvent> buttonHandler = event -> addToCart(p);
                 button.setOnAction(buttonHandler);
             }
@@ -480,6 +484,7 @@ public class ProductController implements Initializable {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 }

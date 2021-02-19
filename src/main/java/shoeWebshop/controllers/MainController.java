@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import shoeWebshop.utils.DateClock;
+import shoeWebshop.utils.Repository;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -55,6 +56,7 @@ public class MainController implements Initializable {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 }
