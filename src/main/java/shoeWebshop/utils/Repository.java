@@ -1,4 +1,4 @@
-package shoeWebshop.model.Utils;
+package shoeWebshop.utils;
 
 import javafx.scene.control.Alert;
 import shoeWebshop.controllers.FxmlUtils;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
-import static shoeWebshop.model.Utils.Credentials.USER.*;
+import static shoeWebshop.utils.Credentials.USER.*;
 
 public class Repository extends Credentials {
 
@@ -243,13 +243,32 @@ public class Repository extends Credentials {
         return products;
     }
 
-    public static void discardOrder(int orderId, int productId){
+    public static int createNewOrder(Customer customer) {
+        int orderId = 0;
+        try (Connection con = createConnection();
+             CallableStatement cstmt = con.prepareCall("{? = CALL new_order(?)}")){
 
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setInt(2, customer.getId());
+            cstmt.execute();
+            orderId = cstmt.getInt(1);
+
+            System.out.println("Calling function new_order");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderId;
+    }
+
+    public static void discardOrder(int orderId){
         try(Connection con = createConnection();
-            CallableStatement cstmt = con.prepareCall("{CALL discard_order(?,?)}")){
+            CallableStatement cstmt = con.prepareCall("{CALL discard_order(?)}")){
 
             cstmt.setInt(1,orderId);
-            cstmt.setInt(2,productId);
+
+            cstmt.execute();
+
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -267,7 +286,6 @@ public class Repository extends Credentials {
                     "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
                     "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id; ")){
 
-            int counter = 0;
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
@@ -279,13 +297,12 @@ public class Repository extends Credentials {
 
                 products.add(new Product(id, productName, priceSek, color, size, brand, stock));
 
-                System.out.println(counter++ + " " + id);
             }
 
         } catch (SQLException throwable) {
             throwable.printStackTrace();
         }
-        System.out.println(products.size());
+
         return products;
     }
 
@@ -340,24 +357,6 @@ public class Repository extends Credentials {
 
     //--------------------------------------------- CART FUNCTIONS ---------------------------------------------------\\
 
-    public static int createNewOrder(Customer customer) {
-        int orderId = 0;
-        try (Connection con = createConnection();
-            CallableStatement cstmt = con.prepareCall("{? = CALL new_order(?)}")){
-
-            cstmt.registerOutParameter(1, Types.INTEGER);
-            cstmt.setInt(2, customer.getId());
-            cstmt.execute();
-            orderId = cstmt.getInt(1);
-
-            System.out.println("Calling function new_order");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return orderId;
-    }
-
 
     public static void addToCart(Integer currentCustomerOrder, Customer whoIsLoggedIn, int id) {
         try (Connection con = createConnection();
@@ -396,4 +395,5 @@ public class Repository extends Credentials {
             e.printStackTrace();
         }
     }
+
 }

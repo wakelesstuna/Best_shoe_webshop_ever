@@ -6,7 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import shoeWebshop.model.Utils.Repository;
+import shoeWebshop.utils.DateClock;
+import shoeWebshop.utils.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,6 +27,9 @@ public class LoginController implements Initializable {
     @FXML
     private Label loginText;
 
+    @FXML
+    private Label dateTimeLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setPromptTextOnLoggIn();
@@ -36,6 +40,8 @@ public class LoginController implements Initializable {
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
+
+        new DateClock(dateTimeLabel);
     }
 
     public void authorizeLogin(){

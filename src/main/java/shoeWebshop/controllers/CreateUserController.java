@@ -9,7 +9,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.City;
-import shoeWebshop.model.Utils.Repository;
+import shoeWebshop.utils.DateClock;
+import shoeWebshop.utils.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -48,6 +49,9 @@ public class CreateUserController implements Initializable {
     @FXML
     private TextField password;
 
+    @FXML
+    private Label dateTimeLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setMaxTextFieldCount(socialSecurityNumber,10);
@@ -60,6 +64,8 @@ public class CreateUserController implements Initializable {
             loggedIn.setText("Logged in: not logged in");
         }
         eraseAllTextFields();
+
+        new DateClock(dateTimeLabel);
     }
 
     public void createUser(){

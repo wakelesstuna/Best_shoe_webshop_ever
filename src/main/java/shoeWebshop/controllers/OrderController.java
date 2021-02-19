@@ -8,7 +8,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
-import shoeWebshop.model.Utils.Repository;
+import shoeWebshop.utils.DateClock;
+import shoeWebshop.utils.Repository;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -69,6 +70,9 @@ public class OrderController implements Initializable {
     @FXML
     private TextField totalPrice;
 
+    @FXML
+    private Label dateTimeLabel;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -92,6 +96,8 @@ public class OrderController implements Initializable {
             selectedOrderTable.setDisable(true);
             totalPrice.setDisable(true);
         }
+
+        new DateClock(dateTimeLabel);
     }
 
     public void fillSelectedOrderToTable() {

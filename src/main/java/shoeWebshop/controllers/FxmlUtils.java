@@ -4,9 +4,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import shoeWebshop.model.Customer;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class FxmlUtils {
@@ -56,6 +59,23 @@ public class FxmlUtils {
             currentStage.setScene(scene);
             currentStage.show();
         }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public static void currentDateTimeSetter(Label label){
+        while (true){
+            String dateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+            label.setText(dateTime);
+            sleep(1);
+        }
+
+    }
+
+    private static void sleep(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

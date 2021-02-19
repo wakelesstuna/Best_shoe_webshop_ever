@@ -8,7 +8,7 @@ module shoeWebshop{
     opens shoeWebshop;
     opens shoeWebshop.controllers;
     opens shoeWebshop.model;
-    opens shoeWebshop.model.Utils;
+    opens shoeWebshop.utils;
     //opens shoeWebshop.sql;
     opens view;
     opens css;

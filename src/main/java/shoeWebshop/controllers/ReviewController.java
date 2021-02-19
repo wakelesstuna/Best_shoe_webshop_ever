@@ -7,7 +7,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.ReviewObject;
-import shoeWebshop.model.Utils.Repository;
+import shoeWebshop.utils.DateClock;
+import shoeWebshop.utils.Repository;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -66,6 +67,9 @@ public class ReviewController implements Initializable {
     @FXML
     private Button leaveReviewButton;
 
+    @FXML
+    private Label dateTimeLabel;
+
     ToggleGroup reviewGroup;
 
     @Override
@@ -92,12 +96,14 @@ public class ReviewController implements Initializable {
             reviewText.setDisable(true);
             leaveReviewButton.setDisable(true);
         }
+
+        new DateClock(dateTimeLabel);
     }
 
     public void showReview(){
-        // TODO: 2021-02-13 fråga sigrun om detta är regelrätt?
         Product selectedItem = choseShoeToReview.getSelectionModel().getSelectedItem();
         String message;
+
         try{
             message = buildReviewString(Repository.getReviewObject(selectedItem));
         } catch (IndexOutOfBoundsException e){

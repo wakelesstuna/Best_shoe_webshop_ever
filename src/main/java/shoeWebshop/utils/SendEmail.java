@@ -1,4 +1,4 @@
-package shoeWebshop.model.Utils;
+package shoeWebshop.utils;
 
 import shoeWebshop.model.Product;
 import javax.mail.*;

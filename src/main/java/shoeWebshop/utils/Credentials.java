@@ -1,4 +1,4 @@
-package shoeWebshop.model.Utils;
+package shoeWebshop.utils;
 
 import java.io.FileReader;
 import java.io.IOException;
