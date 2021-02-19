@@ -69,7 +69,6 @@ public class CreateUserController implements Initializable {
     }
 
     public void createUser(){
-
         String customerFirstName = firstName.getText();
         String customerLastName = lastName.getText();
         String customerSocialSecurityNumber = socialSecurityNumber.getText();

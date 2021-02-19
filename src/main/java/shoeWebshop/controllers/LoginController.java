@@ -40,7 +40,6 @@ public class LoginController implements Initializable {
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
-
         new DateClock(dateTimeLabel);
     }
 

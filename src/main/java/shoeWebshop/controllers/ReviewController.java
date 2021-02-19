@@ -96,7 +96,6 @@ public class ReviewController implements Initializable {
             reviewText.setDisable(true);
             leaveReviewButton.setDisable(true);
         }
-
         new DateClock(dateTimeLabel);
     }
 
@@ -174,7 +173,6 @@ public class ReviewController implements Initializable {
                     .append("\n")
                     .append("\n");
         }
-
         return sb.toString();
     }
 

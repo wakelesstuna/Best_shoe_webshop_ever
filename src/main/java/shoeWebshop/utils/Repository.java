@@ -66,7 +66,6 @@ public class Repository extends Credentials {
                         "INSERT INTO sql_shoe_webshop.customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) " +
                                 "VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?," +
                                 "(SELECT id FROM sql_shoe_webshop.city WHERE city.city_name = '" + city + "'))");
-                // TODO: 2021-02-15 fixa så man lägger in zipCode också
 
                 stmt.setString(1, firstName);
                 stmt.setString(2, lastName);

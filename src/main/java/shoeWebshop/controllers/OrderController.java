@@ -96,7 +96,6 @@ public class OrderController implements Initializable {
             selectedOrderTable.setDisable(true);
             totalPrice.setDisable(true);
         }
-
         new DateClock(dateTimeLabel);
     }
 

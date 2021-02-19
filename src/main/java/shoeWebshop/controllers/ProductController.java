@@ -343,7 +343,6 @@ public class ProductController implements Initializable {
         System.out.println(products.size());
 
         for (Product p : products) {
-            System.out.println("1" + p);
             Pane pane = new Pane();
             pane.setMinWidth(250);
             pane.setMinHeight(350);
@@ -358,38 +357,29 @@ public class ProductController implements Initializable {
             double price = p.getPriceSek();
             int stock = p.getStock();
 
+            Label title = new Label();
+            title.setText(productName);
+            title.setFont(Font.font("Verdana", FontWeight.BOLD, 20.0));
 
             Label info = new Label();
             info.setText("" + brand + "     " + color + "   " + size + " \n" + price + " sek\nStock: " + stock);
             info.setFont(new Font(15));
             info.setStyle("-fx-padding: 5px;");
-            Label title = new Label();
-            title.setText(productName);
-            title.setFont(Font.font("Verdana", FontWeight.BOLD, 20.0));
             info.setStyle("-fx-padding: 2px;");
 
-
             Button button = new Button();
+            button.setText("Add to cart");
+            button.setPadding(new Insets(3, 2, 3, 2));
             button.setStyle("-fx-background-color: linear-gradient(to right top, #B37E39, #E7B13A); " +
                     "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); " +
                     "-fx-padding: 10px; " +
                     "-fx-font-weight: BOLD; " +
                     "-fx-font-size: 12;");
 
-
             if (FxmlUtils.isLoggedIn){
-                EventHandler<ActionEvent> buttonHandler = event -> {
-                    System.out.println(p.getId());
-                    addToCart(p);
-                };
+                EventHandler<ActionEvent> buttonHandler = event -> addToCart(p);
                 button.setOnAction(buttonHandler);
             }
-
-
-            button.setText("Add to cart");
-            button.setPadding(new Insets(3, 2, 3, 2));
-
-
 
             ImageView productImage = null;
             try {
@@ -420,14 +410,13 @@ public class ProductController implements Initializable {
                 counter1++;
                 counter2--;
             }
-            System.out.println(counter1);
         }
 
     }
 
     public ImageView getImageOfProduct(Product p) throws FileNotFoundException {
         ImageView imageView = new ImageView();
-        String product = "";
+        String product;
         switch (p.getProductName()) {
             case "flex runner" -> product = "flexrunner";
             case "air max fusion" -> product = "airmaxfusion";
@@ -462,11 +451,10 @@ public class ProductController implements Initializable {
             imageView.setVisible(true);
             return imageView;
         }
-
         return imageView;
-
     }
 
+    //---- Nav Links ----\\
 
     public void changeToProductView() {
         FxmlUtils.changeView(PRODUCT);
@@ -486,10 +474,6 @@ public class ProductController implements Initializable {
 
     public void changeToLoginView() {
         FxmlUtils.changeView(LOGIN);
-    }
-
-    public void changeToRenderTest() {
-        FxmlUtils.changeView(RENDER_TEST);
     }
 
     public void loggOut() {
