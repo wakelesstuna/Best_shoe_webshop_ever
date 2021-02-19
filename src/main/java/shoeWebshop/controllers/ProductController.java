@@ -98,11 +98,6 @@ public class ProductController implements Initializable {
     @FXML
     private Label dateTimeLabel;
 
-
-    // TODO: 2021-02-18 sett add to cart disable when not new order created 
-
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
@@ -167,7 +162,6 @@ public class ProductController implements Initializable {
             Repository.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, p.getId());
             renderAllProducts(Repository.getAllProducts());
 
-            // TODO: 2021-02-18 Nånting är fel här 
             try{
                 fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
                 addToTotalPrice(p);
