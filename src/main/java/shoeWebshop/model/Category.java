@@ -3,9 +3,9 @@ package shoeWebshop.model;
 import java.util.List;
 
 public class Category {
-    int id;
-    String CategoryName;
-    List<Product> products;
+    private final int id;
+    private final String CategoryName;
+    private List<Product> products;
 
     public Category(int id, String categoryName) {
         this.id = id;
@@ -20,6 +20,10 @@ public class Category {
 
     public String getCategoryName() {
         return CategoryName;
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 
     @Override

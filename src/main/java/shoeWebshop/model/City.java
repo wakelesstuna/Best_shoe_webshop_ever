@@ -1,10 +1,9 @@
 package shoeWebshop.model;
 
 public class City {
-    int id;
-    String countyName;
-    String cityName;
-    int zipCode;
+    private final int id;
+    private final String cityName;
+    private final int zipCode;
 
     public City(int id, String cityName, int zipCode) {
         this.id = id;
@@ -16,11 +15,15 @@ public class City {
         return cityName;
     }
 
+    public int getZipCode() {
+        return zipCode;
+    }
+
     @Override
     public String toString() {
         return "City{" +
                 "id=" + id +
-                ", countyName='" + countyName + '\'' +
+                ", countyName='" + cityName + '\'' +
                 ", zipCode=" + zipCode +
                 '}';
     }

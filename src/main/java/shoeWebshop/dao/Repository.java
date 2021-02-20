@@ -1,14 +1,16 @@
-package shoeWebshop.utils;
+package shoeWebshop.dao;
 
 import javafx.scene.control.Alert;
 import shoeWebshop.controllers.FxmlUtils;
 import shoeWebshop.model.*;
+import shoeWebshop.service.Credentials;
+import shoeWebshop.service.SendEmail;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
-import static shoeWebshop.utils.Credentials.USER.*;
+import static shoeWebshop.service.Credentials.USER.*;
 
 public class Repository extends Credentials {
 
@@ -62,20 +64,21 @@ public class Repository extends Credentials {
             if (getAllCustomers().stream().anyMatch(e -> e.getEmail().equals(email))) {
                 FxmlUtils.showMessage("Warning", "Couldn't create User", email + " are already in use", Alert.AlertType.INFORMATION);
             } else {
-                PreparedStatement stmt = con.prepareStatement(
+                PreparedStatement pstmt = con.prepareStatement(
                         "INSERT INTO sql_shoe_webshop.customer(first_name, last_name, phone_number, email, password, social_security_number, address, fk_city_id) " +
                                 "VALUES (?,?,?,?,AES_ENCRYPT(?,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))),?,?," +
-                                "(SELECT id FROM sql_shoe_webshop.city WHERE city.city_name = '" + city + "'))");
+                                "(SELECT id FROM sql_shoe_webshop.city WHERE city.city_name = ?))");
 
-                stmt.setString(1, firstName);
-                stmt.setString(2, lastName);
-                stmt.setString(3, phoneNumber);
-                stmt.setString(4, email);
-                stmt.setString(5, password);
-                stmt.setString(6, ssn);
-                stmt.setString(7, address);
+                pstmt.setString(1, firstName);
+                pstmt.setString(2, lastName);
+                pstmt.setString(3, phoneNumber);
+                pstmt.setString(4, email);
+                pstmt.setString(5, password);
+                pstmt.setString(6, ssn);
+                pstmt.setString(7, address);
+                pstmt.setString(8, city);
 
-                stmt.execute();
+                pstmt.execute();
 
                 SendEmail.sendCreateUserMail(email, "New Customer", firstName + " " + lastName, password);
                 FxmlUtils.showMessage("New customer", "Welcome!", "We are so glad that you have join us Mr/Mrs " + firstName, Alert.AlertType.INFORMATION);
@@ -158,13 +161,15 @@ public class Repository extends Credentials {
         List<ReviewObject> reviewObjects = new ArrayList<>();
 
         try (Connection con = createConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT product.id, product.product_name, customer.first_name, customer.last_name, size.eu, rating.rating_number, review, product_review.created FROM sql_shoe_webshop.product_review " +
+            PreparedStatement pstmt = con.prepareStatement("SELECT product.id, product.product_name, customer.first_name, customer.last_name, size.eu, rating.rating_number, review, product_review.created FROM sql_shoe_webshop.product_review " +
                     "JOIN sql_shoe_webshop.product ON product.id = product_review.fk_product_id " +
                     "JOIN sql_shoe_webshop.rating ON rating.id = product_review.fk_rating_id " +
                     "JOIN sql_shoe_webshop.size ON size.id = product.fk_size_id " +
                     "JOIN sql_shoe_webshop.customer ON product_review.fk_customer_id = customer.id " +
-                    "WHERE product.id =" + product.getId() + "")){
+                    "WHERE product.id =?")){
+
+            pstmt.setInt(1,product.getId());
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -190,13 +195,15 @@ public class Repository extends Credentials {
         List<Orders> orders = new ArrayList<>();
 
         try (Connection con = createConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT orders.id, orders.date,count(orders_product.fk_product_id) AS totalShoes, sum(product_price) AS totalPrice " +
+            PreparedStatement pstmt = con.prepareCall("SELECT orders.id, orders.date,count(orders_product.fk_product_id) AS totalShoes, sum(product_price) AS totalPrice " +
                     "FROM sql_shoe_webshop.orders " +
                     "JOIN sql_shoe_webshop.orders_product ON orders.id = orders_product.fk_orders_id " +
                     "JOIN sql_shoe_webshop.customer ON customer.id = orders.fk_customer_id " +
-                    "WHERE customer.id = " + customer.getId() + " " +
+                    "WHERE customer.id = ? " +
                     "GROUP BY orders.id")){
+
+            pstmt.setInt(1,customer.getId());
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 orders.add(new Orders(rs.getInt("id"),
@@ -215,21 +222,23 @@ public class Repository extends Credentials {
         List<Product> products = new ArrayList<>();
 
         try (Connection con = createConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
+            PreparedStatement pstmt = con.prepareStatement("SELECT * FROM sql_shoe_webshop.product " +
                     "JOIN sql_shoe_webshop.orders_product ON product.id = orders_product.fk_product_id " +
                     "JOIN sql_shoe_webshop.orders ON orders.id = orders_product.fk_orders_id " +
                     "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
                     "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
                     "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
-                    "WHERE orders_product.fk_orders_id = " + order.getId() + " ")){
+                    "WHERE orders_product.fk_orders_id = ?")){
+
+            pstmt.setInt(1,order.getId());
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
-                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"), rs.getDouble("uk"), rs.getDouble("us"), rs.getDouble("cm"));
                 int amountOrdered = rs.getInt("quantity");
                 Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
 
@@ -261,15 +270,16 @@ public class Repository extends Credentials {
     }
 
     public static void discardOrder(int orderId){
-        try(Connection con = createConnection();
-            CallableStatement cstmt = con.prepareCall("{CALL discard_order(?)}")){
+        if (FxmlUtils.orderCreatedButNotSent){
+            try(Connection con = createConnection();
+                CallableStatement cstmt = con.prepareCall("{CALL discard_order(?)}")){
 
-            cstmt.setInt(1,orderId);
+                cstmt.setInt(1,orderId);
+                cstmt.execute();
 
-            cstmt.execute();
-
-        }catch (SQLException e){
-            e.printStackTrace();
+            }catch (SQLException e){
+                System.out.println("Ingen pågående order att avsluta");
+            }
         }
     }
 
@@ -290,12 +300,11 @@ public class Repository extends Credentials {
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
-                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"), rs.getDouble("uk"), rs.getDouble("us"), rs.getDouble("cm"));
                 Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
                 int stock = Integer.parseInt(rs.getString("stock"));
 
                 products.add(new Product(id, productName, priceSek, color, size, brand, stock));
-
             }
 
         } catch (SQLException throwable) {
@@ -309,21 +318,23 @@ public class Repository extends Credentials {
         List<Product> products = new ArrayList<>();
 
         try (Connection con = createConnection();
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM sql_shoe_webshop.product " +
+            PreparedStatement pstmt = con.prepareCall("SELECT * FROM sql_shoe_webshop.product " +
                     "JOIN sql_shoe_webshop.color ON product.fk_color_id = color.id " +
                     "JOIN sql_shoe_webshop.size ON product.fk_size_id = size.id " +
                     "JOIN sql_shoe_webshop.brand ON product.fk_brand_id = brand.id " +
                     "JOIN sql_shoe_webshop.product_category ON product_category.fk_product_id = product.id " +
                     "JOIN sql_shoe_webshop.category ON product_category.fk_category_id = category.id " +
-                    "WHERE category_name = '"+categoryName+"'")){
+                    "WHERE category_name = ?")){
+
+            pstmt.setString(1, categoryName);
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String productName = rs.getString("product_name");
                 double priceSek = rs.getDouble("price_sek");
                 Color color = new Color(rs.getInt("fk_color_id"), rs.getString("color"));
-                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"));
+                Size size = new Size(rs.getInt("fk_size_id"), rs.getDouble("eu"), rs.getDouble("uk"), rs.getDouble("us"), rs.getDouble("cm"));
                 Brand brand = new Brand(rs.getInt("fk_brand_id"), rs.getString("brand_name"));
                 int stock = Integer.parseInt(rs.getString("stock"));
 
@@ -372,7 +383,11 @@ public class Repository extends Credentials {
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NullPointerException e){
-            FxmlUtils.showMessage("Not logged in!", "You need to be logged in\nto make and order", null, Alert.AlertType.ERROR);
+            if (!FxmlUtils.isLoggedIn){
+                FxmlUtils.showMessage("Not logged in!", "You need to be logged in\nto make and order", null, Alert.AlertType.ERROR);
+            }else {
+                FxmlUtils.showMessage("No Order", "You need to create a order first,\nbefore you can add products", null, Alert.AlertType.ERROR);
+            }
 
         }
 

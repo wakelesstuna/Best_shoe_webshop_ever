@@ -3,8 +3,8 @@ package shoeWebshop.controllers;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import shoeWebshop.utils.DateClock;
-import shoeWebshop.utils.Repository;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,7 +26,6 @@ public class MainController implements Initializable {
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
-
         new DateClock(dateTimeLabel);
     }
 

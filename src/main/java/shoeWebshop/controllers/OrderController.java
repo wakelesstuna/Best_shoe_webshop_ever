@@ -8,8 +8,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
-import shoeWebshop.utils.DateClock;
-import shoeWebshop.utils.Repository;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -114,7 +114,7 @@ public class OrderController implements Initializable {
         sumAllPricesInTable(products);
     }
 
-    public void fillOrdersTable(List<Orders> list) {
+    private void fillOrdersTable(List<Orders> list) {
         ordersOrderIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         ordersDateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         ordersTotalPriceCol.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
@@ -123,7 +123,7 @@ public class OrderController implements Initializable {
         ordersTable.getItems().setAll(list);
     }
 
-    public void sumAllPricesInTable(List<Product> list) {
+    private void sumAllPricesInTable(List<Product> list) {
         double totalSum = list.stream().mapToDouble(e -> e.getPriceSek() * e.getAmountOrdered()).sum();
 
         totalPrice.setText(String.valueOf(totalSum));

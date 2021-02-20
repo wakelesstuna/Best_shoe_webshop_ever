@@ -3,8 +3,6 @@ package shoeWebshop.controllers;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -19,9 +17,9 @@ import javafx.scene.text.FontWeight;
 import shoeWebshop.model.Category;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
-import shoeWebshop.utils.DateClock;
-import shoeWebshop.utils.Repository;
-import shoeWebshop.utils.SendEmail;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
+import shoeWebshop.service.SendEmail;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,7 +29,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static shoeWebshop.controllers.FxmlUtils.View.*;
-import static shoeWebshop.controllers.FxmlUtils.View.RENDER_TEST;
 
 public class ProductController implements Initializable {
 
@@ -101,14 +98,14 @@ public class ProductController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         showTotalPrice.setAlignment(Pos.CENTER_RIGHT);
-        if (FxmlUtils.isLoggedIn){
+        if (FxmlUtils.isLoggedIn) {
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
-            if (FxmlUtils.orderCreatedButNotSent){
+            if (FxmlUtils.orderCreatedButNotSent) {
                 fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
-            }else {
+            } else {
                 customerLoggedInButNoOrderCreated();
             }
-        }else{
+        } else {
             loggedIn.setText("Logged in: not logged in");
 
             removeFromCart.setDisable(true);
@@ -131,7 +128,7 @@ public class ProductController implements Initializable {
 
     //---------------------- CART FUNCTIONS ---------------------------------------------------------------------------\\
 
-    private void customerLoggedInButNoOrderCreated(){
+    private void customerLoggedInButNoOrderCreated() {
         removeFromCart.setDisable(true);
         cartTable.setDisable(true);
         totalPrice.setDisable(false);
@@ -141,7 +138,7 @@ public class ProductController implements Initializable {
         discardOrderBtn.setDisable(true);
     }
 
-    public void createNewOrder(){
+    public void createNewOrder() {
         FxmlUtils.currentCustomerOrder = Repository.createNewOrder(FxmlUtils.whoIsLoggedIn);
         System.out.println("New Order number: " + FxmlUtils.currentCustomerOrder);
         removeFromCart.setDisable(false);
@@ -154,38 +151,38 @@ public class ProductController implements Initializable {
         renderAllProducts(Repository.getAllProducts());
     }
 
-    public void addToCart(Product p){
+    public void addToCart(Product p) {
 
-        if (p.getStock() == 0){
+        if (p.getStock() == 0) {
             FxmlUtils.showMessage("Error", "Sorry, selected product is out of stock!", null, Alert.AlertType.ERROR);
-        }else{
+        } else {
             Repository.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, p.getId());
             renderAllProducts(Repository.getAllProducts());
 
-            try{
-                fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn)));
+            try {
+                fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
                 addToTotalPrice(p);
-            }catch (NullPointerException ignored){
+            } catch (NullPointerException ignored) {
             }
 
         }
     }
 
-    public void removeFromCart(){
+    public void removeFromCart() {
         Product selectedItem = cartTable.getSelectionModel().getSelectedItem();
 
-        if (!(selectedItem.getAmountOrdered() == 0)){
-            Repository.removeFromCart(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn,selectedItem.getId());
+        if (!(selectedItem.getAmountOrdered() == 0)) {
+            Repository.removeFromCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, selectedItem.getId());
             renderAllProducts(Repository.getAllProducts());
             cartTable.getItems().remove(selectedItem);
 
-            Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder,FxmlUtils.whoIsLoggedIn);
+            Orders tempOrder = new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn);
             fillCartTable(Repository.getSelectedOrder(tempOrder));
             substractFromTotalPrice(selectedItem);
         }
     }
 
-    public void sendOrder(){
+    public void sendOrder() {
         SendEmail.sendOrderConfirmMail(FxmlUtils.whoIsLoggedIn.getEmail(), "Shoe Order", cartTable.getItems(), FxmlUtils.whoIsLoggedIn.getFullName());
         FxmlUtils.showMessage("Order", "Order Sent!\nThank you for ordering from\nBest Shoe Shop Ever!", null, Alert.AlertType.INFORMATION);
 
@@ -196,7 +193,7 @@ public class ProductController implements Initializable {
         customerLoggedInButNoOrderCreated();
     }
 
-    public void discardOrder(){
+    public void discardOrder() {
         System.out.println("Order number to discard: " + FxmlUtils.currentCustomerOrder);
         Repository.discardOrder(FxmlUtils.currentCustomerOrder);
 
@@ -208,7 +205,7 @@ public class ProductController implements Initializable {
         customerLoggedInButNoOrderCreated();
     }
 
-    public void fillCartTable(List<Product> list){
+    public void fillCartTable(List<Product> list) {
         try {
             cartModelCul.setCellValueFactory(new PropertyValueFactory<>("productName"));
             cartBrandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
@@ -217,70 +214,66 @@ public class ProductController implements Initializable {
             cartQuantityCol.setCellValueFactory(new PropertyValueFactory<>("amountOrdered"));
 
             cartTable.getItems().setAll(list);
-        }catch (NullPointerException ignored){
+        } catch (NullPointerException ignored) {
         }
 
     }
 
-    public void addToTotalPrice(Product product){
+    public void addToTotalPrice(Product product) {
         double price = Double.parseDouble(showTotalPrice.getText());
         showTotalPrice.setText(price + product.getPriceSek() + "");
     }
 
-    public void substractFromTotalPrice(Product product){
+    public void substractFromTotalPrice(Product product) {
         double price = Double.parseDouble(showTotalPrice.getText());
         showTotalPrice.setText(price - product.getPriceSek() + "");
     }
 
     //---------------------- FILTER BOXES ---------------------------------------------------------------------------\\
 
-    public void fillCategory() {
-        System.out.println("fill category");
+    private void fillCategory() {
         ObservableList<String> categories = FXCollections.observableList(Repository.getAllCategories().stream().map(Category::getCategoryName).collect(Collectors.toList()));
         categories.add(0, "Categories");
         sortCategory.setItems(categories.sorted());
         filterByCategory();
     }
 
-    public void fillBrand() {
+    private void fillBrand() {
         List<Product> products = Repository.getAllProducts();
-        System.out.println("fill brand");
         ObservableList<String> brands = FXCollections.observableList(products.stream().map(Product::getBrand).distinct().collect(Collectors.toList()));
         brands.add(0, "Brands");
         sortBrand.setItems(brands.sorted());
         filterByBrand();
     }
 
-    public void fillSizes() {
+    private void fillSizes() {
         List<Product> products = Repository.getAllProducts();
-        System.out.println("fill sizes");
         ObservableList<String> sizes = FXCollections.observableList(products.stream().map(e -> e.getSize() + "").distinct().collect(Collectors.toList()));
         sizes.add(0, "Sizes");
         sortSize.setItems(sizes);
         filterBySizes();
     }
 
-    public void fillPrice() {
+    private void fillPrice() {
         List<Product> products = Repository.getAllProducts();
-        System.out.println("fill price");
         ObservableList<String> prices = FXCollections.observableList(products.stream().map(e -> e.getPriceSek() + "").distinct().collect(Collectors.toList()));
         prices.add(0, "Prices");
         sortPrice.setItems(prices);
         filterByPrice();
     }
 
-    public void filterByCategory(){
+    private void filterByCategory() {
         sortCategory.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
                     System.out.println(sortCategory.getItems().get(new_val.intValue()));
-                    setComboBoxToFirstValue(sortBrand,sortPrice,sortSize);
+                    setComboBoxToFirstValue(sortBrand, sortPrice, sortSize);
                     List<Product> categories = Repository.getProductsOfCategory(sortCategory.getItems().get(new_val.intValue()));
                     productView.getChildren().clear();
                     renderAllProducts(categories);
                 });
     }
 
-    public void filterByBrand() {
+    private void filterByBrand() {
         sortBrand.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
                     setComboBoxToFirstValue(sortCategory, sortPrice, sortSize);
@@ -292,7 +285,7 @@ public class ProductController implements Initializable {
                 });
     }
 
-    public void filterBySizes() {
+    private void filterBySizes() {
         sortSize.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
                     setComboBoxToFirstValue(sortCategory, sortPrice, sortBrand);
@@ -308,7 +301,7 @@ public class ProductController implements Initializable {
                 });
     }
 
-    public void filterByPrice() {
+    private void filterByPrice() {
         sortPrice.getSelectionModel().selectedIndexProperty().addListener(
                 (ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
                     setComboBoxToFirstValue(sortCategory, sortSize, sortBrand);
@@ -324,29 +317,22 @@ public class ProductController implements Initializable {
                 });
     }
 
-    public void setComboBoxToFirstValue(ComboBox<?> comboBox1, ComboBox<?> comboBox2, ComboBox<?> comboBox3) {
+    private void setComboBoxToFirstValue(ComboBox<?> comboBox1, ComboBox<?> comboBox2, ComboBox<?> comboBox3) {
         comboBox1.getSelectionModel().selectFirst();
         comboBox2.getSelectionModel().selectFirst();
         comboBox3.getSelectionModel().selectFirst();
     }
 
-    //---------------------- RENDER PRODUCTS ---------------------------------------------------------------------------\\
+    //---------------------- RENDER PRODUCTS ------------------------------------------------------------------------\\
 
-    public void renderAllProducts(List<Product> products) {
+    private void renderAllProducts(List<Product> products) {
         int counter1 = 0;
         int counter2 = 1;
         productView.setVisible(true);
         productView.setStyle("-fx-background-color: #B0B9C8;");
         scrollPane.setStyle("-fx-background-color:transparent;");
-        System.out.println(products.size());
 
         for (Product p : products) {
-            Pane pane = new Pane();
-            pane.setMinWidth(250);
-            pane.setMinHeight(350);
-            pane.setPrefWidth(250);
-            pane.setPrefHeight(350);
-            pane.setVisible(true);
 
             String productName = p.getProductName();
             String brand = p.getBrand();
@@ -355,52 +341,18 @@ public class ProductController implements Initializable {
             double price = p.getPriceSek();
             int stock = p.getStock();
 
-            Label title = new Label();
-            title.setText(productName);
-            title.setFont(Font.font("Verdana", FontWeight.BOLD, 20.0));
+            Pane pane = createPane();
+            Label title = createTitleLabel(productName);
+            ImageView productImage = getImageOfProduct(p);
+            Label info = createInfoLabel(brand, color, size, price, stock);
+            Button button = createButton("Add to cart", p);
 
-            Label info = new Label();
-            info.setText("" + brand + "     " + color + "   " + size + " \n" + price + " sek\nStock: " + stock);
-            info.setFont(new Font(15));
-            info.setStyle("-fx-padding: 5px;");
-            info.setStyle("-fx-padding: 2px;");
-
-            Button button = new Button();
-            button.setText("Add to cart");
-            button.setPadding(new Insets(3, 2, 3, 2));
-            button.setStyle("-fx-background-color: linear-gradient(to right top, #B37E39, #E7B13A); " +
-                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); " +
-                    "-fx-padding: 10px; " +
-                    "-fx-font-weight: BOLD; " +
-                    "-fx-font-size: 12;");
-
-            if (FxmlUtils.isLoggedIn && FxmlUtils.orderCreatedButNotSent){
-                EventHandler<ActionEvent> buttonHandler = event -> addToCart(p);
-                button.setOnAction(buttonHandler);
-            }
-
-            ImageView productImage = null;
-            try {
-                productImage = getImageOfProduct(p);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            VBox vBox = new VBox();
-            vBox.setAlignment(Pos.TOP_CENTER);
-            vBox.setMinSize(300, 250);
-            vBox.setPrefHeight(330);
-            vBox.getChildren().add(title);
-            vBox.getChildren().add(productImage);
-            vBox.getChildren().add(info);
-            vBox.getChildren().add(button);
-            vBox.setStyle("-fx-background-color: linear-gradient(to left top, #B37E39, #E7B13A); " +
-                    "-fx-background-radius: 50px;" +
-                    "-fx-border-radius: 50px; " +
-                    "-fx-alignment: Center;");
+            VBox vBox = createVBox(title, productImage, info, button);
 
             pane.getChildren().add(vBox);
             productView.add(pane, counter1, counter2++);
+
+            // counter for product placement in grid
             if (counter1 == 1) {
                 counter1--;
                 counter2++;
@@ -409,47 +361,105 @@ public class ProductController implements Initializable {
                 counter2--;
             }
         }
-
     }
 
-    public ImageView getImageOfProduct(Product p) throws FileNotFoundException {
-        ImageView imageView = new ImageView();
-        String product;
-        switch (p.getProductName()) {
-            case "flex runner" -> product = "flexrunner";
-            case "air max fusion" -> product = "airmaxfusion";
-            case "solar boost" -> product = "solarboost";
-            case "offroad" -> product = "offroad";
-            case "questar" -> product = "questar";
-            case "pegasus" -> product = "pegasus";
-            case "keke" -> product = "keke";
-            case "kaptir" -> product = "kaptir";
-            case "Vomero" -> product = "Vomero";
-            case "lace-up" -> product = "laceup";
-            case "lace-up-b" -> product = "laceupb";
-            case "tanjun" -> product = "tanjun";
-            case "ultra boost" -> product = "ultraboost";
+    private Pane createPane() {
+        Pane pane = new Pane();
+        pane.setMinWidth(250);
+        pane.setMinHeight(350);
+        pane.setPrefWidth(250);
+        pane.setPrefHeight(350);
+        pane.setVisible(true);
+        return pane;
+    }
 
-            default -> product = "noimage";
+    private Label createTitleLabel(String productName) {
+        Label label = new Label();
+        label.setText(productName);
+        label.setFont(Font.font("Verdana", FontWeight.BOLD, 20.0));
+        return label;
+    }
+
+    private ImageView getImageOfProduct(Product p) {
+        String imgPath;
+        FileInputStream file = null;
+        switch (p.getProductName()) {
+            case "flex runner" -> imgPath = "flexrunner";
+            case "air max fusion" -> imgPath = "airmaxfusion";
+            case "solar boost" -> imgPath = "solarboost";
+            case "offroad" -> imgPath = "offroad";
+            case "questar" -> imgPath = "questar";
+            case "pegasus" -> imgPath = "pegasus";
+            case "keke" -> imgPath = "keke";
+            case "kaptir" -> imgPath = "kaptir";
+            case "Vomero" -> imgPath = "Vomero";
+            case "lace-up" -> imgPath = "laceup";
+            case "lace-up-b" -> imgPath = "laceupb";
+            case "tanjun" -> imgPath = "tanjun";
+            case "ultra boost" -> imgPath = "ultraboost";
+
+            default -> imgPath = "noimage";
         }
 
         try {
-            FileInputStream file = new FileInputStream("./src/main/resources/img/product/" + product + ".png");
-            Image img = new Image(file);
-            imageView.setX(30);
-            imageView.setY(50);
-            imageView.setImage(img);
-            imageView.setVisible(true);
+            file = new FileInputStream("./src/main/resources/img/product/" + imgPath + ".png");
+            return setImageValues(new Image(file));
+
         } catch (FileNotFoundException EX) {
-            FileInputStream file = new FileInputStream("./src/main/resources/img/product/noimage.png");
-            Image img = new Image(file);
-            imageView.setX(30);
-            imageView.setY(50);
-            imageView.setImage(img);
-            imageView.setVisible(true);
-            return imageView;
+            try {
+                file = new FileInputStream("./src/main/resources/img/product/noimage.png");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            return setImageValues(new Image(file));
         }
+    }
+
+    private ImageView setImageValues(Image img) {
+        ImageView imageView = new ImageView();
+        imageView.setX(30);
+        imageView.setY(50);
+        imageView.setImage(img);
+        imageView.setVisible(true);
         return imageView;
+    }
+
+    private Label createInfoLabel(String brand, String color, double size, double price, int stock) {
+        Label label = new Label();
+        label.setText("" + brand + "     " + color + "   " + size + " \n" + price + " sek\nStock: " + stock);
+        label.setFont(new Font(15));
+        label.setStyle("-fx-padding: 5px;");
+        label.setStyle("-fx-padding: 2px;");
+        return label;
+    }
+
+    private Button createButton(String s, Product p) {
+        Button btn = new Button();
+        btn.setText(s);
+        btn.setPadding(new Insets(3, 2, 3, 2));
+        btn.setStyle("-fx-background-color: linear-gradient(to right top, #B37E39, #E7B13A); " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0); " +
+                "-fx-padding: 10px; " +
+                "-fx-font-weight: BOLD; " +
+                "-fx-font-size: 12;");
+        btn.setOnAction(event -> addToCart(p));
+        return btn;
+    }
+
+    private VBox createVBox(Label title, ImageView productImage, Label info, Button button) {
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_CENTER);
+        vBox.setMinSize(300, 250);
+        vBox.setPrefHeight(330);
+        vBox.getChildren().add(title);
+        vBox.getChildren().add(productImage);
+        vBox.getChildren().add(info);
+        vBox.getChildren().add(button);
+        vBox.setStyle("-fx-background-color: linear-gradient(to left top, #B37E39, #E7B13A); " +
+                "-fx-background-radius: 50px;" +
+                "-fx-border-radius: 50px; " +
+                "-fx-alignment: Center;");
+        return vBox;
     }
 
     //---- Nav Links ----\\

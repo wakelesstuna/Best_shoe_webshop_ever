@@ -9,8 +9,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.City;
-import shoeWebshop.utils.DateClock;
-import shoeWebshop.utils.Repository;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -86,7 +86,7 @@ public class CreateUserController implements Initializable {
         FxmlUtils.showMessage("Logg in", "Please logg in to \nstart shopping", null, Alert.AlertType.INFORMATION);
     }
 
-    public void eraseAllTextFields(){
+    private void eraseAllTextFields(){
         firstName.setText("");
         lastName.setText("");
         socialSecurityNumber.setText("");
@@ -106,7 +106,7 @@ public class CreateUserController implements Initializable {
         password.setPromptText("password");
     }
 
-    public void setMaxTextFieldCount(TextField textField, int maxLength){
+    private void setMaxTextFieldCount(TextField textField, int maxLength){
         textField.setOnKeyTyped(t -> {
             if (textField.getText().length() > maxLength) {
                 int pos = textField.getCaretPosition();
@@ -116,7 +116,7 @@ public class CreateUserController implements Initializable {
         });
     }
 
-    public void fillComboBox(ComboBox<String> comboBox){
+    private void fillComboBox(ComboBox<String> comboBox){
         ObservableList<String> list = FXCollections.observableList(Repository.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
         comboBox.setItems(list);
     }

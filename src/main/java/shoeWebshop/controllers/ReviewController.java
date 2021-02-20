@@ -7,8 +7,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.ReviewObject;
-import shoeWebshop.utils.DateClock;
-import shoeWebshop.utils.Repository;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -40,8 +40,6 @@ public class ReviewController implements Initializable {
 
     @FXML
     private TableColumn<Product, String> colorCol;
-
-    private TableColumn<Product, Double> avgScoreCol;
 
     @FXML
     private HBox radioButtonBox;
@@ -122,7 +120,7 @@ public class ReviewController implements Initializable {
 
     }
 
-    public void fillReviewTable(List<Product> list) {
+    private void fillReviewTable(List<Product> list) {
 
         modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
         brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
@@ -131,14 +129,6 @@ public class ReviewController implements Initializable {
         colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
 
         choseShoeToReview.getItems().setAll(list);
-    }
-
-    public void setAvgScore(List<ReviewObject> list){
-        double averageReviewScore = list.stream().mapToDouble(ReviewObject::getRating).average().orElseThrow();
-        avgScoreCol.setCellValueFactory(new PropertyValueFactory<>("averageScore"));
-        Product tempProduct = new Product(averageReviewScore);
-        choseShoeToReview.getItems().set(6,tempProduct);
-
     }
 
     private String buildReviewString(List<ReviewObject> list){

@@ -1,4 +1,4 @@
-package shoeWebshop.utils;
+package shoeWebshop.service;
 
 import javafx.scene.control.Label;
 

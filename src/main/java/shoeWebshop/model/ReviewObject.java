@@ -4,13 +4,13 @@ import java.sql.Date;
 
 public class ReviewObject {
 
-    int id;
-    String customerName;
-    String productName;
-    double size;
-    double rating;
-    String review;
-    Date date;
+    private final int id;
+    private String customerName;
+    private String productName;
+    private double size;
+    private double rating;
+    private String review;
+    private Date date;
 
     public ReviewObject(int id, String customerName, String productName, double size, double rating, String review, Date date) {
         this.id = id;

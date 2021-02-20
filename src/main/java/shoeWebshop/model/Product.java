@@ -68,15 +68,15 @@ public class Product {
     }
 
     public String getColor() {
-        return color.color;
+        return color.getColor();
     }
 
     public double getSize() {
-        return size.eu;
+        return size.getEu();
     }
 
     public String getBrand() {
-        return brand.brandName;
+        return brand.getBrandName();
     }
 
     public int getAmountOrdered() {

@@ -3,11 +3,11 @@ package shoeWebshop.model;
 import java.sql.Date;
 
 public class Orders {
-    int id;
-    Date date;
-    Customer customer;
-    double totalPrice;
-    int numberOfProducts;
+    private final int id;
+    private Date date;
+    private final Customer customer;
+    private double totalPrice;
+    private int numberOfProducts;
 
     public Orders(int id, Date date, Customer customer, double totalPrice, int numberOfProducts) {
         this.id = id;
