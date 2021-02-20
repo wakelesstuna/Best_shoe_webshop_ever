@@ -1,4 +1,4 @@
-package shoeWebshop.model.Utils;
+package shoeWebshop.service;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class Credentials {
 
     public Credentials() {
         Properties prop = new Properties();
-        try (FileReader file = new FileReader("src/main/java/shoeWebshop/user.properties")) {
+        try (FileReader file = new FileReader("src/main/resources/setting.properties")) {
             prop.load(file);
         } catch (IOException e) {
             System.out.println("Couldn't read properties");

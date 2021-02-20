@@ -8,7 +8,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import shoeWebshop.model.Orders;
 import shoeWebshop.model.Product;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -69,6 +70,9 @@ public class OrderController implements Initializable {
     @FXML
     private TextField totalPrice;
 
+    @FXML
+    private Label dateTimeLabel;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,7 +85,7 @@ public class OrderController implements Initializable {
             showOrderButton.setDisable(false);
             selectedOrderTable.setDisable(false);
             totalPrice.setDisable(false);
-            fillOrdersTable(Database.getCustomerOrders(FxmlUtils.whoIsLoggedIn));
+            fillOrdersTable(Repository.getCustomerOrders(FxmlUtils.whoIsLoggedIn));
 
         } else {
             loggedIn.setText("Logged in: not logged in");
@@ -92,6 +96,7 @@ public class OrderController implements Initializable {
             selectedOrderTable.setDisable(true);
             totalPrice.setDisable(true);
         }
+        new DateClock(dateTimeLabel);
     }
 
     public void fillSelectedOrderToTable() {
@@ -104,12 +109,12 @@ public class OrderController implements Initializable {
         priceCol.setCellValueFactory(new PropertyValueFactory<>("priceSek"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("amountOrdered"));
 
-        List<Product> products = Database.getSelectedOrder(selectedOrder);
+        List<Product> products = Repository.getSelectedOrder(selectedOrder);
         selectedOrderTable.getItems().setAll(products);
         sumAllPricesInTable(products);
     }
 
-    public void fillOrdersTable(List<Orders> list) {
+    private void fillOrdersTable(List<Orders> list) {
         ordersOrderIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         ordersDateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
         ordersTotalPriceCol.setCellValueFactory(new PropertyValueFactory<>("totalPrice"));
@@ -118,7 +123,7 @@ public class OrderController implements Initializable {
         ordersTable.getItems().setAll(list);
     }
 
-    public void sumAllPricesInTable(List<Product> list) {
+    private void sumAllPricesInTable(List<Product> list) {
         double totalSum = list.stream().mapToDouble(e -> e.getPriceSek() * e.getAmountOrdered()).sum();
 
         totalPrice.setText(String.valueOf(totalSum));
@@ -150,6 +155,7 @@ public class OrderController implements Initializable {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 

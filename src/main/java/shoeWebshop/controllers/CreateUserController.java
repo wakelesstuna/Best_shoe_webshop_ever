@@ -9,7 +9,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import shoeWebshop.model.City;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -48,6 +49,9 @@ public class CreateUserController implements Initializable {
     @FXML
     private TextField password;
 
+    @FXML
+    private Label dateTimeLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setMaxTextFieldCount(socialSecurityNumber,10);
@@ -60,10 +64,11 @@ public class CreateUserController implements Initializable {
             loggedIn.setText("Logged in: not logged in");
         }
         eraseAllTextFields();
+
+        new DateClock(dateTimeLabel);
     }
 
     public void createUser(){
-
         String customerFirstName = firstName.getText();
         String customerLastName = lastName.getText();
         String customerSocialSecurityNumber = socialSecurityNumber.getText();
@@ -74,14 +79,14 @@ public class CreateUserController implements Initializable {
         String customerCity = (String) cityBox.getValue();
         String customerPassword = password.getText();
 
-        Database.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
+        Repository.createNewCustomer(customerFirstName,customerLastName, customerPhoneNumber, customerEmail, customerPassword, customerSocialSecurityNumber, customerAddress, customerCity, customerZipCode);
         eraseAllTextFields();
 
-        FxmlUtils.changeScenes(FxmlUtils.loginView());
+        FxmlUtils.changeView(LOGIN);
         FxmlUtils.showMessage("Logg in", "Please logg in to \nstart shopping", null, Alert.AlertType.INFORMATION);
     }
 
-    public void eraseAllTextFields(){
+    private void eraseAllTextFields(){
         firstName.setText("");
         lastName.setText("");
         socialSecurityNumber.setText("");
@@ -101,7 +106,7 @@ public class CreateUserController implements Initializable {
         password.setPromptText("password");
     }
 
-    public void setMaxTextFieldCount(TextField textField, int maxLength){
+    private void setMaxTextFieldCount(TextField textField, int maxLength){
         textField.setOnKeyTyped(t -> {
             if (textField.getText().length() > maxLength) {
                 int pos = textField.getCaretPosition();
@@ -111,8 +116,8 @@ public class CreateUserController implements Initializable {
         });
     }
 
-    public void fillComboBox(ComboBox<String> comboBox){
-        ObservableList<String> list = FXCollections.observableList(Database.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
+    private void fillComboBox(ComboBox<String> comboBox){
+        ObservableList<String> list = FXCollections.observableList(Repository.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
         comboBox.setItems(list);
     }
 
@@ -142,6 +147,7 @@ public class CreateUserController implements Initializable {
         FxmlUtils.isLoggedIn = false;
         FxmlUtils.whoIsLoggedIn = null;
         loggedIn.setText("");
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 }

@@ -1,4 +1,4 @@
-package shoeWebshop.model.Utils;
+package shoeWebshop.service;
 
 import shoeWebshop.model.Product;
 import javax.mail.*;
@@ -60,21 +60,18 @@ public class SendEmail {
     }
 
     public static String buildCreateCustomerMail(String customerName, String customerEmail, String customerPassword){
-        StringBuilder sb = new StringBuilder();
-
-        return sb.append("Welcome to the Best Shoe Shop Ever!\n")
-                .append("We are so glad that you have join us Mr/Mrs ")
-                .append(customerName)
-                .append("! \nWe hope that you will enjoy shopping at our store and be happy about the products you purchases\n\n")
-                .append("Here is your username: ")
-                .append(customerEmail)
-                .append("\nand here is your password: ")
-                .append(customerPassword)
-                .append("\n\nIf you have any questions just let us know at\n")
-                .append("nackademinJava20A@gmail.com")
-                .append("\n")
-                .append("Kind regards Best shoe shop ever!").toString();
-
+        return "Welcome to the Best Shoe Shop Ever!\n" +
+                "We are so glad that you have join us Mr/Mrs " +
+                customerName +
+                "! \nWe hope that you will enjoy shopping at our store and be happy about the products you purchases\n\n" +
+                "Here is your username: " +
+                customerEmail +
+                "\nand here is your password: " +
+                customerPassword +
+                "\n\nIf you have any questions just let us know at\n" +
+                "nackademinJava20A@gmail.com" +
+                "\n" +
+                "Kind regards Best shoe shop ever!";
     }
 
     private static String buildOrderConfirmMail(List<Product> list, String customerName) {

@@ -1,17 +1,15 @@
 package shoeWebshop.model;
 
-import shoeWebshop.model.Utils.Database;
-
 public class Customer {
-    int id;
-    String firstName;
-    String lastName;
-    int phoneNumber;
-    String email;
-    String password;
-    String ssn;
-    String Address;
-    City city;
+    private final int id;
+    private String firstName;
+    private String lastName;
+    private int phoneNumber;
+    private String email;
+    private String password;
+    private String ssn;
+    private String Address;
+    private City city;
 
     public Customer(int id, String firstName, String lastName, int phoneNumber, String email, String password, String socialSecurityNumber, String address, City city) {
         this.id = id;

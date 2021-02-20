@@ -7,7 +7,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import shoeWebshop.model.Product;
 import shoeWebshop.model.ReviewObject;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -40,8 +41,6 @@ public class ReviewController implements Initializable {
     @FXML
     private TableColumn<Product, String> colorCol;
 
-    private TableColumn<Product, Double> avgScoreCol;
-
     @FXML
     private HBox radioButtonBox;
 
@@ -66,6 +65,9 @@ public class ReviewController implements Initializable {
     @FXML
     private Button leaveReviewButton;
 
+    @FXML
+    private Label dateTimeLabel;
+
     ToggleGroup reviewGroup;
 
     @Override
@@ -77,7 +79,7 @@ public class ReviewController implements Initializable {
         reviewFour.setToggleGroup(reviewGroup);
         reviewFive.setToggleGroup(reviewGroup);
         reviewText.setText("");
-        fillReviewTable(Database.getAllProducts());
+        fillReviewTable(Repository.getAllProducts());
 
         if (FxmlUtils.isLoggedIn) {
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
@@ -92,14 +94,15 @@ public class ReviewController implements Initializable {
             reviewText.setDisable(true);
             leaveReviewButton.setDisable(true);
         }
+        new DateClock(dateTimeLabel);
     }
 
     public void showReview(){
-        // TODO: 2021-02-13 fråga sigrun om detta är regelrätt?
         Product selectedItem = choseShoeToReview.getSelectionModel().getSelectedItem();
         String message;
+
         try{
-            message = buildReviewString(Database.getReviewObject(selectedItem));
+            message = buildReviewString(Repository.getReviewObject(selectedItem));
         } catch (IndexOutOfBoundsException e){
             message = "No review yet on the selected product";
         }
@@ -111,13 +114,13 @@ public class ReviewController implements Initializable {
         Product selectedProduct = choseShoeToReview.getSelectionModel().getSelectedItem();
         int selectedReviewScore = Integer.parseInt(((RadioButton)reviewGroup.getSelectedToggle()).getText());
 
-        Database.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
+        Repository.createNewReview(selectedProduct,selectedReviewScore,reviewText.getText());
         reviewGroup.getSelectedToggle().setSelected(false);
         reviewText.setText("");
 
     }
 
-    public void fillReviewTable(List<Product> list) {
+    private void fillReviewTable(List<Product> list) {
 
         modelCol.setCellValueFactory(new PropertyValueFactory<>("productName"));
         brandCol.setCellValueFactory(new PropertyValueFactory<>("brand"));
@@ -126,14 +129,6 @@ public class ReviewController implements Initializable {
         colorCol.setCellValueFactory(new PropertyValueFactory<>("color"));
 
         choseShoeToReview.getItems().setAll(list);
-    }
-
-    public void setAvgScore(List<ReviewObject> list){
-        double averageReviewScore = list.stream().mapToDouble(ReviewObject::getRating).average().orElseThrow();
-        avgScoreCol.setCellValueFactory(new PropertyValueFactory<>("averageScore"));
-        Product tempProduct = new Product(averageReviewScore);
-        choseShoeToReview.getItems().set(6,tempProduct);
-
     }
 
     private String buildReviewString(List<ReviewObject> list){
@@ -160,13 +155,14 @@ public class ReviewController implements Initializable {
                     .append("\n")
                     .append("Score: ")
                     .append(list.get(i).getRating())
+                    .append(" Date: ")
+                    .append(list.get(i).getDate())
                     .append("\n")
                     .append("Comment: ")
                     .append(list.get(i).getReview())
                     .append("\n")
                     .append("\n");
         }
-
         return sb.toString();
     }
 
@@ -196,6 +192,7 @@ public class ReviewController implements Initializable {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 

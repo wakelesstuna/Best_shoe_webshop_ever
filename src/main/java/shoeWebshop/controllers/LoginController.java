@@ -6,7 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import shoeWebshop.model.Utils.Database;
+import shoeWebshop.service.DateClock;
+import shoeWebshop.dao.Repository;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,40 +27,44 @@ public class LoginController implements Initializable {
     @FXML
     private Label loginText;
 
+    @FXML
+    private Label dateTimeLabel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         setPromptTextOnLoggIn();
 
         if (FxmlUtils.isLoggedIn){
+
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             loginText.setText("Logged in as " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
+
             loggedIn.setText("Logged in: not logged in");
         }
+        new DateClock(dateTimeLabel);
     }
 
     public void authorizeLogin(){
 
         if (loginEmail.getText().isEmpty() || loginPassword.getText().isEmpty()){
-            FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
 
+            FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
         } else {
-            if(Database.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
+            if(Repository.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
 
                 FxmlUtils.showMessage("Logged in", "You are logged in", null, Alert.AlertType.INFORMATION);
-
-                System.out.println(FxmlUtils.whoIsLoggedIn);
-
                 loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
                 loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             } else {
+
                 FxmlUtils.showMessage("Warning", "Wrong username or password", null, Alert.AlertType.ERROR);
             }
             setPromptTextOnLoggIn();
         }
     }
 
-    public void setPromptTextOnLoggIn(){
+    private void setPromptTextOnLoggIn(){
         loginEmail.setText("");
         loginPassword.setText("");
         loginEmail.setPromptText("Email");
@@ -89,13 +94,14 @@ public class LoginController implements Initializable {
     }
 
     public void changeToCreateUserView(){
-        FxmlUtils.changeView(CREATE_USEER);
+        FxmlUtils.changeView(CREATE_USER);
     }
 
     public void loggOut() {
         FxmlUtils.isLoggedIn = false;
         loggedIn.setText("");
         FxmlUtils.whoIsLoggedIn = null;
+        Repository.discardOrder(FxmlUtils.currentCustomerOrder);
         changeToHomeView();
     }
 

@@ -240,5 +240,6 @@
             <Image url="@../img/create-user-shoe.png" />
          </image>
       </ImageView>
+      <Label fx:id="dateTimeLabel" alignment="CENTER" layoutX="482.0" layoutY="756.0" prefHeight="17.0" prefWidth="237.0" text="Clock" textAlignment="CENTER" />
     </children>
 </AnchorPane>

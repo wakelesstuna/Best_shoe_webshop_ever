@@ -1,31 +1,37 @@
 package shoeWebshop.model;
 
+import java.sql.Date;
+
 public class ReviewObject {
 
-    int id;
-    String customerName;
-    String productName;
-    double size;
-    double rating;
-    String review;
+    private final int id;
+    private String customerName;
+    private String productName;
+    private double size;
+    private double rating;
+    private String review;
+    private Date date;
 
-    public ReviewObject(int id, String customerName, String productName, double size, double rating, String review) {
+    public ReviewObject(int id, String customerName, String productName, double size, double rating, String review, Date date) {
         this.id = id;
         this.customerName = customerName;
         this.productName = productName;
         this.size = size;
         this.rating = rating;
         this.review = review;
+        this.date = date;
     }
 
     @Override
     public String toString() {
         return "ReviewObject{" +
                 "id=" + id +
+                ", customerName='" + customerName + '\'' +
                 ", productName='" + productName + '\'' +
                 ", size=" + size +
-                ", averageRating=" + rating +
+                ", rating=" + rating +
                 ", review='" + review + '\'' +
+                ", date=" + date +
                 '}';
     }
 
@@ -47,5 +53,9 @@ public class ReviewObject {
 
     public double getRating() {
         return rating;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

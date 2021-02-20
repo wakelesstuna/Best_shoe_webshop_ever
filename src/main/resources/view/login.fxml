@@ -176,5 +176,6 @@
          </children>
       </Pane>
       <Label fx:id="loggedIn" layoutX="1025.0" layoutY="120.0" prefHeight="17.0" prefWidth="163.0" text="Logged in: not logged in" />
+      <Label fx:id="dateTimeLabel" alignment="CENTER" layoutX="482.0" layoutY="756.0" prefHeight="17.0" prefWidth="237.0" text="Clock" textAlignment="CENTER" />
     </children>
 </AnchorPane>
