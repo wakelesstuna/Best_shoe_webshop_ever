@@ -1,3 +1,5 @@
 # Project exclude paths
 /target/
 /src/main/resources/setting.properties
+/.idea/
+/WebShop.iml
