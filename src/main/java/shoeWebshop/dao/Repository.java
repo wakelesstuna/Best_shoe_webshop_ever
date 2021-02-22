@@ -15,6 +15,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import org.json.*;
 
 import static shoeWebshop.service.Credentials.USER.*;
 
@@ -37,11 +38,11 @@ public class Repository extends Credentials {
         try (Connection con = createConnection();
             PreparedStatement stmt = con.prepareStatement(
                     "SELECT * FROM sql_shoe_webshop.customer " +
-                            "JOIN sql_shoe_webshop.city ON city.id = customer.fk_city_id " +
-                            "WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + "))) = ?")){
+                            "WHERE customer.email = ? AND aes_decrypt(customer.password,UNHEX(SHA2('" + DECRYPT_KEY + "'," + DECRYPT_VALUE + ")))  = ?")){
 
             stmt.setString(1, userName);
             stmt.setString(2, password);
+
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -51,12 +52,14 @@ public class Repository extends Credentials {
             }
 
         } catch (SQLException e) {
+            e.getErrorCode();
             e.printStackTrace();
         }
         return false;
     }
 
     private static Customer createLoggedInCustomer(ResultSet rs) throws SQLException {
+        System.out.println("Making logged in");
         return new Customer(rs.getInt("id"), rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getInt("phone_number"),
@@ -64,7 +67,7 @@ public class Repository extends Credentials {
                 rs.getString("password"),
                 rs.getString("social_security_number"),
                 rs.getString("address"),
-                new City(rs.getInt(12), rs.getString(13), rs.getInt(14)));
+                new City());
     }
 
     public static void createNewCustomer(String firstName, String lastName, String phoneNumber, String email, String password, String ssn, String address, String city, int zipCode) {
@@ -412,29 +415,27 @@ public class Repository extends Credentials {
         }
     }
 
-    public static void main(String[] args) {
-        new Credentials();
-        getCitiesOfSweden();
-    }
-
-    public static void getCitiesOfSweden(){
+    public static String getCitiesOfSweden(String zipCode){
 
         try {
-            URL url = new URL("https://postnummerapi.se/api/1.0/get/13642/");
+            URL url = new URL("https://postnummerapi.se/api/1.0/get/" + zipCode +"/");
             BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 
             String input;
-            while ((input = in.readLine()) != null){
-                System.out.println(input);
+            StringBuilder jsonString = new StringBuilder();
 
+            while ((input = in.readLine()) != null){
+                jsonString.append(input);
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            JSONObject obj = new JSONObject(jsonString.substring(1));
 
+            return obj.getString("City/Locality");
+
+        } catch (IOException e) {
+            System.out.println("no city found");
+        }
+        return null;
     }
 
 }

@@ -8,12 +8,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import shoeWebshop.model.City;
 import shoeWebshop.service.DateClock;
 import shoeWebshop.dao.Repository;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 import static shoeWebshop.controllers.FxmlUtils.View.*;
 
@@ -57,13 +57,24 @@ public class CreateUserController implements Initializable {
         setMaxTextFieldCount(socialSecurityNumber,10);
         setMaxTextFieldCount(phoneNumber,10);
         setMaxTextFieldCount(zipCode,5);
-        fillComboBox(cityBox);
         if (FxmlUtils.isLoggedIn){
             loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
         }else{
             loggedIn.setText("Logged in: not logged in");
         }
         eraseAllTextFields();
+
+        zipCode.setOnKeyTyped(event -> {
+            List<String> temp = new ArrayList<>();
+            if (zipCode.getText().length() > 4) {
+                int pos = zipCode.getCaretPosition();
+                zipCode.setText(zipCode.getText(0, 5));
+                zipCode.positionCaret(pos);
+            }
+            temp.add(Repository.getCitiesOfSweden(zipCode.getText().toLowerCase()));
+            fillComboBox(temp);
+
+        });
 
         new DateClock(dateTimeLabel);
     }
@@ -116,9 +127,9 @@ public class CreateUserController implements Initializable {
         });
     }
 
-    private void fillComboBox(ComboBox<String> comboBox){
-        ObservableList<String> list = FXCollections.observableList(Repository.getAllCities().stream().map(City::getCityName).collect(Collectors.toList()));
-        comboBox.setItems(list);
+    private void fillComboBox(List<String> input){
+        ObservableList<String> list = FXCollections.observableList(input);
+        cityBox.setItems(list);
     }
 
     //---- Nav Links ----\\

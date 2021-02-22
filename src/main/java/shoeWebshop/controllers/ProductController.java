@@ -156,15 +156,16 @@ public class ProductController implements Initializable {
         if (p.getStock() == 0) {
             FxmlUtils.showMessage("Error", "Sorry, selected product is out of stock!", null, Alert.AlertType.ERROR);
         } else {
-            Repository.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, p.getId());
-            renderAllProducts(Repository.getAllProducts());
+            if (FxmlUtils.isLoggedIn) {
+                Repository.addToCart(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn, p.getId());
+                renderAllProducts(Repository.getAllProducts());
 
-            try {
-                fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
-                addToTotalPrice(p);
-            } catch (NullPointerException ignored) {
+                try {
+                    fillCartTable(Repository.getSelectedOrder(new Orders(FxmlUtils.currentCustomerOrder, FxmlUtils.whoIsLoggedIn)));
+                    addToTotalPrice(p);
+                } catch (NullPointerException ignored) {
+                }
             }
-
         }
     }
 

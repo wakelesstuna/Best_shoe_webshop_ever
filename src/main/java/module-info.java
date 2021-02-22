@@ -4,6 +4,7 @@ module shoeWebshop{
     requires javafx.fxml;
     requires java.mail;
     requires java.sql;
+    requires org.json;
 
     opens shoeWebshop;
     opens shoeWebshop.controllers;

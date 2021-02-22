@@ -1,9 +1,12 @@
 package shoeWebshop.model;
 
 public class City {
-    private final int id;
-    private final String cityName;
-    private final int zipCode;
+    private int id;
+    private String cityName;
+    private int zipCode;
+
+    public City() {
+    }
 
     public City(int id, String cityName, int zipCode) {
         this.id = id;

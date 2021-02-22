@@ -47,17 +47,20 @@ public class LoginController implements Initializable {
 
     public void authorizeLogin(){
 
-        if (loginEmail.getText().isEmpty() || loginPassword.getText().isEmpty()){
+        String tempUser = loginEmail.getText().trim();
+        String tempPass = loginPassword.getText().trim();
+
+        if (tempUser.isEmpty() || tempPass.isEmpty()){
 
             FxmlUtils.showMessage("Input", "You need to enter a email\nand a password",null, Alert.AlertType.ERROR);
         } else {
-            if(Repository.isAuthorizeLogin(loginEmail.getText(),loginPassword.getText())){
+            System.out.println("Innan if" + tempUser + tempPass);
+            if(Repository.isAuthorizeLogin(tempUser,tempPass)){
 
                 FxmlUtils.showMessage("Logged in", "You are logged in", null, Alert.AlertType.INFORMATION);
                 loginText.setText("Welcome " + FxmlUtils.whoIsLoggedIn.getFullName());
                 loggedIn.setText("Logged in: " + FxmlUtils.whoIsLoggedIn.getFullName());
             } else {
-
                 FxmlUtils.showMessage("Warning", "Wrong username or password", null, Alert.AlertType.ERROR);
             }
             setPromptTextOnLoggIn();
