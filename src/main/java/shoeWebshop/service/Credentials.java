@@ -17,7 +17,7 @@ public class Credentials {
 
     public Credentials() {
         Properties prop = new Properties();
-        try (FileReader file = new FileReader("src/main/resources/setting.properties")) {
+        try (FileReader file = new FileReader("src/main/resources/settings.properties")) {
             prop.load(file);
         } catch (IOException e) {
             System.out.println("Couldn't read properties");
