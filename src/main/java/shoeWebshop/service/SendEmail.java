@@ -4,10 +4,13 @@ import shoeWebshop.model.Product;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Properties;
 
 public class SendEmail {
+
+    static DecimalFormat df = new DecimalFormat("##.#");
 
     private static Session connectToMailServer(){
         Properties properties = System.getProperties();
@@ -83,12 +86,12 @@ public class SendEmail {
         .append("\n")
         .append("Here is you're order:\n")
         .append("\n")
-        .append(String.format("%-28s %-5s %-13s %-3s","Product name", "Size", "Brand", "Price"))
+        .append(String.format("%-19s %-32s %-42s %-53s","Product name", "Size", "Brand", "Price"))
         .append("\n");
 
         double totalPrice = 0;
         for (Product product : list) {
-            sb.append(String.format("%-28s %-5f %-13s %-3.2f",product.getProductName(), product.getSize(), product.getBrand(), product.getPriceSek()))
+            sb.append(String.format("%-20s %-33.1f %-43s %-53.2f",product.getProductName(), product.getSize(), product.getBrand(), product.getPriceSek()))
             .append("\n");
             totalPrice += product.getPriceSek();
         }

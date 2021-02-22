@@ -6,6 +6,12 @@ import shoeWebshop.model.*;
 import shoeWebshop.service.Credentials;
 import shoeWebshop.service.SendEmail;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -18,6 +24,7 @@ public class Repository extends Credentials {
         Connection con = null;
         try {
             con = DriverManager.getConnection(CONNECTION_STRING.toString() + DATABASE_NAME.toString(), DATABASE_USERNAME.toString(), DATABASE_PASSWORD.toString());
+            System.out.println("Calling database...");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -42,6 +49,7 @@ public class Repository extends Credentials {
                 FxmlUtils.whoIsLoggedIn = createLoggedInCustomer(rs);
                 return true;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -149,8 +157,6 @@ public class Repository extends Credentials {
             cstmt.setString(3, review);
             cstmt.execute();
 
-            System.out.println("Calling Stored procedure rate from database");
-
             FxmlUtils.showMessage("Review", "Thank you for you're review", null, Alert.AlertType.INFORMATION);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -190,6 +196,23 @@ public class Repository extends Credentials {
 
 
     //--------------------------------------------- ORDERS FUNCTIONS ---------------------------------------------------\\
+
+
+    public static int createNewOrder(Customer customer) {
+        int orderId = 0;
+        try (Connection con = createConnection();
+             CallableStatement cstmt = con.prepareCall("{? = CALL new_order(?)}")){
+
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setInt(2, customer.getId());
+            cstmt.execute();
+            orderId = cstmt.getInt(1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderId;
+    }
 
     public static List<Orders> getCustomerOrders(Customer customer) {
         List<Orders> orders = new ArrayList<>();
@@ -251,23 +274,6 @@ public class Repository extends Credentials {
         return products;
     }
 
-    public static int createNewOrder(Customer customer) {
-        int orderId = 0;
-        try (Connection con = createConnection();
-             CallableStatement cstmt = con.prepareCall("{? = CALL new_order(?)}")){
-
-            cstmt.registerOutParameter(1, Types.INTEGER);
-            cstmt.setInt(2, customer.getId());
-            cstmt.execute();
-            orderId = cstmt.getInt(1);
-
-            System.out.println("Calling function new_order");
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return orderId;
-    }
 
     public static void discardOrder(int orderId){
         if (FxmlUtils.orderCreatedButNotSent){
@@ -377,8 +383,6 @@ public class Repository extends Credentials {
             cstmt.setInt(3, id);
             cstmt.execute();
 
-            System.out.println("Calling Stored procedure addToCart");
-
             FxmlUtils.showMessage("Added to cart", "New item added to your cart", null, Alert.AlertType.INFORMATION);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -403,11 +407,34 @@ public class Repository extends Credentials {
             cstmt.setInt(3, id);
             cstmt.execute();
 
-            System.out.println("Calling Stored procedure remove_from_cart");
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new Credentials();
+        getCitiesOfSweden();
+    }
+
+    public static void getCitiesOfSweden(){
+
+        try {
+            URL url = new URL("https://postnummerapi.se/api/1.0/get/13642/");
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String input;
+            while ((input = in.readLine()) != null){
+                System.out.println(input);
+
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
